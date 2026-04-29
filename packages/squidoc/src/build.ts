@@ -7,12 +7,14 @@ import {
   type DocPage,
   type GeneratedFile,
   type LoadedConfig,
+  type ResolvedSquidocConfig,
   type SquidocTheme,
   discoverDocs,
   loadConfig,
   loadTheme,
   runPlugins,
 } from "@squidoc/core";
+import { type FSWatcher, watch } from "chokidar";
 import { renderMarkdown } from "./markdown.js";
 
 const require = createRequire(import.meta.url);
@@ -35,8 +37,15 @@ export async function buildSite(options: BuildOptions = {}): Promise<void> {
 }
 
 export async function devSite(options: ServeOptions = {}): Promise<void> {
-  const internalRoot = await prepareAstroProject(options.cwd ?? process.cwd());
-  await runAstro(internalRoot, "dev", options.astroArgs);
+  const cwd = options.cwd ?? process.cwd();
+  const internalRoot = await prepareAstroProject(cwd);
+  const watcher = await watchDevInputs(cwd, internalRoot);
+
+  try {
+    await runAstro(internalRoot, "dev", options.astroArgs);
+  } finally {
+    await watcher.close();
+  }
 }
 
 export async function previewSite(options: ServeOptions = {}): Promise<void> {
@@ -45,6 +54,15 @@ export async function previewSite(options: ServeOptions = {}): Promise<void> {
 }
 
 async function prepareAstroProject(cwd: string): Promise<string> {
+  const internalRoot = join(cwd, ".squidoc", "astro");
+  await rm(internalRoot, { recursive: true, force: true });
+  await generateAstroProject(cwd, internalRoot);
+  await linkPackageDependencies(internalRoot);
+
+  return internalRoot;
+}
+
+async function generateAstroProject(cwd: string, internalRoot: string): Promise<void> {
   const loaded = await loadConfig({ cwd });
   const pages = await discoverDocs(loaded.config, cwd);
   const theme = await loadTheme(loaded.config, cwd);
@@ -53,12 +71,7 @@ async function prepareAstroProject(cwd: string): Promise<string> {
     throw new Error(`No Markdown pages found in ${loaded.config.docsDir}.`);
   }
 
-  const internalRoot = join(cwd, ".squidoc", "astro");
-  await rm(internalRoot, { recursive: true, force: true });
   await writeAstroProject(internalRoot, cwd, loaded, pages, theme);
-  await linkPackageDependencies(internalRoot);
-
-  return internalRoot;
 }
 
 async function runConfiguredPlugins(cwd: string) {
@@ -80,6 +93,7 @@ async function writeAstroProject(
   pages: DocPage[],
   theme: SquidocTheme,
 ): Promise<void> {
+  await rm(join(internalRoot, "src", "pages"), { recursive: true, force: true });
   await mkdir(join(internalRoot, "src", "pages"), { recursive: true });
   await writeFile(join(internalRoot, "package.json"), JSON.stringify({ type: "module" }, null, 2));
   await writeFile(
@@ -95,6 +109,42 @@ async function writeAstroProject(
   for (const page of pages) {
     await writePage(internalRoot, loaded, pages, page, theme);
   }
+}
+
+async function watchDevInputs(cwd: string, internalRoot: string): Promise<FSWatcher> {
+  const loaded = await loadConfig({ cwd });
+  const watchedPaths = getWatchedPaths(cwd, loaded.config);
+  const watcher = watch(watchedPaths, {
+    ignoreInitial: true,
+  });
+  let timer: NodeJS.Timeout | undefined;
+
+  const regenerate = () => {
+    if (timer) {
+      clearTimeout(timer);
+    }
+
+    timer = setTimeout(() => {
+      generateAstroProject(cwd, internalRoot).catch((error: unknown) => {
+        console.error(error instanceof Error ? error.message : String(error));
+      });
+    }, 75);
+  };
+
+  watcher.on("add", regenerate);
+  watcher.on("change", regenerate);
+  watcher.on("unlink", regenerate);
+
+  return watcher;
+}
+
+function getWatchedPaths(cwd: string, config: ResolvedSquidocConfig): string[] {
+  return [
+    join(cwd, config.docsDir),
+    join(cwd, "docs.config.ts"),
+    join(cwd, "docs.config.mjs"),
+    join(cwd, "docs.config.js"),
+  ];
 }
 
 async function writePage(
