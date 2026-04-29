@@ -12,6 +12,15 @@ npm run dev
 
 Then users add docs, configure `docs.config.ts`, install plugins/themes, and deploy the generated static site to platforms like Vercel, Netlify, or Cloudflare Pages.
 
+Plugins and themes can be added through the Squidoc CLI:
+
+```bash
+npx squidoc add plugin @squidoc/plugin-search
+npx squidoc add theme @squidoc/theme-basic
+```
+
+The add command installs the package with the detected package manager and updates `docs.config.ts`.
+
 ## Monorepo
 
 ```txt

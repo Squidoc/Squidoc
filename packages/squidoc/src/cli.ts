@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 import { discoverDocs, loadConfig } from "@squidoc/core";
+import { type AddKind, addExtension } from "./add.js";
 import { buildSite, devSite, previewSite } from "./build.js";
 import { validateProject } from "./check.js";
 
@@ -29,13 +30,17 @@ Usage:
 if (command === "add") {
   const kind = process.argv[3];
   const name = process.argv[4];
+  const install = !process.argv.includes("--skip-install");
 
   if (!kind || !name || !["plugin", "theme"].includes(kind)) {
-    console.error("Usage: squidoc add plugin <name> OR squidoc add theme <name>");
+    console.error("Usage: squidoc add plugin <name> OR squidoc add theme <name> [--skip-install]");
     process.exit(1);
   }
 
-  console.log(`Adding ${kind} "${name}" is coming next.`);
+  await runCommand(async () => {
+    await addExtension(kind as AddKind, name, { install });
+    console.log(`Added ${kind} "${name}" to docs.config.ts.`);
+  });
   process.exit(0);
 }
 
