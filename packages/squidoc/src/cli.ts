@@ -2,6 +2,7 @@
 
 import { discoverDocs, loadConfig } from "@squidoc/core";
 import { buildSite, devSite, previewSite } from "./build.js";
+import { validateProject } from "./check.js";
 
 const command = process.argv[2] ?? "help";
 const commandArgs = process.argv.slice(3).filter((arg) => arg !== "--");
@@ -84,19 +85,10 @@ async function checkProject(): Promise<void> {
     console.log(`Loaded config: ${loaded.path}`);
     console.log(`Discovered ${pages.length} Markdown page${pages.length === 1 ? "" : "s"}.`);
 
-    if (pages.length === 0) {
-      throw new Error(`No Markdown pages found in ${loaded.config.docsDir}.`);
-    }
+    const issues = validateProject(loaded.config, pages);
 
-    const routes = new Set(pages.map((page) => page.route));
-    const missingNavItems = loaded.config.nav.filter((item) => !routes.has(item.path));
-
-    if (missingNavItems.length > 0) {
-      throw new Error(
-        `Navigation references missing route${missingNavItems.length === 1 ? "" : "s"}: ${missingNavItems
-          .map((item) => item.path)
-          .join(", ")}`,
-      );
+    if (issues.length > 0) {
+      throw new Error(issues.map((issue) => issue.message).join("\n"));
     }
   } catch (error) {
     console.error(error instanceof Error ? error.message : String(error));
