@@ -4,6 +4,7 @@ dist/
 .vercel/
 .netlify/
 .turbo/
+.tmp/
 coverage/
 .DS_Store
 .idea/
