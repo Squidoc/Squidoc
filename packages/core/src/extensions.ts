@@ -80,10 +80,30 @@ export type SquidocTheme = {
     doc: string;
     home?: string;
   };
+  renderer?: {
+    globalCss?: string;
+    classes?: {
+      shell?: string;
+      sidebar?: string;
+      brand?: string;
+      nav?: string;
+      content?: string;
+    };
+  };
   styles?: string[];
   slots?: Record<string, string>;
 };
 
 export function defineTheme(theme: SquidocTheme): SquidocTheme {
   return theme;
+}
+
+export async function loadTheme(
+  config: ResolvedSquidocConfig,
+  cwd = process.cwd(),
+): Promise<SquidocTheme> {
+  const themeName = typeof config.theme === "string" ? config.theme : config.theme.name;
+  const jiti = createJiti(join(cwd, "docs.config.ts"), { moduleCache: false });
+
+  return jiti.import<SquidocTheme>(themeName, { default: true });
 }

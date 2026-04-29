@@ -7,96 +7,16 @@ import {
   type DocPage,
   type GeneratedFile,
   type LoadedConfig,
+  type SquidocTheme,
   discoverDocs,
   loadConfig,
+  loadTheme,
   runPlugins,
 } from "@squidoc/core";
 import { marked } from "marked";
 
 const require = createRequire(import.meta.url);
 const packageRoot = dirname(dirname(fileURLToPath(import.meta.url)));
-
-const THEME_CSS = `:root {
-  color-scheme: light;
-  --squidoc-accent: #2563eb;
-  --squidoc-border: #d8dee8;
-  --squidoc-text: #172033;
-  --squidoc-muted: #5f6f89;
-  font-family:
-    Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-}
-
-body {
-  margin: 0;
-  color: var(--squidoc-text);
-  background: #ffffff;
-}
-
-a {
-  color: var(--squidoc-accent);
-}
-
-.shell {
-  min-height: 100vh;
-  display: grid;
-  grid-template-columns: minmax(220px, 280px) minmax(0, 1fr);
-}
-
-.sidebar {
-  border-right: 1px solid var(--squidoc-border);
-  padding: 24px;
-}
-
-.brand {
-  margin: 0 0 24px;
-  font-size: 18px;
-}
-
-.nav {
-  display: grid;
-  gap: 10px;
-}
-
-.nav a {
-  color: var(--squidoc-muted);
-  text-decoration: none;
-}
-
-.nav a[aria-current="page"] {
-  color: var(--squidoc-text);
-  font-weight: 700;
-}
-
-.content {
-  max-width: 820px;
-  padding: 48px;
-}
-
-.content h1 {
-  font-size: 42px;
-  line-height: 1.1;
-}
-
-.content p,
-.content li {
-  line-height: 1.7;
-}
-
-@media (max-width: 760px) {
-  .shell {
-    display: block;
-  }
-
-  .sidebar {
-    border-right: 0;
-    border-bottom: 1px solid var(--squidoc-border);
-  }
-
-  .content {
-    padding: 28px;
-  }
-}
-`;
 
 export type BuildOptions = {
   cwd?: string;
@@ -126,6 +46,7 @@ export async function previewSite(options: ServeOptions = {}): Promise<void> {
 async function prepareAstroProject(cwd: string): Promise<string> {
   const loaded = await loadConfig({ cwd });
   const pages = await discoverDocs(loaded.config, cwd);
+  const theme = await loadTheme(loaded.config, cwd);
 
   if (pages.length === 0) {
     throw new Error(`No Markdown pages found in ${loaded.config.docsDir}.`);
@@ -133,7 +54,7 @@ async function prepareAstroProject(cwd: string): Promise<string> {
 
   const internalRoot = join(cwd, ".squidoc", "astro");
   await rm(internalRoot, { recursive: true, force: true });
-  await writeAstroProject(internalRoot, cwd, loaded, pages);
+  await writeAstroProject(internalRoot, cwd, loaded, pages, theme);
   await linkPackageDependencies(internalRoot);
 
   return internalRoot;
@@ -155,6 +76,7 @@ async function writeAstroProject(
   cwd: string,
   loaded: LoadedConfig,
   pages: DocPage[],
+  theme: SquidocTheme,
 ): Promise<void> {
   await mkdir(join(internalRoot, "src", "pages"), { recursive: true });
   await writeFile(join(internalRoot, "package.json"), JSON.stringify({ type: "module" }, null, 2));
@@ -169,7 +91,7 @@ async function writeAstroProject(
   );
 
   for (const page of pages) {
-    await writePage(internalRoot, loaded, pages, page);
+    await writePage(internalRoot, loaded, pages, page, theme);
   }
 }
 
@@ -178,6 +100,7 @@ async function writePage(
   loaded: LoadedConfig,
   pages: DocPage[],
   page: DocPage,
+  theme: SquidocTheme,
 ): Promise<void> {
   const outputPath = page.route === "/" ? "index.astro" : `${page.route.slice(1)}/index.astro`;
   const target = join(internalRoot, "src", "pages", outputPath);
@@ -189,6 +112,13 @@ async function writePage(
     route: navPage.route,
     current: navPage.route === page.route,
   }));
+  const classes = {
+    brand: theme.renderer?.classes?.brand ?? "brand",
+    content: theme.renderer?.classes?.content ?? "content",
+    nav: theme.renderer?.classes?.nav ?? "nav",
+    shell: theme.renderer?.classes?.shell ?? "shell",
+    sidebar: theme.renderer?.classes?.sidebar ?? "sidebar",
+  };
 
   await writeFile(
     target,
@@ -197,6 +127,7 @@ const site = ${JSON.stringify(loaded.config.site)};
 const page = ${JSON.stringify({ title: page.title, description: page.description, route: page.route })};
 const navItems = ${JSON.stringify(navItems)};
 const content = ${JSON.stringify(html)};
+const classes = ${JSON.stringify(classes)};
 ---
 
 <html lang="en">
@@ -205,19 +136,19 @@ const content = ${JSON.stringify(html)};
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{page.title} | {site.name}</title>
     {page.description && <meta name="description" content={page.description} />}
-    <style is:global>${THEME_CSS}</style>
+    <style is:global>${theme.renderer?.globalCss ?? ""}</style>
   </head>
   <body>
-    <div class="shell">
-      <aside class="sidebar">
-        <h1 class="brand">{site.name}</h1>
-        <nav class="nav" aria-label="Documentation">
+    <div class={classes.shell}>
+      <aside class={classes.sidebar}>
+        <h1 class={classes.brand}>{site.name}</h1>
+        <nav class={classes.nav} aria-label="Documentation">
           {navItems.map((item) => (
             <a href={item.route} aria-current={item.current ? "page" : undefined}>{item.title}</a>
           ))}
         </nav>
       </aside>
-      <main class="content">
+      <main class={classes.content}>
         <Fragment set:html={content} />
       </main>
     </div>
