@@ -3,7 +3,9 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "dev": "squidoc dev",
     "build": "squidoc build",
+    "preview": "squidoc preview",
     "check": "squidoc check"
   },
   "dependencies": {

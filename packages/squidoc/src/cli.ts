@@ -4,6 +4,7 @@ import { discoverDocs, loadConfig } from "@squidoc/core";
 import { buildSite, devSite, previewSite } from "./build.js";
 
 const command = process.argv[2] ?? "help";
+const commandArgs = process.argv.slice(3).filter((arg) => arg !== "--");
 
 const messages: Record<string, string> = {
   doctor: "Inspecting the local Squidoc environment is coming next.",
@@ -41,7 +42,7 @@ const message = messages[command];
 
 if (!message) {
   if (command === "dev") {
-    await runCommand(() => devSite());
+    await runCommand(() => devSite({ astroArgs: commandArgs }));
     process.exit(0);
   }
 
@@ -51,7 +52,7 @@ if (!message) {
   }
 
   if (command === "preview") {
-    await runCommand(() => previewSite());
+    await runCommand(() => previewSite({ astroArgs: commandArgs }));
     process.exit(0);
   }
 

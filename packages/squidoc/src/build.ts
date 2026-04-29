@@ -24,6 +24,7 @@ export type BuildOptions = {
 
 export type ServeOptions = {
   cwd?: string;
+  astroArgs?: string[];
 };
 
 export async function buildSite(options: BuildOptions = {}): Promise<void> {
@@ -35,12 +36,12 @@ export async function buildSite(options: BuildOptions = {}): Promise<void> {
 
 export async function devSite(options: ServeOptions = {}): Promise<void> {
   const internalRoot = await prepareAstroProject(options.cwd ?? process.cwd());
-  await runAstro(internalRoot, "dev");
+  await runAstro(internalRoot, "dev", options.astroArgs);
 }
 
 export async function previewSite(options: ServeOptions = {}): Promise<void> {
   const internalRoot = await prepareAstroProject(options.cwd ?? process.cwd());
-  await runAstro(internalRoot, "preview");
+  await runAstro(internalRoot, "preview", options.astroArgs);
 }
 
 async function prepareAstroProject(cwd: string): Promise<string> {
@@ -159,12 +160,16 @@ const classes = ${JSON.stringify(classes)};
   );
 }
 
-async function runAstro(internalRoot: string, command: "build" | "dev" | "preview"): Promise<void> {
+async function runAstro(
+  internalRoot: string,
+  command: "build" | "dev" | "preview",
+  args: string[] = [],
+): Promise<void> {
   const astroPackage = require.resolve("astro/package.json");
   const astroBin = join(dirname(astroPackage), "astro.js");
 
   await new Promise<void>((resolve, reject) => {
-    const child = spawn(process.execPath, [astroBin, command], {
+    const child = spawn(process.execPath, [astroBin, command, ...args], {
       cwd: internalRoot,
       env: {
         ...process.env,
