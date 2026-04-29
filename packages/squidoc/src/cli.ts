@@ -1,0 +1,49 @@
+#!/usr/bin/env node
+
+const command = process.argv[2] ?? "help";
+
+const messages: Record<string, string> = {
+  dev: "Starting the Squidoc dev server is coming next. This command will wrap Astro dev.",
+  build: "Building the static Squidoc site is coming next. This command will wrap Astro build.",
+  preview:
+    "Previewing the static Squidoc site is coming next. This command will wrap Astro preview.",
+  check: "Checking config, links, SEO, plugins, and theme compatibility is coming next.",
+  doctor: "Inspecting the local Squidoc environment is coming next.",
+};
+
+if (command === "help" || command === "--help" || command === "-h") {
+  console.log(`squidoc
+
+Usage:
+  squidoc dev
+  squidoc build
+  squidoc preview
+  squidoc check
+  squidoc doctor
+  squidoc add plugin <name>
+  squidoc add theme <name>
+`);
+  process.exit(0);
+}
+
+if (command === "add") {
+  const kind = process.argv[3];
+  const name = process.argv[4];
+
+  if (!kind || !name || !["plugin", "theme"].includes(kind)) {
+    console.error("Usage: squidoc add plugin <name> OR squidoc add theme <name>");
+    process.exit(1);
+  }
+
+  console.log(`Adding ${kind} "${name}" is coming next.`);
+  process.exit(0);
+}
+
+const message = messages[command];
+
+if (!message) {
+  console.error(`Unknown command: ${command}`);
+  process.exit(1);
+}
+
+console.log(message);

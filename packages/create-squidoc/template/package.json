@@ -1,0 +1,17 @@
+{
+  "name": "my-docs",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "squidoc dev",
+    "build": "squidoc build",
+    "preview": "squidoc preview",
+    "check": "squidoc check"
+  },
+  "dependencies": {
+    "@squidoc/plugin-seo": "^0.1.0",
+    "@squidoc/theme-basic": "^0.1.0",
+    "squidoc": "^0.1.0"
+  },
+  "devDependencies": {}
+}
