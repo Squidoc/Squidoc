@@ -30,10 +30,13 @@ packages/
 
 ```bash
 pnpm install
+pnpm lint
 pnpm build
 pnpm check
 pnpm test
 ```
+
+The dogfood docs site lives in `examples/squidoc-docs` and is included in the test loop.
 
 ## Publishing
 
@@ -44,4 +47,3 @@ pnpm changeset
 pnpm version-packages
 pnpm publish-packages
 ```
-
