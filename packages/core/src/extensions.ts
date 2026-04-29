@@ -1,11 +1,14 @@
 import { join } from "node:path";
 import { createJiti } from "jiti";
+import type { DocPage } from "./docs.js";
 import type { ResolvedSquidocConfig } from "./schema.js";
 
 export type PluginApi = {
   addGeneratedFile: (file: GeneratedFile) => void;
   addHeadTags: (tags: HeadTag[]) => void;
   addThemeSlot: (slot: ThemeSlot) => void;
+  config: ResolvedSquidocConfig;
+  pages: DocPage[];
 };
 
 export type GeneratedFile = {
@@ -41,6 +44,7 @@ export type PluginContext = {
 
 export async function runPlugins(
   config: ResolvedSquidocConfig,
+  pages: DocPage[] = [],
   cwd = process.cwd(),
 ): Promise<PluginContext> {
   const context: PluginContext = {
@@ -58,6 +62,8 @@ export async function runPlugins(
     addThemeSlot(slot) {
       context.themeSlots.push(slot);
     },
+    config,
+    pages,
   };
   const jiti = createJiti(join(cwd, "docs.config.ts"), { moduleCache: false });
 

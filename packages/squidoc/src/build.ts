@@ -62,7 +62,8 @@ async function prepareAstroProject(cwd: string): Promise<string> {
 
 async function runConfiguredPlugins(cwd: string) {
   const loaded = await loadConfig({ cwd });
-  return runPlugins(loaded.config, cwd);
+  const pages = await discoverDocs(loaded.config, cwd);
+  return runPlugins(loaded.config, pages, cwd);
 }
 
 async function linkPackageDependencies(internalRoot: string): Promise<void> {
