@@ -1,9 +1,16 @@
 import { spawn } from "node:child_process";
 import { mkdir, rm, symlink, writeFile } from "node:fs/promises";
 import { createRequire } from "node:module";
-import { dirname, join } from "node:path";
+import { dirname, join, resolve, sep } from "node:path";
 import { fileURLToPath } from "node:url";
-import { type DocPage, type LoadedConfig, discoverDocs, loadConfig } from "@squidoc/core";
+import {
+  type DocPage,
+  type GeneratedFile,
+  type LoadedConfig,
+  discoverDocs,
+  loadConfig,
+  runPlugins,
+} from "@squidoc/core";
 import { marked } from "marked";
 
 const require = createRequire(import.meta.url);
@@ -99,6 +106,7 @@ export async function buildSite(options: BuildOptions = {}): Promise<void> {
   const cwd = options.cwd ?? process.cwd();
   const loaded = await loadConfig({ cwd });
   const pages = await discoverDocs(loaded.config, cwd);
+  const plugins = await runPlugins(loaded.config, cwd);
 
   if (pages.length === 0) {
     throw new Error(`No Markdown pages found in ${loaded.config.docsDir}.`);
@@ -109,6 +117,7 @@ export async function buildSite(options: BuildOptions = {}): Promise<void> {
   await writeAstroProject(internalRoot, cwd, loaded, pages);
   await linkPackageDependencies(internalRoot);
   await runAstroBuild(internalRoot);
+  await writeGeneratedFiles(join(cwd, "dist"), plugins.generatedFiles);
 }
 
 async function linkPackageDependencies(internalRoot: string): Promise<void> {
@@ -217,4 +226,19 @@ async function runAstroBuild(internalRoot: string): Promise<void> {
       }
     });
   });
+}
+
+async function writeGeneratedFiles(outDir: string, files: GeneratedFile[]): Promise<void> {
+  const root = resolve(outDir);
+
+  for (const file of files) {
+    const target = resolve(root, file.path);
+
+    if (target !== root && !target.startsWith(`${root}${sep}`)) {
+      throw new Error(`Generated file path escapes the output directory: ${file.path}`);
+    }
+
+    await mkdir(dirname(target), { recursive: true });
+    await writeFile(target, file.contents);
+  }
 }

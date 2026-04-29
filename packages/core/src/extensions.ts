@@ -1,3 +1,7 @@
+import { join } from "node:path";
+import { createJiti } from "jiti";
+import type { ResolvedSquidocConfig } from "./schema.js";
+
 export type PluginApi = {
   addGeneratedFile: (file: GeneratedFile) => void;
   addHeadTags: (tags: HeadTag[]) => void;
@@ -27,6 +31,46 @@ export type SquidocPlugin = {
 
 export function definePlugin(plugin: SquidocPlugin): SquidocPlugin {
   return plugin;
+}
+
+export type PluginContext = {
+  generatedFiles: GeneratedFile[];
+  headTags: HeadTag[];
+  themeSlots: ThemeSlot[];
+};
+
+export async function runPlugins(
+  config: ResolvedSquidocConfig,
+  cwd = process.cwd(),
+): Promise<PluginContext> {
+  const context: PluginContext = {
+    generatedFiles: [],
+    headTags: [],
+    themeSlots: [],
+  };
+  const api: PluginApi = {
+    addGeneratedFile(file) {
+      context.generatedFiles.push(file);
+    },
+    addHeadTags(tags) {
+      context.headTags.push(...tags);
+    },
+    addThemeSlot(slot) {
+      context.themeSlots.push(slot);
+    },
+  };
+  const jiti = createJiti(join(cwd, "docs.config.ts"), { moduleCache: false });
+
+  for (const pluginConfig of config.plugins) {
+    if (typeof pluginConfig !== "string") {
+      continue;
+    }
+
+    const plugin = await jiti.import<SquidocPlugin>(pluginConfig, { default: true });
+    await plugin.setup?.(api);
+  }
+
+  return context;
 }
 
 export type SquidocTheme = {
