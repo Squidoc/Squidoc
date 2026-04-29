@@ -102,11 +102,30 @@ export type BuildOptions = {
   cwd?: string;
 };
 
+export type ServeOptions = {
+  cwd?: string;
+};
+
 export async function buildSite(options: BuildOptions = {}): Promise<void> {
   const cwd = options.cwd ?? process.cwd();
+  const internalRoot = await prepareAstroProject(cwd);
+  await runAstro(internalRoot, "build");
+  await writeGeneratedFiles(join(cwd, "dist"), (await runConfiguredPlugins(cwd)).generatedFiles);
+}
+
+export async function devSite(options: ServeOptions = {}): Promise<void> {
+  const internalRoot = await prepareAstroProject(options.cwd ?? process.cwd());
+  await runAstro(internalRoot, "dev");
+}
+
+export async function previewSite(options: ServeOptions = {}): Promise<void> {
+  const internalRoot = await prepareAstroProject(options.cwd ?? process.cwd());
+  await runAstro(internalRoot, "preview");
+}
+
+async function prepareAstroProject(cwd: string): Promise<string> {
   const loaded = await loadConfig({ cwd });
   const pages = await discoverDocs(loaded.config, cwd);
-  const plugins = await runPlugins(loaded.config, cwd);
 
   if (pages.length === 0) {
     throw new Error(`No Markdown pages found in ${loaded.config.docsDir}.`);
@@ -116,8 +135,13 @@ export async function buildSite(options: BuildOptions = {}): Promise<void> {
   await rm(internalRoot, { recursive: true, force: true });
   await writeAstroProject(internalRoot, cwd, loaded, pages);
   await linkPackageDependencies(internalRoot);
-  await runAstroBuild(internalRoot);
-  await writeGeneratedFiles(join(cwd, "dist"), plugins.generatedFiles);
+
+  return internalRoot;
+}
+
+async function runConfiguredPlugins(cwd: string) {
+  const loaded = await loadConfig({ cwd });
+  return runPlugins(loaded.config, cwd);
 }
 
 async function linkPackageDependencies(internalRoot: string): Promise<void> {
@@ -203,12 +227,12 @@ const content = ${JSON.stringify(html)};
   );
 }
 
-async function runAstroBuild(internalRoot: string): Promise<void> {
+async function runAstro(internalRoot: string, command: "build" | "dev" | "preview"): Promise<void> {
   const astroPackage = require.resolve("astro/package.json");
   const astroBin = join(dirname(astroPackage), "astro.js");
 
   await new Promise<void>((resolve, reject) => {
-    const child = spawn(process.execPath, [astroBin, "build"], {
+    const child = spawn(process.execPath, [astroBin, command], {
       cwd: internalRoot,
       env: {
         ...process.env,
@@ -222,7 +246,7 @@ async function runAstroBuild(internalRoot: string): Promise<void> {
       if (code === 0) {
         resolve();
       } else {
-        reject(new Error(`Astro build failed with exit code ${code}.`));
+        reject(new Error(`Astro ${command} failed with exit code ${code}.`));
       }
     });
   });

@@ -1,14 +1,11 @@
 #!/usr/bin/env node
 
 import { discoverDocs, loadConfig } from "@squidoc/core";
-import { buildSite } from "./build.js";
+import { buildSite, devSite, previewSite } from "./build.js";
 
 const command = process.argv[2] ?? "help";
 
 const messages: Record<string, string> = {
-  dev: "Starting the Squidoc dev server is coming next. This command will wrap Astro dev.",
-  preview:
-    "Previewing the static Squidoc site is coming next. This command will wrap Astro preview.",
   doctor: "Inspecting the local Squidoc environment is coming next.",
 };
 
@@ -43,8 +40,18 @@ if (command === "add") {
 const message = messages[command];
 
 if (!message) {
+  if (command === "dev") {
+    await runCommand(() => devSite());
+    process.exit(0);
+  }
+
   if (command === "build") {
-    await runBuild();
+    await runCommand(() => buildSite());
+    process.exit(0);
+  }
+
+  if (command === "preview") {
+    await runCommand(() => previewSite());
     process.exit(0);
   }
 
@@ -59,9 +66,9 @@ if (!message) {
 
 console.log(message);
 
-async function runBuild(): Promise<void> {
+async function runCommand(command: () => Promise<void>): Promise<void> {
   try {
-    await buildSite();
+    await command();
   } catch (error) {
     console.error(error instanceof Error ? error.message : String(error));
     process.exit(1);
