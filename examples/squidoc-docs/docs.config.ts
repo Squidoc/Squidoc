@@ -6,7 +6,7 @@ export default defineConfig({
     url: "https://squidoc.dev",
     description: "Documentation for the Squidoc static docs platform.",
   },
-  plugins: ["@squidoc/plugin-seo"],
+  plugins: ["@squidoc/plugin-seo", "@squidoc/plugin-llms"],
   nav: [
     { title: "Introduction", path: "/" },
     { title: "Architecture", path: "/architecture" },

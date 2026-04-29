@@ -26,6 +26,9 @@ importers:
 
   examples/squidoc-docs:
     dependencies:
+      '@squidoc/plugin-llms':
+        specifier: workspace:*
+        version: link:../../packages/plugin-llms
       '@squidoc/plugin-seo':
         specifier: workspace:*
         version: link:../../packages/plugin-seo
