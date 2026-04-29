@@ -86,6 +86,17 @@ async function checkProject(): Promise<void> {
     if (pages.length === 0) {
       throw new Error(`No Markdown pages found in ${loaded.config.docsDir}.`);
     }
+
+    const routes = new Set(pages.map((page) => page.route));
+    const missingNavItems = loaded.config.nav.filter((item) => !routes.has(item.path));
+
+    if (missingNavItems.length > 0) {
+      throw new Error(
+        `Navigation references missing route${missingNavItems.length === 1 ? "" : "s"}: ${missingNavItems
+          .map((item) => item.path)
+          .join(", ")}`,
+      );
+    }
   } catch (error) {
     console.error(error instanceof Error ? error.message : String(error));
     process.exit(1);
