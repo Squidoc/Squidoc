@@ -13,7 +13,7 @@ import {
   loadTheme,
   runPlugins,
 } from "@squidoc/core";
-import { marked } from "marked";
+import { renderMarkdown } from "./markdown.js";
 
 const require = createRequire(import.meta.url);
 const packageRoot = dirname(dirname(fileURLToPath(import.meta.url)));
@@ -108,7 +108,7 @@ async function writePage(
   const target = join(internalRoot, "src", "pages", outputPath);
   await mkdir(dirname(target), { recursive: true });
 
-  const html = await marked.parse(page.content);
+  const html = await renderMarkdown(page.content);
   const navItems = pages.map((navPage) => ({
     title: navPage.title,
     route: navPage.route,
