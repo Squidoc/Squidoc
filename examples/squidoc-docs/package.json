@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@squidoc/plugin-llms": "workspace:*",
+    "@squidoc/plugin-search": "workspace:*",
     "@squidoc/plugin-seo": "workspace:*",
     "@squidoc/theme-basic": "workspace:*",
     "squidoc": "workspace:*"

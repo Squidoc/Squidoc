@@ -29,6 +29,9 @@ importers:
       '@squidoc/plugin-llms':
         specifier: workspace:*
         version: link:../../packages/plugin-llms
+      '@squidoc/plugin-search':
+        specifier: workspace:*
+        version: link:../../packages/plugin-search
       '@squidoc/plugin-seo':
         specifier: workspace:*
         version: link:../../packages/plugin-seo
