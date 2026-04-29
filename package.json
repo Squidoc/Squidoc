@@ -12,7 +12,8 @@
     "clean": "pnpm -r --filter './packages/**' clean",
     "format": "biome format --write .",
     "lint": "biome check .",
-    "test": "pnpm -r --filter './packages/**' test && pnpm check:docs && pnpm build:docs",
+    "test": "pnpm -r --filter './packages/**' test && pnpm check:docs && pnpm build:docs && pnpm test:generator",
+    "test:generator": "node scripts/smoke-create-squidoc.mjs",
     "version-packages": "changeset version",
     "publish-packages": "pnpm build && changeset publish",
     "changeset": "changeset"
