@@ -6,11 +6,13 @@
   "packageManager": "pnpm@10.30.2",
   "scripts": {
     "build": "pnpm -r --filter './packages/**' build",
+    "build:docs": "pnpm --filter @squidoc/docs build",
     "check": "pnpm -r --filter './packages/**' check",
+    "check:docs": "pnpm --filter @squidoc/docs check",
     "clean": "pnpm -r --filter './packages/**' clean",
     "format": "biome format --write .",
     "lint": "biome check .",
-    "test": "pnpm -r --filter './packages/**' test",
+    "test": "pnpm -r --filter './packages/**' test && pnpm check:docs && pnpm build:docs",
     "version-packages": "changeset version",
     "publish-packages": "pnpm build && changeset publish",
     "changeset": "changeset"

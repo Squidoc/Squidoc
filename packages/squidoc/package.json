@@ -21,7 +21,8 @@
   },
   "dependencies": {
     "@squidoc/core": "workspace:*",
-    "astro": "^5.13.0"
+    "astro": "^5.13.0",
+    "marked": "^15.0.4"
   },
   "devDependencies": {
     "@types/node": "^22.10.2",

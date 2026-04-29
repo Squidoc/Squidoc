@@ -1,0 +1,14 @@
+{
+  "name": "@squidoc/docs",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "squidoc build",
+    "check": "squidoc check"
+  },
+  "dependencies": {
+    "@squidoc/plugin-seo": "workspace:*",
+    "@squidoc/theme-basic": "workspace:*",
+    "squidoc": "workspace:*"
+  }
+}

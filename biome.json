@@ -7,7 +7,7 @@
     "lineWidth": 100
   },
   "files": {
-    "ignore": ["**/dist/**", "**/.tmp/**", "node_modules/**", "pnpm-lock.yaml"]
+    "ignore": ["**/dist/**", "**/.squidoc/**", "**/.tmp/**", "node_modules/**", "pnpm-lock.yaml"]
   },
   "linter": {
     "enabled": true,
