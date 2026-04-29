@@ -6,6 +6,7 @@ import type { ResolvedSquidocConfig } from "./schema.js";
 export type PluginApi = {
   addGeneratedFile: (file: GeneratedFile) => void;
   addHeadTags: (tags: HeadTag[]) => void;
+  addPageHeadTags: (factory: PageHeadTagFactory) => void;
   addThemeSlot: (slot: ThemeSlot) => void;
   config: ResolvedSquidocConfig;
   pages: DocPage[];
@@ -21,6 +22,8 @@ export type HeadTag = {
   attrs: Record<string, string>;
   content?: string;
 };
+
+export type PageHeadTagFactory = (page: DocPage) => HeadTag[];
 
 export type ThemeSlot = {
   name: string;
@@ -39,6 +42,7 @@ export function definePlugin(plugin: SquidocPlugin): SquidocPlugin {
 export type PluginContext = {
   generatedFiles: GeneratedFile[];
   headTags: HeadTag[];
+  pageHeadTagFactories: PageHeadTagFactory[];
   themeSlots: ThemeSlot[];
 };
 
@@ -50,6 +54,7 @@ export async function runPlugins(
   const context: PluginContext = {
     generatedFiles: [],
     headTags: [],
+    pageHeadTagFactories: [],
     themeSlots: [],
   };
   const api: PluginApi = {
@@ -58,6 +63,9 @@ export async function runPlugins(
     },
     addHeadTags(tags) {
       context.headTags.push(...tags);
+    },
+    addPageHeadTags(factory) {
+      context.pageHeadTagFactories.push(factory);
     },
     addThemeSlot(slot) {
       context.themeSlots.push(slot);

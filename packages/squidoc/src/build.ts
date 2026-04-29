@@ -6,7 +6,9 @@ import { fileURLToPath } from "node:url";
 import {
   type DocPage,
   type GeneratedFile,
+  type HeadTag,
   type LoadedConfig,
+  type PluginContext,
   type ResolvedSquidocConfig,
   type SquidocTheme,
   discoverDocs,
@@ -29,55 +31,56 @@ export type ServeOptions = {
   astroArgs?: string[];
 };
 
+type PreparedAstroProject = {
+  internalRoot: string;
+  plugins: PluginContext;
+};
+
 export async function buildSite(options: BuildOptions = {}): Promise<void> {
   const cwd = options.cwd ?? process.cwd();
-  const internalRoot = await prepareAstroProject(cwd);
-  await runAstro(internalRoot, "build");
-  await writeGeneratedFiles(join(cwd, "dist"), (await runConfiguredPlugins(cwd)).generatedFiles);
+  const prepared = await prepareAstroProject(cwd);
+  await runAstro(prepared.internalRoot, "build");
+  await writeGeneratedFiles(join(cwd, "dist"), prepared.plugins.generatedFiles);
 }
 
 export async function devSite(options: ServeOptions = {}): Promise<void> {
   const cwd = options.cwd ?? process.cwd();
-  const internalRoot = await prepareAstroProject(cwd);
-  const watcher = await watchDevInputs(cwd, internalRoot);
+  const prepared = await prepareAstroProject(cwd);
+  const watcher = await watchDevInputs(cwd, prepared.internalRoot);
 
   try {
-    await runAstro(internalRoot, "dev", options.astroArgs);
+    await runAstro(prepared.internalRoot, "dev", options.astroArgs);
   } finally {
     await watcher.close();
   }
 }
 
 export async function previewSite(options: ServeOptions = {}): Promise<void> {
-  const internalRoot = await prepareAstroProject(options.cwd ?? process.cwd());
-  await runAstro(internalRoot, "preview", options.astroArgs);
+  const prepared = await prepareAstroProject(options.cwd ?? process.cwd());
+  await runAstro(prepared.internalRoot, "preview", options.astroArgs);
 }
 
-async function prepareAstroProject(cwd: string): Promise<string> {
+async function prepareAstroProject(cwd: string): Promise<PreparedAstroProject> {
   const internalRoot = join(cwd, ".squidoc", "astro");
   await rm(internalRoot, { recursive: true, force: true });
-  await generateAstroProject(cwd, internalRoot);
+  const plugins = await generateAstroProject(cwd, internalRoot);
   await linkPackageDependencies(internalRoot);
 
-  return internalRoot;
+  return { internalRoot, plugins };
 }
 
-async function generateAstroProject(cwd: string, internalRoot: string): Promise<void> {
+async function generateAstroProject(cwd: string, internalRoot: string): Promise<PluginContext> {
   const loaded = await loadConfig({ cwd });
   const pages = await discoverDocs(loaded.config, cwd);
   const theme = await loadTheme(loaded.config, cwd);
+  const plugins = await runPlugins(loaded.config, pages, cwd);
 
   if (pages.length === 0) {
     throw new Error(`No Markdown pages found in ${loaded.config.docsDir}.`);
   }
 
-  await writeAstroProject(internalRoot, cwd, loaded, pages, theme);
-}
-
-async function runConfiguredPlugins(cwd: string) {
-  const loaded = await loadConfig({ cwd });
-  const pages = await discoverDocs(loaded.config, cwd);
-  return runPlugins(loaded.config, pages, cwd);
+  await writeAstroProject(internalRoot, cwd, loaded, pages, theme, plugins);
+  return plugins;
 }
 
 async function linkPackageDependencies(internalRoot: string): Promise<void> {
@@ -92,6 +95,7 @@ async function writeAstroProject(
   loaded: LoadedConfig,
   pages: DocPage[],
   theme: SquidocTheme,
+  plugins: PluginContext,
 ): Promise<void> {
   await rm(join(internalRoot, "src", "pages"), { recursive: true, force: true });
   await mkdir(join(internalRoot, "src", "pages"), { recursive: true });
@@ -107,7 +111,7 @@ async function writeAstroProject(
   );
 
   for (const page of pages) {
-    await writePage(internalRoot, loaded, pages, page, theme);
+    await writePage(internalRoot, loaded, pages, page, theme, plugins);
   }
 }
 
@@ -153,6 +157,7 @@ async function writePage(
   pages: DocPage[],
   page: DocPage,
   theme: SquidocTheme,
+  plugins: PluginContext,
 ): Promise<void> {
   const outputPath = page.route === "/" ? "index.astro" : `${page.route.slice(1)}/index.astro`;
   const target = join(internalRoot, "src", "pages", outputPath);
@@ -171,6 +176,10 @@ async function writePage(
     shell: theme.renderer?.classes?.shell ?? "shell",
     sidebar: theme.renderer?.classes?.sidebar ?? "sidebar",
   };
+  const headHtml = renderHeadTags([
+    ...plugins.headTags,
+    ...plugins.pageHeadTagFactories.flatMap((factory) => factory(page)),
+  ]);
 
   await writeFile(
     target,
@@ -180,6 +189,7 @@ const page = ${JSON.stringify({ title: page.title, description: page.description
 const navItems = ${JSON.stringify(navItems)};
 const content = ${JSON.stringify(html)};
 const classes = ${JSON.stringify(classes)};
+const headHtml = ${JSON.stringify(headHtml)};
 ---
 
 <html lang="en">
@@ -188,6 +198,7 @@ const classes = ${JSON.stringify(classes)};
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{page.title} | {site.name}</title>
     {page.description && <meta name="description" content={page.description} />}
+    <Fragment set:html={headHtml} />
     <style is:global>${theme.renderer?.globalCss ?? ""}</style>
   </head>
   <body>
@@ -208,6 +219,30 @@ const classes = ${JSON.stringify(classes)};
 </html>
 `,
   );
+}
+
+function renderHeadTags(tags: HeadTag[]): string {
+  return tags.map(renderHeadTag).join("\n");
+}
+
+function renderHeadTag(tag: HeadTag): string {
+  const attrs = Object.entries(tag.attrs)
+    .map(([name, value]) => `${name}="${escapeHtml(value)}"`)
+    .join(" ");
+
+  if (tag.content) {
+    return `<${tag.tag} ${attrs}>${escapeHtml(tag.content)}</${tag.tag}>`;
+  }
+
+  return `<${tag.tag} ${attrs}>`;
+}
+
+function escapeHtml(value: string): string {
+  return value
+    .replaceAll("&", "&amp;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;");
 }
 
 async function runAstro(
