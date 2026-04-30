@@ -9,7 +9,7 @@ export default defineConfig({
   plugins: [
     "@squidoc/plugin-seo",
     "@squidoc/plugin-llms",
-    "@squidoc/plugin-syntax-highlight",
+    "@squidoc/plugin-codeblocks",
     "@squidoc/plugin-article-tree",
     "@squidoc/plugin-search",
     "@squidoc/plugin-mdx",

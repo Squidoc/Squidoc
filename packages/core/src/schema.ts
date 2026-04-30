@@ -44,11 +44,7 @@ export const squidocConfigSchema = z.object({
   theme: themeConfigSchema.default("@squidoc/theme-basic"),
   plugins: z
     .array(z.union([z.string(), z.record(z.unknown())]))
-    .default([
-      "@squidoc/plugin-seo",
-      "@squidoc/plugin-syntax-highlight",
-      "@squidoc/plugin-article-tree",
-    ]),
+    .default(["@squidoc/plugin-seo", "@squidoc/plugin-codeblocks", "@squidoc/plugin-article-tree"]),
   nav: z.array(navItemSchema).default([]),
 });
 

@@ -32,6 +32,9 @@ importers:
       '@squidoc/plugin-article-tree':
         specifier: workspace:*
         version: link:../../packages/plugin-article-tree
+      '@squidoc/plugin-codeblocks':
+        specifier: workspace:*
+        version: link:../../packages/plugin-codeblocks
       '@squidoc/plugin-llms':
         specifier: workspace:*
         version: link:../../packages/plugin-llms
@@ -44,9 +47,6 @@ importers:
       '@squidoc/plugin-seo':
         specifier: workspace:*
         version: link:../../packages/plugin-seo
-      '@squidoc/plugin-syntax-highlight':
-        specifier: workspace:*
-        version: link:../../packages/plugin-syntax-highlight
       '@squidoc/theme-basic':
         specifier: workspace:*
         version: link:../../packages/theme-basic
@@ -90,6 +90,22 @@ importers:
       '@squidoc/core':
         specifier: workspace:*
         version: link:../core
+    devDependencies:
+      typescript:
+        specifier: ^5.7.2
+        version: 5.9.3
+      vitest:
+        specifier: ^2.1.8
+        version: 2.1.9(@types/node@22.19.17)
+
+  packages/plugin-codeblocks:
+    dependencies:
+      '@squidoc/core':
+        specifier: workspace:*
+        version: link:../core
+      shiki:
+        specifier: ^3.23.0
+        version: 3.23.0
     devDependencies:
       typescript:
         specifier: ^5.7.2
@@ -145,22 +161,6 @@ importers:
       '@squidoc/core':
         specifier: workspace:*
         version: link:../core
-    devDependencies:
-      typescript:
-        specifier: ^5.7.2
-        version: 5.9.3
-      vitest:
-        specifier: ^2.1.8
-        version: 2.1.9(@types/node@22.19.17)
-
-  packages/plugin-syntax-highlight:
-    dependencies:
-      '@squidoc/core':
-        specifier: workspace:*
-        version: link:../core
-      shiki:
-        specifier: ^3.23.0
-        version: 3.23.0
     devDependencies:
       typescript:
         specifier: ^5.7.2

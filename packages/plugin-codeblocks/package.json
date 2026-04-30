@@ -1,7 +1,7 @@
 {
-  "name": "@squidoc/plugin-syntax-highlight",
+  "name": "@squidoc/plugin-codeblocks",
   "version": "0.1.0",
-  "description": "Syntax highlighting plugin for Squidoc code blocks.",
+  "description": "Code block highlighting and copy controls for Squidoc.",
   "license": "MIT",
   "type": "module",
   "homepage": "https://github.com/Squidoc/Squidoc#readme",
@@ -11,9 +11,9 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Squidoc/Squidoc.git",
-    "directory": "packages/plugin-syntax-highlight"
+    "directory": "packages/plugin-codeblocks"
   },
-  "keywords": ["docs", "documentation", "syntax-highlighting", "squidoc", "plugin"],
+  "keywords": ["codeblocks", "docs", "documentation", "syntax-highlighting", "squidoc", "plugin"],
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",

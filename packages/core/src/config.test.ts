@@ -30,7 +30,7 @@ describe("loadConfig", () => {
       theme: "@squidoc/theme-basic",
       plugins: [
         "@squidoc/plugin-seo",
-        "@squidoc/plugin-syntax-highlight",
+        "@squidoc/plugin-codeblocks",
         "@squidoc/plugin-article-tree",
       ],
       nav: [],

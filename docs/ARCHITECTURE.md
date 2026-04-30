@@ -37,7 +37,7 @@ packages/
   core/
   theme-basic/
   plugin-seo/
-  plugin-syntax-highlight/
+  plugin-codeblocks/
   plugin-article-tree/
   plugin-mdx/
   plugin-search/
@@ -98,7 +98,7 @@ export default defineConfig({
   },
   plugins: [
     '@squidoc/plugin-seo',
-    '@squidoc/plugin-syntax-highlight',
+    '@squidoc/plugin-codeblocks',
     '@squidoc/plugin-article-tree',
     '@squidoc/plugin-search'
   ],
@@ -197,7 +197,7 @@ Phase 1 now covers the original MVP plan plus the additions needed for dogfoodin
 - Config loader with `docs.config.ts`.
 - Markdown docs discovery and Astro-backed static rendering.
 - Basic responsive theme with navbar, configurable footer, mobile sidebar, nested navigation, search placement, and article tree placement.
-- Default SEO, syntax highlighting, and article tree plugins.
+- Default SEO, code blocks, and article tree plugins.
 - Optional MDX, search, and `llms.txt` plugins.
 - Project generator.
 - CI, Changesets release automation, unit tests, dogfood smoke tests, browser smoke tests, and generator smoke tests.

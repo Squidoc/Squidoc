@@ -12,7 +12,7 @@ Phase 1 is the static-first foundation for Squidoc. It should be usable for dogf
 - Config validation through `docs.config.ts`.
 - Nested sidebar navigation with folder pages.
 - Default responsive theme with navbar, footer options, mobile sidebar, search slot, and article tree slot.
-- Default plugins for SEO, syntax highlighting, and article tree.
+- Default plugins for SEO, code blocks, and article tree.
 - Optional plugins for search, MDX, and `llms.txt` / `llms-full.txt`.
 - Dogfood docs site in `examples/squidoc-docs`.
 - CI, Changesets release workflow, package metadata, and npm dry-run coverage.

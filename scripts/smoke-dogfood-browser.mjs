@@ -56,6 +56,10 @@ try {
       "href",
       "https://squidoc.dev/configuration",
     );
+    await assertCount(page.locator("[data-squidoc-codeblock]"), 2);
+    await assertCount(page.locator("[data-squidoc-copy-code]"), 2);
+    await page.locator("[data-squidoc-copy-code]").first().click();
+    await expectText(page.locator("[data-squidoc-copy-code]").first(), "Copied");
 
     await page.locator("#squidoc-search-input").fill("generated output");
     await expectText(
@@ -129,6 +133,11 @@ async function expectText(locator, expected) {
 async function expectAttribute(locator, name, expected) {
   const actual = await locator.getAttribute(name);
   assert(actual === expected, `Expected ${name}="${expected}", received "${actual}".`);
+}
+
+async function assertCount(locator, expected) {
+  const actual = await locator.count();
+  assert(actual === expected, `Expected ${expected} matches, received ${actual}.`);
 }
 
 async function expectFooterPinnedToViewport(page) {

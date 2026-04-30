@@ -69,7 +69,7 @@ describe("addExtension", () => {
     expect(contents).toContain('"@squidoc/plugin-search"');
     expect(loaded.config.plugins).toEqual([
       "@squidoc/plugin-seo",
-      "@squidoc/plugin-syntax-highlight",
+      "@squidoc/plugin-codeblocks",
       "@squidoc/plugin-article-tree",
       "@squidoc/plugin-search",
     ]);

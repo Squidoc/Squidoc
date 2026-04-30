@@ -32,7 +32,7 @@ export default defineConfig({
   },
   plugins: [
     "@squidoc/plugin-seo",
-    "@squidoc/plugin-syntax-highlight",
+    "@squidoc/plugin-codeblocks",
     "@squidoc/plugin-article-tree",
   ],
   nav: [

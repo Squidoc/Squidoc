@@ -2,8 +2,8 @@ import type { HtmlTransformer, PluginApi, ResolvedSquidocConfig } from "@squidoc
 import { describe, expect, test } from "vitest";
 import plugin from "./index.js";
 
-describe("@squidoc/plugin-syntax-highlight", () => {
-  test("highlights fenced code blocks", async () => {
+describe("@squidoc/plugin-codeblocks", () => {
+  test("highlights fenced code blocks and adds copy controls", async () => {
     const transformers: HtmlTransformer[] = [];
     const api: PluginApi = {
       addDocExtension() {},
@@ -18,7 +18,7 @@ describe("@squidoc/plugin-syntax-highlight", () => {
         site: { name: "Test Docs" },
         docsDir: "docs",
         theme: "@squidoc/theme-basic",
-        plugins: ["@squidoc/plugin-syntax-highlight"],
+        plugins: ["@squidoc/plugin-codeblocks"],
         nav: [],
       } satisfies ResolvedSquidocConfig,
       pages: [],
@@ -37,6 +37,9 @@ describe("@squidoc/plugin-syntax-highlight", () => {
     );
 
     expect(html).toContain("shiki");
+    expect(html).toContain("data-squidoc-codeblock");
+    expect(html).toContain("data-squidoc-copy-code");
+    expect(html).toContain("Copy");
     expect(html).toContain("squidoc");
     expect(html).toContain("style=");
   });

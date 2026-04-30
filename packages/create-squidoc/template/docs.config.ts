@@ -16,10 +16,6 @@ export default defineConfig({
       },
     },
   },
-  plugins: [
-    "@squidoc/plugin-seo",
-    "@squidoc/plugin-syntax-highlight",
-    "@squidoc/plugin-article-tree",
-  ],
+  plugins: ["@squidoc/plugin-seo", "@squidoc/plugin-codeblocks", "@squidoc/plugin-article-tree"],
   nav: [{ title: "Getting Started", path: "/getting-started" }],
 });

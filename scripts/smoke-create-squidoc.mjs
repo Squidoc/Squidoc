@@ -44,8 +44,8 @@ async function linkWorkspacePackages(target) {
     "dir",
   );
   await symlink(
-    join(repoRoot, "packages/plugin-syntax-highlight"),
-    join(target, "node_modules", "@squidoc", "plugin-syntax-highlight"),
+    join(repoRoot, "packages/plugin-codeblocks"),
+    join(target, "node_modules", "@squidoc", "plugin-codeblocks"),
     "dir",
   );
   await symlink(
