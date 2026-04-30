@@ -28,7 +28,11 @@ describe("loadConfig", () => {
       },
       docsDir: "docs",
       theme: "@squidoc/theme-basic",
-      plugins: ["@squidoc/plugin-seo"],
+      plugins: [
+        "@squidoc/plugin-seo",
+        "@squidoc/plugin-syntax-highlight",
+        "@squidoc/plugin-article-tree",
+      ],
       nav: [],
     });
   });

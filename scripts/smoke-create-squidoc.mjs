@@ -43,6 +43,16 @@ async function linkWorkspacePackages(target) {
     join(target, "node_modules", "@squidoc", "plugin-seo"),
     "dir",
   );
+  await symlink(
+    join(repoRoot, "packages/plugin-syntax-highlight"),
+    join(target, "node_modules", "@squidoc", "plugin-syntax-highlight"),
+    "dir",
+  );
+  await symlink(
+    join(repoRoot, "packages/plugin-article-tree"),
+    join(target, "node_modules", "@squidoc", "plugin-article-tree"),
+    "dir",
+  );
 }
 
 function smokeEnv(target) {

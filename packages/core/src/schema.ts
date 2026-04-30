@@ -42,7 +42,13 @@ export const squidocConfigSchema = z.object({
   site: siteConfigSchema,
   docsDir: z.string().default("docs"),
   theme: themeConfigSchema.default("@squidoc/theme-basic"),
-  plugins: z.array(z.union([z.string(), z.record(z.unknown())])).default(["@squidoc/plugin-seo"]),
+  plugins: z
+    .array(z.union([z.string(), z.record(z.unknown())]))
+    .default([
+      "@squidoc/plugin-seo",
+      "@squidoc/plugin-syntax-highlight",
+      "@squidoc/plugin-article-tree",
+    ]),
   nav: z.array(navItemSchema).default([]),
 });
 

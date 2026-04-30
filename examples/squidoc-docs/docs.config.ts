@@ -14,6 +14,19 @@ export default defineConfig({
     "@squidoc/plugin-search",
     "@squidoc/plugin-mdx",
   ],
+  theme: {
+    name: "@squidoc/theme-basic",
+    options: {
+      headerLinks: [{ title: "GitHub", href: "https://github.com/Squidoc/Squidoc" }],
+      footer: {
+        text: "Built with Squidoc.",
+        links: [
+          { title: "GitHub", href: "https://github.com/Squidoc/Squidoc" },
+          { title: "Configuration", path: "/configuration" },
+        ],
+      },
+    },
+  },
   nav: [
     { title: "Introduction", path: "/" },
     { title: "Getting Started", path: "/getting-started" },

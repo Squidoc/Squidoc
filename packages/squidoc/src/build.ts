@@ -169,6 +169,13 @@ async function writePage(
 
   const html = await transformHtml(await renderMarkdown(page.content), page, plugins);
   const navHtml = renderNavHtml(buildNavTree(loaded.config.nav, pages), page.route);
+  const themeOptions = getThemeOptions(loaded.config);
+  const headerLinksHtml = renderLinkListHtml(
+    readLinks(themeOptions.headerLinks),
+    "sq-topbar__link",
+  );
+  const footer = readFooter(themeOptions.footer);
+  const footerLinksHtml = renderLinkListHtml(footer.links, "sq-footer__link");
   const classes = {
     brand: theme.renderer?.classes?.brand ?? "brand",
     content: theme.renderer?.classes?.content ?? "content",
@@ -193,6 +200,9 @@ const page = ${JSON.stringify({ title: page.title, description: page.description
 const content = ${JSON.stringify(html)};
 const classes = ${JSON.stringify(classes)};
 const headHtml = ${JSON.stringify(headHtml)};
+const headerLinksHtml = ${JSON.stringify(headerLinksHtml)};
+const footer = ${JSON.stringify({ text: footer.text })};
+const footerLinksHtml = ${JSON.stringify(footerLinksHtml)};
 const navHtml = ${JSON.stringify(navHtml)};
 const slots = ${JSON.stringify(slots)};
 ---
@@ -207,6 +217,14 @@ const slots = ${JSON.stringify(slots)};
     <style is:global>${theme.renderer?.globalCss ?? ""}</style>
   </head>
   <body>
+    <header class="sq-topbar">
+      <a class="sq-topbar__brand" href="/">{site.name}</a>
+      <nav class="sq-topbar__nav" aria-label="Site">
+        <Fragment set:html={headerLinksHtml} />
+      </nav>
+      <label class="sq-sidebar-toggle" for="squidoc-sidebar-toggle">Menu</label>
+    </header>
+    <input class="sq-sidebar-control" id="squidoc-sidebar-toggle" type="checkbox" aria-label="Toggle documentation navigation" />
     <div class={classes.shell}>
       <aside class={classes.sidebar}>
         <h1 class={classes.brand}>{site.name}</h1>
@@ -222,6 +240,12 @@ const slots = ${JSON.stringify(slots)};
         <Fragment set:html={slots.articleTree} />
       </aside>
     </div>
+    <footer class="sq-footer">
+      {footer.text && <p class="sq-footer__text">{footer.text}</p>}
+      <nav class="sq-footer__nav" aria-label="Footer">
+        <Fragment set:html={footerLinksHtml} />
+      </nav>
+    </footer>
   </body>
 </html>
 `,
@@ -233,6 +257,59 @@ type RenderNavItem = {
   path?: string;
   items?: RenderNavItem[];
 };
+
+type RenderLink = {
+  title: string;
+  href: string;
+};
+
+type RenderFooter = {
+  text?: string;
+  links: RenderLink[];
+};
+
+type ThemeOptions = Record<string, unknown>;
+
+function getThemeOptions(config: ResolvedSquidocConfig): ThemeOptions {
+  return typeof config.theme === "string" ? {} : config.theme.options;
+}
+
+function readFooter(value: unknown): RenderFooter {
+  if (!isRecord(value)) {
+    return { links: [] };
+  }
+
+  return {
+    text: readString(value.text),
+    links: readLinks(value.links),
+  };
+}
+
+function readLinks(value: unknown): RenderLink[] {
+  if (!Array.isArray(value)) {
+    return [];
+  }
+
+  return value.flatMap((item) => {
+    if (!isRecord(item)) {
+      return [];
+    }
+
+    const title = readString(item.title);
+    const href = readString(item.href) ?? readString(item.path);
+
+    return title && href ? [{ title, href }] : [];
+  });
+}
+
+function renderLinkListHtml(links: RenderLink[], className: string): string {
+  return links
+    .map(
+      (link) =>
+        `<a class="${className}" href="${escapeHtml(link.href)}">${escapeHtml(link.title)}</a>`,
+    )
+    .join("");
+}
 
 function buildNavTree(configNav: NavItem[], pages: DocPage[]): RenderNavItem[] {
   if (configNav.length > 0) {
@@ -316,6 +393,14 @@ function escapeHtml(value: string): string {
     .replaceAll('"', "&quot;")
     .replaceAll("<", "&lt;")
     .replaceAll(">", "&gt;");
+}
+
+function readString(value: unknown): string | undefined {
+  return typeof value === "string" && value.trim().length > 0 ? value : undefined;
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null && !Array.isArray(value);
 }
 
 async function runAstro(

@@ -9,7 +9,9 @@
     "check": "squidoc check"
   },
   "dependencies": {
+    "@squidoc/plugin-article-tree": "^0.1.0",
     "@squidoc/plugin-seo": "^0.1.0",
+    "@squidoc/plugin-syntax-highlight": "^0.1.0",
     "@squidoc/theme-basic": "^0.1.0",
     "squidoc": "^0.1.0"
   },

@@ -20,6 +20,14 @@ export default defineConfig({
     name: "@squidoc/theme-basic",
     options: {
       primaryColor: "#2563eb",
+      headerLinks: [{ title: "GitHub", href: "https://github.com/Squidoc/Squidoc" }],
+      footer: {
+        text: "Built with Squidoc.",
+        links: [
+          { title: "GitHub", href: "https://github.com/Squidoc/Squidoc" },
+          { title: "Configuration", path: "/configuration" },
+        ],
+      },
     },
   },
   plugins: [
@@ -51,3 +59,5 @@ npx squidoc add theme @squidoc/theme-basic
 ```
 
 Plugins can add generated files, metadata, document extensions, and theme slots. Themes control the page structure, classes, and styling that turn discovered docs into a site.
+
+The basic theme reads `theme.options.headerLinks` for the top navigation and `theme.options.footer` for the footer. Footer links use the same `{ title, href }` or `{ title, path }` shape as header links.
