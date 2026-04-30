@@ -10,6 +10,7 @@
       "@squidoc/core",
       "@squidoc/theme-basic",
       "@squidoc/plugin-seo",
+      "@squidoc/plugin-codeblocks",
       "@squidoc/plugin-mdx",
       "@squidoc/plugin-search",
       "@squidoc/plugin-llms"

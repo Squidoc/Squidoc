@@ -3,10 +3,10 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "squidoc dev",
-    "build": "squidoc build",
-    "preview": "squidoc preview",
-    "check": "squidoc check"
+    "dev": "node ../../packages/squidoc/dist/cli.js dev",
+    "build": "node ../../packages/squidoc/dist/cli.js build",
+    "preview": "node ../../packages/squidoc/dist/cli.js preview",
+    "check": "node ../../packages/squidoc/dist/cli.js check"
   },
   "dependencies": {
     "@squidoc/plugin-article-tree": "workspace:*",
