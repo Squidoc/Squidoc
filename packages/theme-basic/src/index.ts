@@ -114,7 +114,8 @@ a {
 }
 
 .sq-nav__list .sq-nav__list {
-  margin: 8px 0 2px;
+  margin: 8px 0 2px 14px;
+  padding-left: 12px;
 }
 
 .sq-nav__item {
@@ -174,8 +175,8 @@ a {
 }
 
 .sq-nav summary a[aria-current="page"] {
-  color: var(--squidoc-muted);
-  font-weight: 400;
+  color: var(--squidoc-text);
+  font-weight: 700;
 }
 
 .sq-search {
