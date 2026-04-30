@@ -8,6 +8,7 @@ import {
   type GeneratedFile,
   type HeadTag,
   type LoadedConfig,
+  type NavItem,
   type PluginContext,
   type ResolvedSquidocConfig,
   type SquidocTheme,
@@ -167,11 +168,7 @@ async function writePage(
   await mkdir(dirname(target), { recursive: true });
 
   const html = await renderMarkdown(page.content);
-  const navItems = pages.map((navPage) => ({
-    title: navPage.title,
-    route: navPage.route,
-    current: navPage.route === page.route,
-  }));
+  const navHtml = renderNavHtml(buildNavTree(loaded.config.nav, pages), page.route);
   const classes = {
     brand: theme.renderer?.classes?.brand ?? "brand",
     content: theme.renderer?.classes?.content ?? "content",
@@ -195,10 +192,10 @@ async function writePage(
     `---
 const site = ${JSON.stringify(loaded.config.site)};
 const page = ${JSON.stringify({ title: page.title, description: page.description, route: page.route })};
-const navItems = ${JSON.stringify(navItems)};
 const content = ${JSON.stringify(html)};
 const classes = ${JSON.stringify(classes)};
 const headHtml = ${JSON.stringify(headHtml)};
+const navHtml = ${JSON.stringify(navHtml)};
 const slots = ${JSON.stringify(slots)};
 ---
 
@@ -217,9 +214,7 @@ const slots = ${JSON.stringify(slots)};
         <h1 class={classes.brand}>{site.name}</h1>
         <Fragment set:html={slots.search} />
         <nav class={classes.nav} aria-label="Documentation">
-          {navItems.map((item) => (
-            <a href={item.route} aria-current={item.current ? "page" : undefined}>{item.title}</a>
-          ))}
+          <Fragment set:html={navHtml} />
         </nav>
       </aside>
       <main class={classes.content}>
@@ -229,6 +224,55 @@ const slots = ${JSON.stringify(slots)};
   </body>
 </html>
 `,
+  );
+}
+
+type RenderNavItem = {
+  title: string;
+  path?: string;
+  items?: RenderNavItem[];
+};
+
+function buildNavTree(configNav: NavItem[], pages: DocPage[]): RenderNavItem[] {
+  if (configNav.length > 0) {
+    return configNav;
+  }
+
+  return pages.map((page) => ({
+    title: page.title,
+    path: page.route,
+  }));
+}
+
+function renderNavHtml(items: RenderNavItem[], currentRoute: string): string {
+  return `<ul class="sq-nav__list">${items.map((item) => renderNavItem(item, currentRoute)).join("")}</ul>`;
+}
+
+function renderNavItem(item: RenderNavItem, currentRoute: string): string {
+  const children = item.items ?? [];
+  const isCurrent = item.path === currentRoute;
+  const isExpanded =
+    isCurrent || children.some((child) => navItemContainsRoute(child, currentRoute));
+  const currentAttribute = isCurrent ? ' aria-current="page"' : "";
+  const link = item.path
+    ? `<a href="${escapeHtml(item.path)}"${currentAttribute}>${escapeHtml(item.title)}</a>`
+    : `<span>${escapeHtml(item.title)}</span>`;
+
+  if (children.length === 0) {
+    return `<li class="sq-nav__item">${link}</li>`;
+  }
+
+  return `<li class="sq-nav__item sq-nav__item--group">
+  <details${isExpanded ? " open" : ""}>
+    <summary>${link}</summary>
+    ${renderNavHtml(children, currentRoute)}
+  </details>
+</li>`;
+}
+
+function navItemContainsRoute(item: RenderNavItem, route: string): boolean {
+  return (
+    item.path === route || (item.items ?? []).some((child) => navItemContainsRoute(child, route))
   );
 }
 

@@ -1,4 +1,4 @@
-import type { DocPage, ResolvedSquidocConfig } from "@squidoc/core";
+import type { DocPage, NavItem, ResolvedSquidocConfig } from "@squidoc/core";
 
 const MARKDOWN_LINK_PATTERN = /\[[^\]]+\]\(([^)]+)\)/g;
 
@@ -22,9 +22,13 @@ export function validateProject(config: ResolvedSquidocConfig, pages: DocPage[])
 function validateNavRoutes(config: ResolvedSquidocConfig, pages: DocPage[]): CheckIssue[] {
   const routes = new Set(pages.map((page) => page.route));
 
-  return config.nav
-    .filter((item) => !routes.has(item.path))
+  return flattenNavItems(config.nav)
+    .filter((item) => item.path && !routes.has(item.path))
     .map((item) => ({ message: `Navigation references missing route: ${item.path}` }));
+}
+
+function flattenNavItems(items: NavItem[]): NavItem[] {
+  return items.flatMap((item) => [item, ...flattenNavItems(item.items ?? [])]);
 }
 
 function validateMarkdownLinks(pages: DocPage[]): CheckIssue[] {

@@ -6,10 +6,29 @@ export const siteConfigSchema = z.object({
   description: z.string().optional(),
 });
 
-export const navItemSchema = z.object({
-  title: z.string().min(1),
-  path: z.string().min(1),
-});
+export type NavItemInput = {
+  title: string;
+  path?: string;
+  items?: NavItemInput[];
+};
+
+export type NavItem = {
+  title: string;
+  path?: string;
+  items?: NavItem[];
+};
+
+export const navItemSchema: z.ZodType<NavItem, z.ZodTypeDef, NavItemInput> = z.lazy(() =>
+  z
+    .object({
+      title: z.string().min(1),
+      path: z.string().min(1).optional(),
+      items: z.array(navItemSchema).optional(),
+    })
+    .refine((item) => item.path || (item.items && item.items.length > 0), {
+      message: "Navigation items must define a path or child items.",
+    }),
+);
 
 export const themeConfigSchema = z.union([
   z.string().min(1),

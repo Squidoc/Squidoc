@@ -37,8 +37,34 @@ a {
 }
 
 .sq-nav {
+  font-size: 14px;
+}
+
+.sq-nav__list {
   display: grid;
-  gap: 10px;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.sq-nav__list .sq-nav__list {
+  margin: 8px 0 2px 14px;
+  padding-left: 12px;
+  border-left: 1px solid var(--squidoc-border);
+}
+
+.sq-nav__item {
+  min-width: 0;
+}
+
+.sq-nav a,
+.sq-nav span {
+  display: inline-flex;
+  min-width: 0;
+  color: var(--squidoc-muted);
+  line-height: 1.45;
+  overflow-wrap: anywhere;
 }
 
 .sq-nav a {
@@ -49,6 +75,28 @@ a {
 .sq-nav a[aria-current="page"] {
   color: var(--squidoc-text);
   font-weight: 700;
+}
+
+.sq-nav details {
+  display: grid;
+}
+
+.sq-nav summary {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--squidoc-muted);
+  cursor: pointer;
+  list-style-position: outside;
+}
+
+.sq-nav summary::marker {
+  color: var(--squidoc-muted);
+  font-size: 11px;
+}
+
+.sq-nav summary a {
+  color: inherit;
 }
 
 .sq-search {
