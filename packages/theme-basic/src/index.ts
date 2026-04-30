@@ -11,9 +11,12 @@ export const globalCss = `:root {
 }
 
 body {
+  min-height: 100vh;
   margin: 0;
   color: var(--squidoc-text);
   background: #ffffff;
+  display: flex;
+  flex-direction: column;
 }
 
 a {
@@ -21,9 +24,10 @@ a {
 }
 
 .sq-shell {
-  min-height: 100vh;
+  flex: 1;
   display: grid;
   grid-template-columns: minmax(220px, 280px) minmax(0, 1fr) minmax(180px, 240px);
+  min-height: 0;
 }
 
 .sq-topbar {
@@ -41,6 +45,7 @@ a {
 }
 
 .sq-topbar__brand {
+  flex: 0 0 auto;
   color: var(--squidoc-text);
   font-weight: 800;
   text-decoration: none;
@@ -48,7 +53,7 @@ a {
 
 .sq-topbar__nav {
   display: flex;
-  flex: 1;
+  flex: 0 0 auto;
   justify-content: flex-end;
   gap: 16px;
 }
@@ -87,7 +92,7 @@ a {
   position: sticky;
   top: 60px;
   align-self: start;
-  max-height: calc(100vh - 60px);
+  height: calc(100vh - 60px);
   overflow: auto;
   border-right: 1px solid var(--squidoc-border);
   padding: 24px;
@@ -163,15 +168,18 @@ a {
 
 .sq-search {
   position: relative;
-  margin: 0 0 22px;
+  flex: 1 1 320px;
+  max-width: 440px;
+  margin: 0 auto;
 }
 
 .sq-search__label {
-  display: block;
-  margin: 0 0 8px;
-  color: var(--squidoc-muted);
-  font-size: 13px;
-  font-weight: 700;
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
 }
 
 .sq-search__input {
@@ -338,12 +346,20 @@ a {
 
 @media (max-width: 760px) {
   .sq-topbar {
+    flex-wrap: wrap;
     min-height: 56px;
-    padding: 0 16px;
+    gap: 10px;
+    padding: 10px 16px;
   }
 
   .sq-topbar__nav {
     display: none;
+  }
+
+  .sq-search {
+    order: 3;
+    flex-basis: 100%;
+    max-width: none;
   }
 
   .sq-sidebar-toggle {
@@ -358,7 +374,8 @@ a {
   .sq-sidebar {
     display: none;
     position: static;
-    max-height: none;
+    height: auto;
+    max-height: calc(100vh - 120px);
     border-right: 0;
     border-bottom: 1px solid var(--squidoc-border);
     padding: 18px;

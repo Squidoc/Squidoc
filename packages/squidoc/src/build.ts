@@ -219,6 +219,7 @@ const slots = ${JSON.stringify(slots)};
   <body>
     <header class="sq-topbar">
       <a class="sq-topbar__brand" href="/">{site.name}</a>
+      <Fragment set:html={slots.search} />
       <nav class="sq-topbar__nav" aria-label="Site">
         <Fragment set:html={headerLinksHtml} />
       </nav>
@@ -228,7 +229,6 @@ const slots = ${JSON.stringify(slots)};
     <div class={classes.shell}>
       <aside class={classes.sidebar}>
         <h1 class={classes.brand}>{site.name}</h1>
-        <Fragment set:html={slots.search} />
         <nav class={classes.nav} aria-label="Documentation">
           <Fragment set:html={navHtml} />
         </nav>

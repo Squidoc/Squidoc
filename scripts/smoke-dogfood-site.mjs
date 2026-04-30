@@ -79,6 +79,11 @@ assertIncludes(pluginAuthoring, "sq-topbar", "plugin-authoring/index.html");
 assertIncludes(pluginAuthoring, "sq-sidebar-toggle", "plugin-authoring/index.html");
 assertIncludes(pluginAuthoring, "sq-footer", "plugin-authoring/index.html");
 assertIncludes(pluginAuthoring, "Built with Squidoc.", "plugin-authoring/index.html");
+assert(
+  pluginAuthoring.indexOf('class="sq-search" data-squidoc-search') <
+    pluginAuthoring.indexOf('class="sq-sidebar"'),
+  "plugin-authoring/index.html should render search before the sidebar",
+);
 
 const searchIndex = JSON.parse(await readDistFile("search-index.json"));
 assert(
