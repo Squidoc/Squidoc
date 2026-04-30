@@ -114,9 +114,7 @@ a {
 }
 
 .sq-nav__list .sq-nav__list {
-  margin: 8px 0 2px 14px;
-  padding-left: 12px;
-  border-left: 1px solid var(--squidoc-border);
+  margin: 8px 0 2px;
 }
 
 .sq-nav__item {
@@ -151,12 +149,8 @@ a {
   align-items: center;
   justify-content: space-between;
   gap: 8px;
-  border-radius: 8px;
-  padding: 6px 8px;
-  color: var(--squidoc-text);
-  background: #f6f8fb;
+  color: var(--squidoc-muted);
   cursor: pointer;
-  font-weight: 700;
   list-style: none;
 }
 
@@ -177,7 +171,11 @@ a {
 
 .sq-nav summary a {
   color: inherit;
-  font-weight: inherit;
+}
+
+.sq-nav summary a[aria-current="page"] {
+  color: var(--squidoc-muted);
+  font-weight: 400;
 }
 
 .sq-search {
