@@ -2,7 +2,18 @@
   "name": "squidoc",
   "version": "0.1.0",
   "description": "CLI for the Squidoc documentation platform.",
+  "license": "MIT",
   "type": "module",
+  "homepage": "https://github.com/Squidoc/Squidoc#readme",
+  "bugs": {
+    "url": "https://github.com/Squidoc/Squidoc/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Squidoc/Squidoc.git",
+    "directory": "packages/squidoc"
+  },
+  "keywords": ["docs", "documentation", "cli", "squidoc", "static-site"],
   "bin": {
     "squidoc": "./dist/cli.js"
   },
@@ -13,6 +24,9 @@
     }
   },
   "files": ["dist"],
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "check": "tsc -p tsconfig.json --noEmit",

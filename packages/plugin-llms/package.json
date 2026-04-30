@@ -2,7 +2,18 @@
   "name": "@squidoc/plugin-llms",
   "version": "0.1.0",
   "description": "llms.txt generation for Squidoc.",
+  "license": "MIT",
   "type": "module",
+  "homepage": "https://github.com/Squidoc/Squidoc#readme",
+  "bugs": {
+    "url": "https://github.com/Squidoc/Squidoc/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Squidoc/Squidoc.git",
+    "directory": "packages/plugin-llms"
+  },
+  "keywords": ["docs", "documentation", "llms.txt", "squidoc", "plugin"],
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
@@ -10,6 +21,9 @@
     }
   },
   "files": ["dist"],
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "check": "tsc -p tsconfig.json --noEmit",
