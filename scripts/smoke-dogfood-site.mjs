@@ -73,6 +73,8 @@ for (const page of pages) {
 const pluginAuthoring = await readDistFile("plugin-authoring/index.html");
 assertIncludes(pluginAuthoring, 'class="shiki github-light"', "plugin-authoring/index.html");
 assertIncludes(pluginAuthoring, "<details open>", "plugin-authoring/index.html");
+assertIncludes(pluginAuthoring, "data-squidoc-article-tree", "plugin-authoring/index.html");
+assertIncludes(pluginAuthoring, "IntersectionObserver", "plugin-authoring/index.html");
 
 const searchIndex = JSON.parse(await readDistFile("search-index.json"));
 assert(

@@ -10,6 +10,7 @@ export default defineConfig({
     "@squidoc/plugin-seo",
     "@squidoc/plugin-llms",
     "@squidoc/plugin-syntax-highlight",
+    "@squidoc/plugin-article-tree",
     "@squidoc/plugin-search",
     "@squidoc/plugin-mdx",
   ],

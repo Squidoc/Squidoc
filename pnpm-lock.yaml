@@ -29,6 +29,9 @@ importers:
 
   examples/squidoc-docs:
     dependencies:
+      '@squidoc/plugin-article-tree':
+        specifier: workspace:*
+        version: link:../../packages/plugin-article-tree
       '@squidoc/plugin-llms':
         specifier: workspace:*
         version: link:../../packages/plugin-llms
@@ -75,6 +78,19 @@ importers:
       '@types/node':
         specifier: ^22.10.2
         version: 22.19.17
+      typescript:
+        specifier: ^5.7.2
+        version: 5.9.3
+      vitest:
+        specifier: ^2.1.8
+        version: 2.1.9(@types/node@22.19.17)
+
+  packages/plugin-article-tree:
+    dependencies:
+      '@squidoc/core':
+        specifier: workspace:*
+        version: link:../core
+    devDependencies:
       typescript:
         specifier: ^5.7.2
         version: 5.9.3

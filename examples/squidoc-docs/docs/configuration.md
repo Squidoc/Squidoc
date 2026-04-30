@@ -22,7 +22,11 @@ export default defineConfig({
       primaryColor: "#2563eb",
     },
   },
-  plugins: ["@squidoc/plugin-seo", "@squidoc/plugin-syntax-highlight"],
+  plugins: [
+    "@squidoc/plugin-seo",
+    "@squidoc/plugin-syntax-highlight",
+    "@squidoc/plugin-article-tree",
+  ],
   nav: [
     { title: "Getting Started", path: "/getting-started" },
     {

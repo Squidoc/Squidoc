@@ -9,6 +9,7 @@
     "check": "squidoc check"
   },
   "dependencies": {
+    "@squidoc/plugin-article-tree": "workspace:*",
     "@squidoc/plugin-llms": "workspace:*",
     "@squidoc/plugin-mdx": "workspace:*",
     "@squidoc/plugin-search": "workspace:*",

@@ -181,10 +181,8 @@ async function writePage(
     ...plugins.pageHeadTagFactories.flatMap((factory) => factory(page)),
   ]);
   const slots = {
-    search: plugins.themeSlots
-      .filter((slot) => slot.name === "search" && slot.html)
-      .map((slot) => slot.html)
-      .join("\n"),
+    articleTree: renderThemeSlot(plugins, "article-tree"),
+    search: renderThemeSlot(plugins, "search"),
   };
 
   await writeFile(
@@ -220,6 +218,9 @@ const slots = ${JSON.stringify(slots)};
       <main class={classes.content}>
         <Fragment set:html={content} />
       </main>
+      <aside class="sq-article-tree">
+        <Fragment set:html={slots.articleTree} />
+      </aside>
     </div>
   </body>
 </html>
@@ -284,6 +285,13 @@ async function transformHtml(html: string, page: DocPage, plugins: PluginContext
   }
 
   return transformed;
+}
+
+function renderThemeSlot(plugins: PluginContext, name: string): string {
+  return plugins.themeSlots
+    .filter((slot) => slot.name === name && slot.html)
+    .map((slot) => slot.html)
+    .join("\n");
 }
 
 function renderHeadTags(tags: HeadTag[]): string {
