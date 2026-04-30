@@ -23,12 +23,15 @@ pnpm test
 pnpm check:docs
 pnpm build:docs
 pnpm test:dogfood
+pnpm test:browser
 pnpm test:generator
 ```
 
 That means the example docs site in `examples/squidoc-docs` must keep working as the renderer, config system, plugins, and themes evolve.
 
 `pnpm test:dogfood` inspects the generated static site and verifies core dogfood outputs such as page titles, canonical tags, the search slot, `search-index.json`, `llms.txt`, and `llms-full.txt`.
+
+`pnpm test:browser` starts a local preview server for the built dogfood site and checks the rendered UI in Chromium, including page metadata, search results, and the search empty state.
 
 ## Dogfood Site
 

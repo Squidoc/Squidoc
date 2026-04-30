@@ -12,7 +12,8 @@
     "clean": "pnpm -r --filter './packages/**' clean",
     "format": "biome format --write .",
     "lint": "biome check .",
-    "test": "pnpm -r --filter './packages/**' test && pnpm check:docs && pnpm build:docs && pnpm test:dogfood && pnpm test:generator",
+    "test": "pnpm -r --filter './packages/**' test && pnpm check:docs && pnpm build:docs && pnpm test:dogfood && pnpm test:browser && pnpm test:generator",
+    "test:browser": "node scripts/smoke-dogfood-browser.mjs",
     "test:dogfood": "node scripts/smoke-dogfood-site.mjs",
     "test:generator": "node scripts/smoke-create-squidoc.mjs",
     "version-packages": "changeset version",
@@ -23,6 +24,7 @@
     "@biomejs/biome": "^1.9.4",
     "@changesets/cli": "^2.29.5",
     "@types/node": "^22.10.2",
+    "playwright": "^1.59.1",
     "typescript": "^5.7.2",
     "vitest": "^2.1.8"
   }
