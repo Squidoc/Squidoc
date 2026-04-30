@@ -364,13 +364,12 @@ a {
 
 .sq-codeblock pre {
   margin: 0;
-  padding-top: 42px;
 }
 
 .sq-codeblock__copy {
   position: absolute;
   z-index: 1;
-  top: 10px;
+  top: -14px;
   right: 10px;
   border: 1px solid #cbd5e1;
   border-radius: 6px;
