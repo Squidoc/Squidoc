@@ -16,6 +16,8 @@ export default defineConfig({
     { title: "Introduction", path: "/" },
     { title: "Getting Started", path: "/getting-started" },
     { title: "Configuration", path: "/configuration" },
+    { title: "Plugin Authoring", path: "/plugin-authoring" },
+    { title: "Theme Authoring", path: "/theme-authoring" },
     { title: "Architecture", path: "/architecture" },
     { title: "MDX", path: "/mdx" },
     { title: "Testing", path: "/testing" },

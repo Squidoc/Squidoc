@@ -24,6 +24,18 @@ const pages = [
     canonical: "https://squidoc.dev/configuration",
   },
   {
+    file: "plugin-authoring/index.html",
+    route: "/plugin-authoring",
+    title: "Plugin Authoring | Squidoc",
+    canonical: "https://squidoc.dev/plugin-authoring",
+  },
+  {
+    file: "theme-authoring/index.html",
+    route: "/theme-authoring",
+    title: "Theme Authoring | Squidoc",
+    canonical: "https://squidoc.dev/theme-authoring",
+  },
+  {
     file: "getting-started/index.html",
     route: "/getting-started",
     title: "Getting Started | Squidoc",
@@ -66,10 +78,14 @@ const llms = await readDistFile("llms.txt");
 assertIncludes(llms, "[MDX](https://squidoc.dev/mdx)", "llms.txt");
 assertIncludes(llms, "[Architecture](https://squidoc.dev/architecture)", "llms.txt");
 assertIncludes(llms, "[Testing](https://squidoc.dev/testing)", "llms.txt");
+assertIncludes(llms, "[Plugin Authoring](https://squidoc.dev/plugin-authoring)", "llms.txt");
+assertIncludes(llms, "[Theme Authoring](https://squidoc.dev/theme-authoring)", "llms.txt");
 
 const llmsFull = await readDistFile("llms-full.txt");
 assertIncludes(llmsFull, "This page is written as an MDX file", "llms-full.txt");
 assertIncludes(llmsFull, "The generated-site smoke test checks for page titles", "llms-full.txt");
+assertIncludes(llmsFull, "The setup API currently supports:", "llms-full.txt");
+assertIncludes(llmsFull, "Powerful themes are a core design goal.", "llms-full.txt");
 
 console.log("Dogfood generated-site smoke passed.");
 
