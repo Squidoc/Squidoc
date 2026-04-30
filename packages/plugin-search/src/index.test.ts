@@ -45,11 +45,10 @@ describe("@squidoc/plugin-search", () => {
         content: "Getting Started Read the guide and install it.",
       },
     ]);
-    expect(themeSlots).toEqual([
-      {
-        name: "search",
-        component: "@squidoc/plugin-search/Search.astro",
-      },
-    ]);
+    expect(themeSlots[0]).toMatchObject({
+      name: "search",
+      component: "@squidoc/plugin-search/Search.astro",
+    });
+    expect(themeSlots[0]?.html).toContain("data-squidoc-search");
   });
 });

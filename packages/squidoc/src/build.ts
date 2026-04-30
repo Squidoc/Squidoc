@@ -183,6 +183,12 @@ async function writePage(
     ...plugins.headTags,
     ...plugins.pageHeadTagFactories.flatMap((factory) => factory(page)),
   ]);
+  const slots = {
+    search: plugins.themeSlots
+      .filter((slot) => slot.name === "search" && slot.html)
+      .map((slot) => slot.html)
+      .join("\n"),
+  };
 
   await writeFile(
     target,
@@ -193,6 +199,7 @@ const navItems = ${JSON.stringify(navItems)};
 const content = ${JSON.stringify(html)};
 const classes = ${JSON.stringify(classes)};
 const headHtml = ${JSON.stringify(headHtml)};
+const slots = ${JSON.stringify(slots)};
 ---
 
 <html lang="en">
@@ -208,6 +215,7 @@ const headHtml = ${JSON.stringify(headHtml)};
     <div class={classes.shell}>
       <aside class={classes.sidebar}>
         <h1 class={classes.brand}>{site.name}</h1>
+        <Fragment set:html={slots.search} />
         <nav class={classes.nav} aria-label="Documentation">
           {navItems.map((item) => (
             <a href={item.route} aria-current={item.current ? "page" : undefined}>{item.title}</a>

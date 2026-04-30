@@ -29,6 +29,7 @@ export type PageHeadTagFactory = (page: DocPage) => HeadTag[];
 export type ThemeSlot = {
   name: string;
   component: string;
+  html?: string;
 };
 
 export type SquidocPlugin = {
