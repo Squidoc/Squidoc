@@ -357,9 +357,14 @@ a {
   }
 
   .sq-search {
+    display: none;
     order: 3;
     flex-basis: 100%;
     max-width: none;
+  }
+
+  .sq-sidebar-control:checked + .sq-topbar .sq-search {
+    display: block;
   }
 
   .sq-sidebar-toggle {
@@ -382,7 +387,7 @@ a {
     background: #ffffff;
   }
 
-  .sq-sidebar-control:checked + .sq-shell .sq-sidebar {
+  .sq-sidebar-control:checked ~ .sq-shell .sq-sidebar {
     display: block;
   }
 

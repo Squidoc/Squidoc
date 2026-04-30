@@ -217,6 +217,7 @@ const slots = ${JSON.stringify(slots)};
     <style is:global>${theme.renderer?.globalCss ?? ""}</style>
   </head>
   <body>
+    <input class="sq-sidebar-control" id="squidoc-sidebar-toggle" type="checkbox" aria-label="Toggle documentation navigation" />
     <header class="sq-topbar">
       <a class="sq-topbar__brand" href="/">{site.name}</a>
       <Fragment set:html={slots.search} />
@@ -225,7 +226,6 @@ const slots = ${JSON.stringify(slots)};
       </nav>
       <label class="sq-sidebar-toggle" for="squidoc-sidebar-toggle">Menu</label>
     </header>
-    <input class="sq-sidebar-control" id="squidoc-sidebar-toggle" type="checkbox" aria-label="Toggle documentation navigation" />
     <div class={classes.shell}>
       <aside class={classes.sidebar}>
         <h1 class={classes.brand}>{site.name}</h1>
