@@ -233,19 +233,21 @@ const slots = ${JSON.stringify(slots)};
           <Fragment set:html={navHtml} />
         </nav>
       </aside>
-      <main class={classes.content}>
-        <Fragment set:html={content} />
-      </main>
+      <div class="sq-page">
+        <main class={classes.content}>
+          <Fragment set:html={content} />
+        </main>
+        <footer class="sq-footer">
+          {footer.text && <p class="sq-footer__text">{footer.text}</p>}
+          <nav class="sq-footer__nav" aria-label="Footer">
+            <Fragment set:html={footerLinksHtml} />
+          </nav>
+        </footer>
+      </div>
       <aside class="sq-article-tree">
         <Fragment set:html={slots.articleTree} />
       </aside>
     </div>
-    <footer class="sq-footer">
-      {footer.text && <p class="sq-footer__text">{footer.text}</p>}
-      <nav class="sq-footer__nav" aria-label="Footer">
-        <Fragment set:html={footerLinksHtml} />
-      </nav>
-    </footer>
   </body>
 </html>
 `,

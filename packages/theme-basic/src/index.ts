@@ -11,12 +11,14 @@ export const globalCss = `:root {
 }
 
 body {
+  height: 100vh;
   min-height: 100vh;
   margin: 0;
   color: var(--squidoc-text);
   background: #ffffff;
   display: flex;
   flex-direction: column;
+  overflow: hidden;
 }
 
 a {
@@ -24,10 +26,12 @@ a {
 }
 
 .sq-shell {
-  flex: 1;
+  flex: 1 1 auto;
   display: grid;
   grid-template-columns: minmax(220px, 280px) minmax(0, 1fr) minmax(180px, 240px);
+  height: calc(100vh - 60px);
   min-height: 0;
+  overflow: hidden;
 }
 
 .sq-topbar {
@@ -89,10 +93,7 @@ a {
 }
 
 .sq-sidebar {
-  position: sticky;
-  top: 60px;
-  align-self: start;
-  height: calc(100vh - 60px);
+  min-height: 0;
   overflow: auto;
   border-right: 1px solid var(--squidoc-border);
   padding: 24px;
@@ -256,15 +257,23 @@ a {
 }
 
 .sq-content {
+  box-sizing: border-box;
+  flex: 1 0 auto;
+  width: 100%;
   max-width: 820px;
   padding: 48px;
 }
 
+.sq-page {
+  display: flex;
+  min-width: 0;
+  min-height: 0;
+  overflow: auto;
+  flex-direction: column;
+}
+
 .sq-article-tree {
-  position: sticky;
-  top: 60px;
-  align-self: start;
-  max-height: calc(100vh - 60px);
+  min-height: 0;
   overflow: auto;
   padding: 48px 24px 24px 0;
 }
@@ -314,6 +323,7 @@ a {
 
 .sq-footer {
   display: flex;
+  flex: 0 0 auto;
   align-items: center;
   justify-content: space-between;
   gap: 20px;
@@ -345,6 +355,11 @@ a {
 }
 
 @media (max-width: 760px) {
+  body {
+    height: auto;
+    overflow: auto;
+  }
+
   .sq-topbar {
     flex-wrap: wrap;
     min-height: 56px;
@@ -374,6 +389,8 @@ a {
 
   .sq-shell {
     display: block;
+    height: auto;
+    overflow: visible;
   }
 
   .sq-sidebar {
@@ -393,6 +410,11 @@ a {
 
   .sq-content {
     padding: 28px;
+  }
+
+  .sq-page {
+    display: block;
+    overflow: visible;
   }
 
   .sq-article-tree {
