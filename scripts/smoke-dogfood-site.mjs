@@ -18,10 +18,28 @@ const pages = [
     canonical: "https://squidoc.dev/architecture",
   },
   {
+    file: "configuration/index.html",
+    route: "/configuration",
+    title: "Configuration | Squidoc",
+    canonical: "https://squidoc.dev/configuration",
+  },
+  {
+    file: "getting-started/index.html",
+    route: "/getting-started",
+    title: "Getting Started | Squidoc",
+    canonical: "https://squidoc.dev/getting-started",
+  },
+  {
     file: "mdx/index.html",
     route: "/mdx",
     title: "MDX | Squidoc",
     canonical: "https://squidoc.dev/mdx",
+  },
+  {
+    file: "testing/index.html",
+    route: "/testing",
+    title: "Testing | Squidoc",
+    canonical: "https://squidoc.dev/testing",
   },
 ];
 
@@ -47,9 +65,11 @@ assert(
 const llms = await readDistFile("llms.txt");
 assertIncludes(llms, "[MDX](https://squidoc.dev/mdx)", "llms.txt");
 assertIncludes(llms, "[Architecture](https://squidoc.dev/architecture)", "llms.txt");
+assertIncludes(llms, "[Testing](https://squidoc.dev/testing)", "llms.txt");
 
 const llmsFull = await readDistFile("llms-full.txt");
 assertIncludes(llmsFull, "This page is written as an MDX file", "llms-full.txt");
+assertIncludes(llmsFull, "The generated-site smoke test checks for page titles", "llms-full.txt");
 
 console.log("Dogfood generated-site smoke passed.");
 

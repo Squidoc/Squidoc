@@ -14,7 +14,10 @@ export default defineConfig({
   ],
   nav: [
     { title: "Introduction", path: "/" },
+    { title: "Getting Started", path: "/getting-started" },
+    { title: "Configuration", path: "/configuration" },
     { title: "Architecture", path: "/architecture" },
     { title: "MDX", path: "/mdx" },
+    { title: "Testing", path: "/testing" },
   ],
 });
