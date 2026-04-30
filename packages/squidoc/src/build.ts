@@ -228,7 +228,6 @@ const slots = ${JSON.stringify(slots)};
     </header>
     <div class={classes.shell}>
       <aside class={classes.sidebar}>
-        <h1 class={classes.brand}>{site.name}</h1>
         <nav class={classes.nav} aria-label="Documentation">
           <Fragment set:html={navHtml} />
         </nav>
