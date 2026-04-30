@@ -29,9 +29,21 @@ pnpm test:generator
 
 That means the example docs site in `examples/squidoc-docs` must keep working as the renderer, config system, plugins, and themes evolve.
 
-`pnpm test:dogfood` inspects the generated static site and verifies core dogfood outputs such as page titles, canonical tags, the search slot, `search-index.json`, `llms.txt`, and `llms-full.txt`.
+`pnpm test:dogfood` inspects the generated static site and verifies core dogfood outputs such as page titles, canonical tags, the search slot, syntax-highlighted code blocks, article tree markup, theme chrome, `search-index.json`, `llms.txt`, and `llms-full.txt`.
 
 `pnpm test:browser` starts a local preview server for the built dogfood site and checks the rendered UI in Chromium, including page metadata, search results, and the search empty state.
+
+`pnpm test:generator` creates a temporary Squidoc project from the public starter template, links local workspace packages, runs `squidoc check`, and builds the generated project. This catches missing starter dependencies and default plugin regressions.
+
+## Package Dry Run
+
+Before publishing, run an npm package dry run across all publishable packages:
+
+```bash
+pnpm -r --filter './packages/**' exec npm pack --dry-run --cache /private/tmp/squidoc-npm-cache
+```
+
+This verifies the package `files` fields and catches accidental test fixture or source leakage before a release.
 
 ## Dogfood Site
 

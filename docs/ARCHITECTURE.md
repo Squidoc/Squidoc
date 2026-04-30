@@ -37,12 +37,13 @@ packages/
   core/
   theme-basic/
   plugin-seo/
+  plugin-syntax-highlight/
+  plugin-article-tree/
   plugin-mdx/
   plugin-search/
   plugin-llms/
 examples/
-  basic/
-  advanced/
+  squidoc-docs/
 ```
 
 ## Generated User Project
@@ -88,11 +89,30 @@ export default defineConfig({
     options: {
       logo: '/logo.svg',
       primaryColor: '#2563eb',
-      headerLinks: [{ label: 'GitHub', href: 'https://github.com/acme' }]
+      headerLinks: [{ title: 'GitHub', href: 'https://github.com/acme' }],
+      footer: {
+        text: 'Built with Squidoc.',
+        links: [{ title: 'GitHub', href: 'https://github.com/acme' }]
+      }
     }
   },
-  plugins: ['@squidoc/plugin-seo', '@squidoc/plugin-search'],
-  nav: [{ title: 'Getting Started', path: '/getting-started' }]
+  plugins: [
+    '@squidoc/plugin-seo',
+    '@squidoc/plugin-syntax-highlight',
+    '@squidoc/plugin-article-tree',
+    '@squidoc/plugin-search'
+  ],
+  nav: [
+    { title: 'Getting Started', path: '/getting-started' },
+    {
+      title: 'Developers',
+      path: '/developers',
+      items: [
+        { title: 'Plugin Authoring', path: '/plugin-authoring' },
+        { title: 'Theme Authoring', path: '/theme-authoring' }
+      ]
+    }
+  ]
 })
 ```
 
@@ -125,18 +145,16 @@ Themes receive normalized site data such as `site`, `nav`, `pages`, `currentPage
 
 Plugins add platform behavior. Examples include SEO, search, MDX, dark mode, analytics, sitemap generation, redirects, versioning, OpenAPI docs, code tabs, and copy buttons.
 
-Plugin hooks should include:
+Phase 1 plugin hooks include:
 
-- `extendMarkdown()`
-- `extendHtml()`
 - `addHeadTags()`
-- `addRoute()`
+- `addPageHeadTags()`
 - `addGeneratedFile()`
-- `addClientScript()`
+- `addDocExtension()`
+- `addHtmlTransformer()`
 - `addThemeSlot()`
-- `validateConfig()`
-- `onBuildStart()`
-- `onBuildEnd()`
+
+Future plugin hooks can expand toward route injection, lifecycle hooks, config validation, and client script registration.
 
 ## SEO
 
@@ -170,18 +188,16 @@ The repo should use:
 - GitHub Actions for CI and release automation.
 - Fixture projects for integration tests.
 
-## MVP Plan
+## Phase 1 Delivery
 
-1. Monorepo scaffold.
-2. CLI package with `dev`, `build`, `preview`.
-3. Config loader with `docs.config.ts`.
-4. Markdown docs discovery.
-5. Astro-backed static rendering.
-6. Basic theme.
-7. Default SEO plugin.
-8. Project generator.
-9. Plugin/theme install commands.
-10. `squidoc check`.
-11. MDX plugin.
-12. Search plugin.
-13. `llms.txt` plugin.
+Phase 1 now covers the original MVP plan plus the additions needed for dogfooding:
+
+- Monorepo scaffold and publishable packages.
+- CLI package with `dev`, `build`, `preview`, `check`, `doctor`, and `add`.
+- Config loader with `docs.config.ts`.
+- Markdown docs discovery and Astro-backed static rendering.
+- Basic responsive theme with navbar, configurable footer, mobile sidebar, nested navigation, search placement, and article tree placement.
+- Default SEO, syntax highlighting, and article tree plugins.
+- Optional MDX, search, and `llms.txt` plugins.
+- Project generator.
+- CI, Changesets release automation, unit tests, dogfood smoke tests, browser smoke tests, and generator smoke tests.
