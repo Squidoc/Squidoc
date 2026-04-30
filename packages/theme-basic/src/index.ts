@@ -335,6 +335,40 @@ a {
   line-height: 1.7;
 }
 
+.sq-content :not(pre) > code {
+  border: 1px solid #e2e8f0;
+  border-radius: 5px;
+  padding: 0.12em 0.32em;
+  color: #334155;
+  background: #f8fafc;
+  font-size: 0.92em;
+}
+
+.sq-content pre {
+  box-sizing: border-box;
+  max-width: 100%;
+  margin: 24px 0;
+  border: 1px solid #d8dee8;
+  border-radius: 8px;
+  padding: 18px 20px;
+  background: #f8fafc !important;
+  overflow-x: auto;
+  line-height: 1.65;
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 72%);
+}
+
+.sq-content pre code {
+  display: block;
+  min-width: max-content;
+  font-size: 13px;
+  font-family:
+    "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+}
+
+.sq-content pre code span {
+  background: transparent !important;
+}
+
 .sq-footer {
   display: flex;
   align-items: center;
