@@ -12,6 +12,7 @@ describe("@squidoc/plugin-search", () => {
       },
       addDocExtension() {},
       addHeadTags() {},
+      addHtmlTransformer() {},
       addPageHeadTags() {},
       addThemeSlot(slot) {
         themeSlots.push(slot);

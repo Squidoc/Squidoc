@@ -70,6 +70,10 @@ for (const page of pages) {
   assertIncludes(html, `href="${page.route}"`, page.file);
 }
 
+const pluginAuthoring = await readDistFile("plugin-authoring/index.html");
+assertIncludes(pluginAuthoring, 'class="shiki github-light"', "plugin-authoring/index.html");
+assertIncludes(pluginAuthoring, "<details open>", "plugin-authoring/index.html");
+
 const searchIndex = JSON.parse(await readDistFile("search-index.json"));
 assert(
   Array.isArray(searchIndex) && searchIndex.length === pages.length,

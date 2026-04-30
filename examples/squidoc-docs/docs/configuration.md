@@ -22,12 +22,22 @@ export default defineConfig({
       primaryColor: "#2563eb",
     },
   },
-  plugins: ["@squidoc/plugin-seo"],
-  nav: [{ title: "Getting Started", path: "/getting-started" }],
+  plugins: ["@squidoc/plugin-seo", "@squidoc/plugin-syntax-highlight"],
+  nav: [
+    { title: "Getting Started", path: "/getting-started" },
+    {
+      title: "Developers",
+      path: "/developers",
+      items: [
+        { title: "Plugin Authoring", path: "/plugin-authoring" },
+        { title: "Theme Authoring", path: "/theme-authoring" },
+      ],
+    },
+  ],
 });
 ```
 
-The `site` object feeds page titles, metadata, generated SEO files, and theme templates. Navigation paths must point to discovered docs routes, and `squidoc check` catches missing routes before deploy.
+The `site` object feeds page titles, metadata, generated SEO files, and theme templates. Navigation paths must point to discovered docs routes, and `squidoc check` catches missing routes before deploy. Navigation items can be flat links, folders with `items`, or folders with both a `path` and `items` when the folder has its own article.
 
 Add plugins and themes with the CLI:
 

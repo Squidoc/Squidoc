@@ -11,6 +11,7 @@ describe("@squidoc/plugin-mdx", () => {
       },
       addGeneratedFile() {},
       addHeadTags() {},
+      addHtmlTransformer() {},
       addPageHeadTags() {},
       addThemeSlot() {},
       config: {

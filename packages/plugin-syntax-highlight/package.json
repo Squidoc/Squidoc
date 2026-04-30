@@ -1,0 +1,41 @@
+{
+  "name": "@squidoc/plugin-syntax-highlight",
+  "version": "0.1.0",
+  "description": "Syntax highlighting plugin for Squidoc code blocks.",
+  "license": "MIT",
+  "type": "module",
+  "homepage": "https://github.com/Squidoc/Squidoc#readme",
+  "bugs": {
+    "url": "https://github.com/Squidoc/Squidoc/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Squidoc/Squidoc.git",
+    "directory": "packages/plugin-syntax-highlight"
+  },
+  "keywords": ["docs", "documentation", "syntax-highlighting", "squidoc", "plugin"],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": ["dist"],
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "check": "tsc -p tsconfig.json --noEmit",
+    "clean": "rm -rf dist",
+    "test": "vitest run --passWithNoTests"
+  },
+  "dependencies": {
+    "@squidoc/core": "workspace:*",
+    "shiki": "^3.23.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.2",
+    "vitest": "^2.1.8"
+  }
+}

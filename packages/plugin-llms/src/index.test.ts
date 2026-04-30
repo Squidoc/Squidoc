@@ -11,6 +11,7 @@ describe("@squidoc/plugin-llms", () => {
       },
       addDocExtension() {},
       addHeadTags() {},
+      addHtmlTransformer() {},
       addPageHeadTags() {},
       addThemeSlot(_slot: ThemeSlot) {},
       config: {

@@ -7,6 +7,7 @@ export type PluginApi = {
   addDocExtension: (extension: string) => void;
   addGeneratedFile: (file: GeneratedFile) => void;
   addHeadTags: (tags: HeadTag[]) => void;
+  addHtmlTransformer: (transformer: HtmlTransformer) => void;
   addPageHeadTags: (factory: PageHeadTagFactory) => void;
   addThemeSlot: (slot: ThemeSlot) => void;
   config: ResolvedSquidocConfig;
@@ -25,6 +26,8 @@ export type HeadTag = {
 };
 
 export type PageHeadTagFactory = (page: DocPage) => HeadTag[];
+
+export type HtmlTransformer = (html: string, page: DocPage) => string | Promise<string>;
 
 export type ThemeSlot = {
   name: string;
@@ -45,6 +48,7 @@ export type PluginContext = {
   docExtensions: string[];
   generatedFiles: GeneratedFile[];
   headTags: HeadTag[];
+  htmlTransformers: HtmlTransformer[];
   pageHeadTagFactories: PageHeadTagFactory[];
   themeSlots: ThemeSlot[];
 };
@@ -58,6 +62,7 @@ export async function runPlugins(
     docExtensions: [],
     generatedFiles: [],
     headTags: [],
+    htmlTransformers: [],
     pageHeadTagFactories: [],
     themeSlots: [],
   };
@@ -72,6 +77,9 @@ export async function runPlugins(
     },
     addHeadTags(tags) {
       context.headTags.push(...tags);
+    },
+    addHtmlTransformer(transformer) {
+      context.htmlTransformers.push(transformer);
     },
     addPageHeadTags(factory) {
       context.pageHeadTagFactories.push(factory);

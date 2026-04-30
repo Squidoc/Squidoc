@@ -167,7 +167,7 @@ async function writePage(
   const target = join(internalRoot, "src", "pages", outputPath);
   await mkdir(dirname(target), { recursive: true });
 
-  const html = await renderMarkdown(page.content);
+  const html = await transformHtml(await renderMarkdown(page.content), page, plugins);
   const navHtml = renderNavHtml(buildNavTree(loaded.config.nav, pages), page.route);
   const classes = {
     brand: theme.renderer?.classes?.brand ?? "brand",
@@ -274,6 +274,16 @@ function navItemContainsRoute(item: RenderNavItem, route: string): boolean {
   return (
     item.path === route || (item.items ?? []).some((child) => navItemContainsRoute(child, route))
   );
+}
+
+async function transformHtml(html: string, page: DocPage, plugins: PluginContext): Promise<string> {
+  let transformed = html;
+
+  for (const transformer of plugins.htmlTransformers) {
+    transformed = await transformer(transformed, page);
+  }
+
+  return transformed;
 }
 
 function renderHeadTags(tags: HeadTag[]): string {
