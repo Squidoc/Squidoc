@@ -97,7 +97,7 @@ a {
   box-shadow: 0 16px 36px rgb(23 32 51 / 12%);
 }
 
-.sq-search[data-has-results] .sq-search__results {
+.sq-search[data-has-query] .sq-search__results {
   display: grid;
 }
 
@@ -128,6 +128,13 @@ a {
   color: var(--squidoc-muted);
   font-size: 12px;
   line-height: 1.45;
+}
+
+.sq-search__empty {
+  margin: 0;
+  padding: 10px;
+  color: var(--squidoc-muted);
+  font-size: 13px;
 }
 
 .sq-content {

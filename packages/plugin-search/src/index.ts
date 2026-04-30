@@ -57,6 +57,7 @@ input?.addEventListener("input", () => {
   if (!query) {
     results.replaceChildren();
     root?.removeAttribute("data-has-results");
+    root?.removeAttribute("data-has-query");
     return;
   }
 
@@ -64,7 +65,17 @@ input?.addEventListener("input", () => {
     .filter((entry) => [entry.title, entry.description, entry.content].filter(Boolean).join(" ").toLowerCase().includes(query))
     .slice(0, 6);
 
+  root?.setAttribute("data-has-query", "");
   root?.toggleAttribute("data-has-results", matches.length > 0);
+
+  if (matches.length === 0) {
+    const empty = document.createElement("p");
+    empty.className = "sq-search__empty";
+    empty.textContent = "No results found.";
+    results.replaceChildren(empty);
+    return;
+  }
+
   results.replaceChildren(...matches.map((entry) => {
     const link = document.createElement("a");
     link.className = "sq-search__result";

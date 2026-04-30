@@ -50,5 +50,6 @@ describe("@squidoc/plugin-search", () => {
       component: "@squidoc/plugin-search/Search.astro",
     });
     expect(themeSlots[0]?.html).toContain("data-squidoc-search");
+    expect(themeSlots[0]?.html).toContain("No results found.");
   });
 });
