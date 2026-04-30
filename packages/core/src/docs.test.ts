@@ -38,11 +38,29 @@ Hello.
       content: "# Getting Started\n\nHello.",
     });
   });
+
+  test("discovers additional document extensions", async () => {
+    const cwd = join(process.cwd(), ".tmp", `docs-mdx-${Date.now()}`);
+    await mkdir(join(cwd, "docs"), { recursive: true });
+    await writeFile(join(cwd, "docs", "index.md"), "# Home\n");
+    await writeFile(join(cwd, "docs", "component-guide.mdx"), "# Component Guide\n");
+
+    const pages = await discoverDocs(resolveConfig({ site: { name: "Test" } }), cwd, {
+      extensions: [".mdx"],
+    });
+
+    expect(pages.map((page) => page.route)).toEqual(["/", "/component-guide"]);
+    expect(pages[1]).toMatchObject({
+      title: "Component Guide",
+      content: "# Component Guide",
+    });
+  });
 });
 
 describe("routeFromFilePath", () => {
   test("maps index files to directory routes", () => {
     expect(routeFromFilePath("/repo/docs/index.md", "/repo/docs")).toBe("/");
+    expect(routeFromFilePath("/repo/docs/index.mdx", "/repo/docs")).toBe("/");
     expect(routeFromFilePath("/repo/docs/guide/index.md", "/repo/docs")).toBe("/guide");
   });
 });

@@ -10,6 +10,7 @@ describe("@squidoc/plugin-search", () => {
       addGeneratedFile(file) {
         generatedFiles.push(file);
       },
+      addDocExtension() {},
       addHeadTags() {},
       addPageHeadTags() {},
       addThemeSlot(slot) {

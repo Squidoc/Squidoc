@@ -9,6 +9,7 @@ describe("@squidoc/plugin-llms", () => {
       addGeneratedFile(file) {
         generatedFiles.push(file);
       },
+      addDocExtension() {},
       addHeadTags() {},
       addPageHeadTags() {},
       addThemeSlot(_slot: ThemeSlot) {},

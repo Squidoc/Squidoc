@@ -10,7 +10,7 @@ export function validateProject(config: ResolvedSquidocConfig, pages: DocPage[])
   const issues: CheckIssue[] = [];
 
   if (pages.length === 0) {
-    issues.push({ message: `No Markdown pages found in ${config.docsDir}.` });
+    issues.push({ message: `No documentation pages found in ${config.docsDir}.` });
     return issues;
   }
 

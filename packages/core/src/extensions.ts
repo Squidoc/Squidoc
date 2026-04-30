@@ -4,6 +4,7 @@ import type { DocPage } from "./docs.js";
 import type { ResolvedSquidocConfig } from "./schema.js";
 
 export type PluginApi = {
+  addDocExtension: (extension: string) => void;
   addGeneratedFile: (file: GeneratedFile) => void;
   addHeadTags: (tags: HeadTag[]) => void;
   addPageHeadTags: (factory: PageHeadTagFactory) => void;
@@ -40,6 +41,7 @@ export function definePlugin(plugin: SquidocPlugin): SquidocPlugin {
 }
 
 export type PluginContext = {
+  docExtensions: string[];
   generatedFiles: GeneratedFile[];
   headTags: HeadTag[];
   pageHeadTagFactories: PageHeadTagFactory[];
@@ -52,12 +54,18 @@ export async function runPlugins(
   cwd = process.cwd(),
 ): Promise<PluginContext> {
   const context: PluginContext = {
+    docExtensions: [],
     generatedFiles: [],
     headTags: [],
     pageHeadTagFactories: [],
     themeSlots: [],
   };
   const api: PluginApi = {
+    addDocExtension(extension) {
+      if (!context.docExtensions.includes(extension)) {
+        context.docExtensions.push(extension);
+      }
+    },
     addGeneratedFile(file) {
       context.generatedFiles.push(file);
     },

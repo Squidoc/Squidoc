@@ -29,6 +29,9 @@ importers:
       '@squidoc/plugin-llms':
         specifier: workspace:*
         version: link:../../packages/plugin-llms
+      '@squidoc/plugin-mdx':
+        specifier: workspace:*
+        version: link:../../packages/plugin-mdx
       '@squidoc/plugin-search':
         specifier: workspace:*
         version: link:../../packages/plugin-search

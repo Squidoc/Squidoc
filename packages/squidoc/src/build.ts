@@ -71,12 +71,15 @@ async function prepareAstroProject(cwd: string): Promise<PreparedAstroProject> {
 
 async function generateAstroProject(cwd: string, internalRoot: string): Promise<PluginContext> {
   const loaded = await loadConfig({ cwd });
-  const pages = await discoverDocs(loaded.config, cwd);
+  const capabilities = await runPlugins(loaded.config, [], cwd);
+  const pages = await discoverDocs(loaded.config, cwd, {
+    extensions: capabilities.docExtensions,
+  });
   const theme = await loadTheme(loaded.config, cwd);
   const plugins = await runPlugins(loaded.config, pages, cwd);
 
   if (pages.length === 0) {
-    throw new Error(`No Markdown pages found in ${loaded.config.docsDir}.`);
+    throw new Error(`No documentation pages found in ${loaded.config.docsDir}.`);
   }
 
   await writeAstroProject(internalRoot, cwd, loaded, pages, theme, plugins);

@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import { discoverDocs, loadConfig } from "@squidoc/core";
+import { discoverDocs, loadConfig, runPlugins } from "@squidoc/core";
 import { type AddKind, addExtension } from "./add.js";
 import { buildSite, devSite, previewSite } from "./build.js";
 import { validateProject } from "./check.js";
@@ -85,10 +85,13 @@ async function runCommand(command: () => Promise<void>): Promise<void> {
 async function checkProject(): Promise<void> {
   try {
     const loaded = await loadConfig();
-    const pages = await discoverDocs(loaded.config);
+    const capabilities = await runPlugins(loaded.config);
+    const pages = await discoverDocs(loaded.config, process.cwd(), {
+      extensions: capabilities.docExtensions,
+    });
 
     console.log(`Loaded config: ${loaded.path}`);
-    console.log(`Discovered ${pages.length} Markdown page${pages.length === 1 ? "" : "s"}.`);
+    console.log(`Discovered ${pages.length} documentation page${pages.length === 1 ? "" : "s"}.`);
 
     const issues = validateProject(loaded.config, pages);
 
