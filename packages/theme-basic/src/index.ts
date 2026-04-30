@@ -89,7 +89,8 @@ a {
   position: sticky;
   top: 60px;
   align-self: start;
-  max-height: calc(100vh - 60px);
+  height: calc(100vh - 60px);
+  box-sizing: border-box;
   overflow: auto;
   border-right: 1px solid var(--squidoc-border);
   padding: 24px;
@@ -270,13 +271,17 @@ a {
 
 .sq-content {
   box-sizing: border-box;
+  flex: 1 0 auto;
   width: 100%;
   max-width: 820px;
   padding: 48px;
 }
 
 .sq-page {
+  display: flex;
   min-width: 0;
+  min-height: calc(100vh - 60px);
+  flex-direction: column;
 }
 
 .sq-article-tree {

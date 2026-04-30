@@ -44,6 +44,11 @@ try {
   const page = await browser.newPage();
 
   try {
+    await page.setViewportSize({ width: 1200, height: 720 });
+    await page.goto(baseUrl, { waitUntil: "networkidle" });
+    await expectFooterPinnedToViewport(page);
+    await expectSidebarFillsViewport(page);
+
     await page.goto(`${baseUrl}/configuration`, { waitUntil: "networkidle" });
     await expectText(page.locator("main h1"), "Configuration");
     await expectAttribute(
@@ -124,6 +129,30 @@ async function expectText(locator, expected) {
 async function expectAttribute(locator, name, expected) {
   const actual = await locator.getAttribute(name);
   assert(actual === expected, `Expected ${name}="${expected}", received "${actual}".`);
+}
+
+async function expectFooterPinnedToViewport(page) {
+  const footerBox = await page.locator(".sq-footer").boundingBox();
+  const viewport = page.viewportSize();
+
+  assert(footerBox, "Expected footer to be visible.");
+  assert(viewport, "Expected a viewport size.");
+  assert(
+    Math.abs(footerBox.y + footerBox.height - viewport.height) <= 2,
+    "Expected footer to pin to the viewport bottom on short pages.",
+  );
+}
+
+async function expectSidebarFillsViewport(page) {
+  const sidebarBox = await page.locator(".sq-sidebar").boundingBox();
+  const viewport = page.viewportSize();
+
+  assert(sidebarBox, "Expected sidebar to be visible.");
+  assert(viewport, "Expected a viewport size.");
+  assert(
+    Math.abs(sidebarBox.height - (viewport.height - 60)) <= 2,
+    "Expected sidebar to fill the available viewport height below the navbar.",
+  );
 }
 
 function assert(condition, message) {
