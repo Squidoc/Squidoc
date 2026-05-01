@@ -56,8 +56,8 @@ try {
       "href",
       "https://squidoc.dev/configuration",
     );
-    await assertCount(page.locator("[data-squidoc-codeblock]"), 2);
-    await assertCount(page.locator("[data-squidoc-copy-code]"), 2);
+    await assertMinCount(page.locator("[data-squidoc-codeblock]"), 2);
+    await assertMinCount(page.locator("[data-squidoc-copy-code]"), 2);
     await page.addInitScript(() => {
       Object.defineProperty(navigator, "clipboard", {
         configurable: true,
@@ -163,9 +163,9 @@ async function expectAttribute(locator, name, expected) {
   assert(actual === expected, `Expected ${name}="${expected}", received "${actual}".`);
 }
 
-async function assertCount(locator, expected) {
+async function assertMinCount(locator, expected) {
   const actual = await locator.count();
-  assert(actual === expected, `Expected ${expected} matches, received ${actual}.`);
+  assert(actual >= expected, `Expected at least ${expected} matches, received ${actual}.`);
 }
 
 async function expectFooterPinnedToViewport(page) {

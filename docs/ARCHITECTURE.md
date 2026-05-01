@@ -28,6 +28,8 @@ The proposed approach is: Astro inside, Squidoc outside.
 
 Users should interact with our CLI, config, plugin API, and theme API. Astro should be an internal rendering engine we can use without exposing every implementation detail.
 
+Squidoc should generate its internal Astro project from real template files rather than embedding page markup as TypeScript string literals. The CLI can write structured render data, while Astro templates own the document shell, routing, and layout markup.
+
 ## Package Layout
 
 ```txt

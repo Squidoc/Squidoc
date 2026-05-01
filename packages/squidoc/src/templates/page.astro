@@ -1,0 +1,75 @@
+---
+import { pages } from "../squidoc-data.mjs";
+
+export function getStaticPaths() {
+  return pages.map((data) => ({
+    params: {
+      route: data.page.route === "/" ? undefined : data.page.route.slice(1),
+    },
+    props: { data },
+  }));
+}
+
+const { data } = Astro.props;
+const {
+  site,
+  page,
+  content,
+  classes,
+  globalCss,
+  headHtml,
+  headerLinksHtml,
+  footer,
+  footerLinksHtml,
+  navHtml,
+  slots,
+} = data;
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{page.title} | {site.name}</title>
+    {page.description && <meta name="description" content={page.description} />}
+    <Fragment set:html={headHtml} />
+    <style set:html={globalCss}></style>
+  </head>
+  <body>
+    <input
+      class="sq-sidebar-control"
+      id="squidoc-sidebar-toggle"
+      type="checkbox"
+      aria-label="Toggle documentation navigation"
+    />
+    <header class="sq-topbar">
+      <a class="sq-topbar__brand" href="/">{site.name}</a>
+      <Fragment set:html={slots.search} />
+      <nav class="sq-topbar__nav" aria-label="Site">
+        <Fragment set:html={headerLinksHtml} />
+      </nav>
+      <label class="sq-sidebar-toggle" for="squidoc-sidebar-toggle">Menu</label>
+    </header>
+    <div class={classes.shell}>
+      <aside class={classes.sidebar}>
+        <nav class={classes.nav} aria-label="Documentation">
+          <Fragment set:html={navHtml} />
+        </nav>
+      </aside>
+      <div class="sq-page">
+        <main class={classes.content}>
+          <Fragment set:html={content} />
+        </main>
+        <footer class="sq-footer">
+          {footer.text && <p class="sq-footer__text">{footer.text}</p>}
+          <nav class="sq-footer__nav" aria-label="Footer">
+            <Fragment set:html={footerLinksHtml} />
+          </nav>
+        </footer>
+      </div>
+      <aside class="sq-article-tree">
+        <Fragment set:html={slots.articleTree} />
+      </aside>
+    </div>
+  </body>
+</html>

@@ -1,7 +1,8 @@
 import { spawn } from "node:child_process";
-import { mkdir, rm, symlink, writeFile } from "node:fs/promises";
+import { copyFile, mkdir, rm, symlink, writeFile } from "node:fs/promises";
 import { createRequire } from "node:module";
 import { dirname, join, resolve, sep } from "node:path";
+import { fileURLToPath } from "node:url";
 import {
   type DocPage,
   type GeneratedFile,
@@ -20,6 +21,7 @@ import { type FSWatcher, watch } from "chokidar";
 import { renderMarkdown } from "./markdown.js";
 
 const require = createRequire(import.meta.url);
+const templatesRoot = join(dirname(fileURLToPath(import.meta.url)), "templates");
 
 export type BuildOptions = {
   cwd?: string;
@@ -112,18 +114,24 @@ async function writeAstroProject(
   await mkdir(join(internalRoot, "src", "pages"), { recursive: true });
   await writeFile(join(internalRoot, "package.json"), JSON.stringify({ type: "module" }, null, 2));
   await writeFile(
-    join(internalRoot, "astro.config.mjs"),
-    `export default {
-  outDir: ${JSON.stringify(join(cwd, "dist"))},
-  publicDir: ${JSON.stringify(join(cwd, "public"))},
-  site: ${JSON.stringify(loaded.config.site.url)},
-};
+    join(internalRoot, "squidoc.config.mjs"),
+    `export default ${JSON.stringify(
+      {
+        outDir: join(cwd, "dist"),
+        publicDir: join(cwd, "public"),
+        site: loaded.config.site.url,
+      },
+      null,
+      2,
+    )};
 `,
   );
-
-  for (const page of pages) {
-    await writePage(internalRoot, loaded, pages, page, theme, plugins);
-  }
+  await copyFile(join(templatesRoot, "astro.config.mjs"), join(internalRoot, "astro.config.mjs"));
+  await copyFile(
+    join(templatesRoot, "page.astro"),
+    join(internalRoot, "src", "pages", "[...route].astro"),
+  );
+  await writeRenderData(internalRoot, loaded, pages, theme, plugins);
 }
 
 async function watchDevInputs(cwd: string, internalRoot: string): Promise<FSWatcher> {
@@ -162,20 +170,13 @@ function getWatchedPaths(cwd: string, config: ResolvedSquidocConfig): string[] {
   ];
 }
 
-async function writePage(
+async function writeRenderData(
   internalRoot: string,
   loaded: LoadedConfig,
   pages: DocPage[],
-  page: DocPage,
   theme: SquidocTheme,
   plugins: PluginContext,
 ): Promise<void> {
-  const outputPath = page.route === "/" ? "index.astro" : `${page.route.slice(1)}/index.astro`;
-  const target = join(internalRoot, "src", "pages", outputPath);
-  await mkdir(dirname(target), { recursive: true });
-
-  const html = await transformHtml(await renderMarkdown(page.content), page, plugins);
-  const navHtml = renderNavHtml(buildNavTree(loaded.config.nav, pages), page.route);
   const themeOptions = getThemeOptions(loaded.config);
   const headerLinksHtml = renderLinkListHtml(
     readLinks(themeOptions.headerLinks),
@@ -190,72 +191,36 @@ async function writePage(
     shell: theme.renderer?.classes?.shell ?? "shell",
     sidebar: theme.renderer?.classes?.sidebar ?? "sidebar",
   };
-  const headHtml = renderHeadTags([
-    ...plugins.headTags,
-    ...plugins.pageHeadTagFactories.flatMap((factory) => factory(page)),
-  ]);
   const slots = {
     articleTree: renderThemeSlot(plugins, "article-tree"),
     search: renderThemeSlot(plugins, "search"),
   };
+  const renderPages = await Promise.all(
+    pages.map(async (page) => ({
+      site: loaded.config.site,
+      page: {
+        description: page.description,
+        route: page.route,
+        title: page.title,
+      },
+      content: await transformHtml(await renderMarkdown(page.content), page, plugins),
+      classes,
+      globalCss: theme.renderer?.globalCss ?? "",
+      headHtml: renderHeadTags([
+        ...plugins.headTags,
+        ...plugins.pageHeadTagFactories.flatMap((factory) => factory(page)),
+      ]),
+      headerLinksHtml,
+      footer: { text: footer.text },
+      footerLinksHtml,
+      navHtml: renderNavHtml(buildNavTree(loaded.config.nav, pages), page.route),
+      slots,
+    })),
+  );
 
   await writeFile(
-    target,
-    `---
-const site = ${JSON.stringify(loaded.config.site)};
-const page = ${JSON.stringify({ title: page.title, description: page.description, route: page.route })};
-const content = ${JSON.stringify(html)};
-const classes = ${JSON.stringify(classes)};
-const headHtml = ${JSON.stringify(headHtml)};
-const headerLinksHtml = ${JSON.stringify(headerLinksHtml)};
-const footer = ${JSON.stringify({ text: footer.text })};
-const footerLinksHtml = ${JSON.stringify(footerLinksHtml)};
-const navHtml = ${JSON.stringify(navHtml)};
-const slots = ${JSON.stringify(slots)};
----
-
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>{page.title} | {site.name}</title>
-    {page.description && <meta name="description" content={page.description} />}
-    <Fragment set:html={headHtml} />
-    <style is:global>${theme.renderer?.globalCss ?? ""}</style>
-  </head>
-  <body>
-    <input class="sq-sidebar-control" id="squidoc-sidebar-toggle" type="checkbox" aria-label="Toggle documentation navigation" />
-    <header class="sq-topbar">
-      <a class="sq-topbar__brand" href="/">{site.name}</a>
-      <Fragment set:html={slots.search} />
-      <nav class="sq-topbar__nav" aria-label="Site">
-        <Fragment set:html={headerLinksHtml} />
-      </nav>
-      <label class="sq-sidebar-toggle" for="squidoc-sidebar-toggle">Menu</label>
-    </header>
-    <div class={classes.shell}>
-      <aside class={classes.sidebar}>
-        <nav class={classes.nav} aria-label="Documentation">
-          <Fragment set:html={navHtml} />
-        </nav>
-      </aside>
-      <div class="sq-page">
-        <main class={classes.content}>
-          <Fragment set:html={content} />
-        </main>
-        <footer class="sq-footer">
-          {footer.text && <p class="sq-footer__text">{footer.text}</p>}
-          <nav class="sq-footer__nav" aria-label="Footer">
-            <Fragment set:html={footerLinksHtml} />
-          </nav>
-        </footer>
-      </div>
-      <aside class="sq-article-tree">
-        <Fragment set:html={slots.articleTree} />
-      </aside>
-    </div>
-  </body>
-</html>
+    join(internalRoot, "src", "squidoc-data.mjs"),
+    `export const pages = ${JSON.stringify(renderPages, null, 2)};
 `,
   );
 }

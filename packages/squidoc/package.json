@@ -28,7 +28,7 @@
     "access": "public"
   },
   "scripts": {
-    "build": "tsc -p tsconfig.json",
+    "build": "tsc -p tsconfig.json && node scripts/copy-templates.mjs",
     "check": "tsc -p tsconfig.json --noEmit",
     "clean": "rm -rf dist",
     "test": "vitest run --passWithNoTests"
