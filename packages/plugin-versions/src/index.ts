@@ -172,7 +172,9 @@ function renderVersionSelector(versions: ResolvedVersion[]): string {
 
   const versions = JSON.parse(root.dataset.versions ?? "[]");
   const path = window.location.pathname.replace(/\\/+$/, "") || "/";
-  const active = versions.find((version) => path === version.routePrefix || path.startsWith(version.routePrefix.replace(/\\/+$/, "") + "/")) ?? versions.find((version) => version.current);
+  const active = versions
+    .filter((version) => version.routePrefix !== "/")
+    .find((version) => path === version.routePrefix || path.startsWith(version.routePrefix.replace(/\\/+$/, "") + "/")) ?? versions.find((version) => version.routePrefix === "/" && path === "/") ?? versions.find((version) => version.current);
 
   if (active) {
     select.value = active.routePrefix;

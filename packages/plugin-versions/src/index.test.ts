@@ -66,6 +66,7 @@ describe("@squidoc/plugin-versions", () => {
     });
     expect(slots[0]?.name).toBe("version-selector");
     expect(slots[0]?.html).toContain("data-squidoc-versions");
+    expect(slots[0]?.html).toContain('version.routePrefix !== "/"');
   });
 
   test("supports custom docs and route prefixes", async () => {
