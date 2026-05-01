@@ -3,10 +3,12 @@
 import { mkdir, readFile, readdir, writeFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
+import { detectPackageManager, getNextStepCommands } from "./package-manager.js";
 
 const targetDir = process.argv[2] ?? "my-docs";
 const packageRoot = dirname(dirname(fileURLToPath(import.meta.url)));
 const templateDir = join(packageRoot, "template");
+const nextSteps = getNextStepCommands(detectPackageManager());
 
 async function copyTemplate(from: string, to: string): Promise<void> {
   await mkdir(to, { recursive: true });
@@ -31,5 +33,5 @@ console.log(`Created Squidoc project in ${targetDir}`);
 console.log("");
 console.log("Next steps:");
 console.log(`  cd ${targetDir}`);
-console.log("  pnpm install");
-console.log("  pnpm dev");
+console.log(`  ${nextSteps.install}`);
+console.log(`  ${nextSteps.dev}`);
