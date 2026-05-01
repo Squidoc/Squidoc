@@ -11,6 +11,9 @@
       "@squidoc/theme-basic",
       "@squidoc/plugin-seo",
       "@squidoc/plugin-codeblocks",
+      "@squidoc/plugin-article-tree",
+      "@squidoc/plugin-pages",
+      "@squidoc/plugin-versions",
       "@squidoc/plugin-mdx",
       "@squidoc/plugin-search",
       "@squidoc/plugin-llms"
