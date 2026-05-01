@@ -1,5 +1,5 @@
 import { spawn } from "node:child_process";
-import { copyFile, mkdir, rm, symlink, writeFile } from "node:fs/promises";
+import { copyFile, cp, mkdir, rm, symlink, writeFile } from "node:fs/promises";
 import { createRequire } from "node:module";
 import { dirname, join, resolve, sep } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -110,15 +110,18 @@ async function writeAstroProject(
   theme: SquidocTheme,
   plugins: PluginContext,
 ): Promise<void> {
+  const publicDir = join(internalRoot, "public");
+
   await rm(join(internalRoot, "src", "pages"), { recursive: true, force: true });
   await mkdir(join(internalRoot, "src", "pages"), { recursive: true });
+  await preparePublicDir(publicDir, join(cwd, "public"), plugins.generatedFiles);
   await writeFile(join(internalRoot, "package.json"), JSON.stringify({ type: "module" }, null, 2));
   await writeFile(
     join(internalRoot, "squidoc.config.mjs"),
     `export default ${JSON.stringify(
       {
         outDir: join(cwd, "dist"),
-        publicDir: join(cwd, "public"),
+        publicDir,
         site: loaded.config.site.url,
       },
       null,
@@ -132,6 +135,26 @@ async function writeAstroProject(
     join(internalRoot, "src", "pages", "[...route].astro"),
   );
   await writeRenderData(internalRoot, loaded, pages, theme, plugins);
+}
+
+async function preparePublicDir(
+  publicDir: string,
+  userPublicDir: string,
+  generatedFiles: GeneratedFile[],
+): Promise<void> {
+  await rm(publicDir, { recursive: true, force: true });
+
+  try {
+    await cp(userPublicDir, publicDir, { recursive: true, force: true });
+  } catch (error) {
+    if (!isNodeError(error) || error.code !== "ENOENT") {
+      throw error;
+    }
+
+    await mkdir(publicDir, { recursive: true });
+  }
+
+  await writeGeneratedFiles(publicDir, generatedFiles);
 }
 
 async function watchDevInputs(cwd: string, internalRoot: string): Promise<FSWatcher> {
@@ -374,6 +397,10 @@ function readString(value: unknown): string | undefined {
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
+}
+
+function isNodeError(error: unknown): error is NodeJS.ErrnoException {
+  return error instanceof Error && "code" in error;
 }
 
 async function runAstro(
