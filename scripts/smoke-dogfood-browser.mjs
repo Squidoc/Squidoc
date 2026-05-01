@@ -58,8 +58,19 @@ try {
     );
     await assertCount(page.locator("[data-squidoc-codeblock]"), 2);
     await assertCount(page.locator("[data-squidoc-copy-code]"), 2);
+    await page.addInitScript(() => {
+      Object.defineProperty(navigator, "clipboard", {
+        configurable: true,
+        value: {
+          async writeText(text) {
+            window.__squidocCopiedText = text;
+          },
+        },
+      });
+    });
+    await page.reload({ waitUntil: "networkidle" });
     await page.locator("[data-squidoc-copy-code]").first().click();
-    await expectText(page.locator("[data-squidoc-copy-code]").first(), "Copied");
+    await expectTextEventually(page.locator("[data-squidoc-copy-code]").first(), "Copied");
 
     await page.locator("#squidoc-search-input").fill("generated output");
     await expectText(
@@ -128,6 +139,23 @@ async function waitForServer() {
 async function expectText(locator, expected) {
   const actual = (await locator.innerText()).trim();
   assert(actual === expected, `Expected text "${expected}", received "${actual}".`);
+}
+
+async function expectTextEventually(locator, expected) {
+  const started = Date.now();
+  let actual = "";
+
+  while (Date.now() - started < 2_000) {
+    actual = (await locator.innerText()).trim();
+
+    if (actual === expected) {
+      return;
+    }
+
+    await new Promise((resolve) => setTimeout(resolve, 50));
+  }
+
+  assert(false, `Expected text "${expected}", received "${actual}".`);
 }
 
 async function expectAttribute(locator, name, expected) {

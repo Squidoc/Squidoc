@@ -55,6 +55,8 @@ const COPY_SCRIPT = `<script>
     }
 
     const originalLabel = button.textContent ?? "Copy";
+    button.textContent = "Copying";
+    button.dataset.state = "copying";
 
     try {
       await writeClipboard(code.textContent ?? "");

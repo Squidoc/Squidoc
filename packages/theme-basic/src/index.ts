@@ -404,6 +404,11 @@ a {
   color: #166534;
 }
 
+.sq-codeblock__copy[data-state="copying"] {
+  border-color: var(--squidoc-accent);
+  color: var(--squidoc-accent);
+}
+
 .sq-codeblock__copy[data-state="failed"] {
   border-color: #dc2626;
   color: #991b1b;
