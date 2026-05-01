@@ -2,6 +2,33 @@
 
 Thanks for helping build Squidoc. This repo is a pnpm monorepo containing the public CLI, project generator, core APIs, default theme, plugins, dogfood docs, and release tooling.
 
+## Local Setup
+
+Prerequisites:
+
+- Node.js 20 or newer
+- pnpm 10.30.2 or newer
+
+Clone the repo and install dependencies:
+
+```bash
+git clone https://github.com/Squidoc/Squidoc.git
+cd Squidoc
+pnpm install
+```
+
+Build the packages:
+
+```bash
+pnpm build
+```
+
+Run the dogfood docs locally:
+
+```bash
+pnpm --filter @squidoc/docs dev
+```
+
 ## Monorepo Layout
 
 ```txt
@@ -22,23 +49,20 @@ examples/
   squidoc-docs/     Dogfood docs site
 ```
 
-## Development
+## Running Tests
+
+Before opening a pull request, run:
 
 ```bash
-pnpm install
 pnpm lint
 pnpm build
 pnpm check
 pnpm test
 ```
 
-The dogfood docs site lives in `examples/squidoc-docs` and is included in the test loop.
-
-## Testing
-
 `pnpm test` runs package tests, checks the dogfood docs, builds the dogfood docs, verifies generated output, runs browser smoke tests, and runs the project generator smoke test.
 
-Before publishing, also run an npm package dry run:
+For package publish checks, run:
 
 ```bash
 pnpm -r --filter './packages/**' exec npm pack --dry-run --cache /private/tmp/squidoc-npm-cache
@@ -46,16 +70,19 @@ pnpm -r --filter './packages/**' exec npm pack --dry-run --cache /private/tmp/sq
 
 This verifies package `files` fields and catches missing templates or accidental test fixture/source leakage before release.
 
-## Phase 1
+## Submitting A Pull Request
 
-Phase 1 establishes the static-first core:
+1. Create a branch from `main`.
+2. Keep the change focused and include tests or docs when useful.
+3. Run the checks above.
+4. Use conventional commit messages, such as `fix(create): derive package name from target`.
+5. Open a pull request with a short summary, testing notes, and screenshots for UI changes.
 
-- Project generator and public CLI.
-- Markdown docs rendering with optional MDX.
-- Config validation and nested navigation.
-- Plugin system with SEO, search, code blocks, article tree, MDX, and llms output.
-- Basic responsive theme with navbar, mobile sidebar, footer options, code highlighting, search, and article tree slots.
-- Dogfood docs site, generated-site smoke tests, browser smoke tests, generator smoke tests, CI, and Changesets publishing flow.
+If your change affects published package behavior, add a Changeset:
+
+```bash
+pnpm changeset
+```
 
 ## Publishing
 
