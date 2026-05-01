@@ -64,6 +64,8 @@ Plugin order matters when plugins build on each other. Keep format plugins such 
 
 `@squidoc/plugin-versions` adds version metadata, a version selector slot, `versions.json`, and route handling for archived docs. See the [Versioning guide](/versioning).
 
+`@squidoc/plugin-i18n` adds localized docs routing, a language selector slot, `locales.json`, search scoping, and SEO metadata for translated pages. See the [Internationalization guide](/i18n).
+
 ## Removing a plugin
 
 Remove the package from `plugins` in `docs.config.ts`, then remove the dependency from your package manager if you no longer need it.

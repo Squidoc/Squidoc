@@ -84,6 +84,12 @@ const pages = [
     canonical: "https://squidoc.dev/docs/versioning",
   },
   {
+    file: "docs/i18n/index.html",
+    route: "/docs/i18n",
+    title: "Internationalization | Squidoc",
+    canonical: "https://squidoc.dev/docs/i18n",
+  },
+  {
     file: "docs/mdx/index.html",
     route: "/docs/mdx",
     title: "MDX | Squidoc",
@@ -102,7 +108,39 @@ const archivedPages = pages.map((page) => ({
       ? "https://squidoc.dev/docs/versions/0.1"
       : `https://squidoc.dev${page.route.replace("/docs", "/docs/versions/0.1")}`,
 }));
-const allPages = [...pages, ...archivedPages];
+const localizedPages = [
+  {
+    file: "es/docs/index.html",
+    route: "/es/docs",
+    title: "Introducción | Squidoc",
+    canonical: "https://squidoc.dev/es/docs",
+  },
+  {
+    file: "es/docs/configuration/index.html",
+    route: "/es/docs/configuration",
+    title: "Configuración | Squidoc",
+    canonical: "https://squidoc.dev/es/docs/configuration",
+  },
+  {
+    file: "es/docs/versions/0.1/index.html",
+    route: "/es/docs/versions/0.1",
+    title: "Introducción | Squidoc",
+    canonical: "https://squidoc.dev/es/docs/versions/0.1",
+  },
+  {
+    file: "es/docs/versions/0.1/configuration/index.html",
+    route: "/es/docs/versions/0.1/configuration",
+    title: "Configuración | Squidoc",
+    canonical: "https://squidoc.dev/es/docs/versions/0.1/configuration",
+  },
+  {
+    file: "es/docs/versions/0.1/i18n/index.html",
+    route: "/es/docs/versions/0.1/i18n",
+    title: "Internacionalización | Squidoc",
+    canonical: "https://squidoc.dev/es/docs/versions/0.1/i18n",
+  },
+];
+const allPages = [...pages, ...archivedPages, ...localizedPages];
 
 for (const page of allPages) {
   const html = await readDistFile(page.file);
@@ -111,6 +149,7 @@ for (const page of allPages) {
   assertIncludes(html, `rel="canonical" href="${page.canonical}"`, page.file);
   assertIncludes(html, "data-squidoc-search", page.file);
   assertIncludes(html, "data-squidoc-versions", page.file);
+  assertIncludes(html, "data-squidoc-locales", page.file);
 }
 
 const home = await readDistFile("index.html");
@@ -185,8 +224,19 @@ assert(
     versions.some((version) => version.name === "next" && version.current === true) &&
     versions.some(
       (version) => version.name === "0.1" && version.routePrefix === "/docs/versions/0.1",
+    ) &&
+    versions.some(
+      (version) => version.name === "0.1" && version.routePrefix === "/es/docs/versions/0.1",
     ),
   "versions.json should include current and archived dogfood versions",
+);
+
+const locales = JSON.parse(await readDistFile("locales.json"));
+assert(
+  Array.isArray(locales) &&
+    locales.some((locale) => locale.code === "en" && locale.current === true) &&
+    locales.some((locale) => locale.code === "es" && locale.routePrefix === "/es"),
+  "locales.json should include English and Spanish locales",
 );
 
 const llms = await readDistFile("llms.txt");

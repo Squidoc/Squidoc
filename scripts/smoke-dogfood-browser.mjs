@@ -63,6 +63,12 @@ try {
       "href",
       "https://squidoc.dev/docs/configuration",
     );
+    await expectText(page.locator(".sq-locale-selector__label"), "Language");
+    await expectAttribute(
+      page.locator('link[rel="alternate"][hreflang="es"]'),
+      "href",
+      "https://squidoc.dev/es/docs/configuration",
+    );
     await assertMinCount(page.locator("[data-squidoc-codeblock]"), 2);
     await assertMinCount(page.locator("[data-squidoc-copy-code]"), 2);
     await page.addInitScript(() => {
@@ -78,6 +84,25 @@ try {
     await page.reload({ waitUntil: "networkidle" });
     await page.locator("[data-squidoc-copy-code]").first().click();
     await expectTextEventually(page.locator("[data-squidoc-copy-code]").first(), "Copied");
+
+    await page.locator("#squidoc-locale-selector").selectOption("es");
+    await page.waitForURL(`${baseUrl}/es/docs/configuration`, { waitUntil: "networkidle" });
+    await expectAttribute(page.locator("html"), "lang", "es");
+    await expectText(page.locator("main h1"), "Configuración");
+    await page.locator("#squidoc-version-selector").selectOption("/es/docs/versions/0.1");
+    await page.waitForURL(`${baseUrl}/es/docs/versions/0.1/configuration`, {
+      waitUntil: "networkidle",
+    });
+    await expectText(page.locator("main h1"), "Configuración");
+    await page.locator("#squidoc-version-selector").selectOption("/es/docs");
+    await page.waitForURL(`${baseUrl}/es/docs/configuration`, { waitUntil: "networkidle" });
+    await page.locator("#squidoc-search-input").fill("fuente principal");
+    await expectText(
+      page.locator('.sq-search__result[href="/es/docs/configuration"] .sq-search__result-title'),
+      "Configuración\nNext",
+    );
+    await page.locator("#squidoc-locale-selector").selectOption("en");
+    await page.waitForURL(`${baseUrl}/docs/configuration`, { waitUntil: "networkidle" });
 
     await page.goto(`${baseUrl}/docs/pages`, { waitUntil: "networkidle" });
     await page.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight));
@@ -155,6 +180,15 @@ try {
           entry.route === "/docs/versions/0.1/configuration" && entry.version?.label === "0.1",
       ),
       "search-index.json should include archived version metadata",
+    );
+    assert(
+      searchIndex.some(
+        (entry) =>
+          entry.route === "/es/docs/configuration" &&
+          entry.locale?.code === "es" &&
+          entry.version?.label === "Next",
+      ),
+      "search-index.json should include locale metadata",
     );
   } finally {
     await browser.close();

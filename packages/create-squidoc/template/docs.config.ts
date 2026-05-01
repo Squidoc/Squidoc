@@ -21,6 +21,13 @@ export default defineConfig({
     "@squidoc/plugin-pages",
     "@squidoc/plugin-codeblocks",
     "@squidoc/plugin-article-tree",
+    {
+      name: "@squidoc/plugin-i18n",
+      options: {
+        defaultLocale: "en",
+        locales: [{ code: "en", label: "English" }],
+      },
+    },
   ],
   nav: [{ title: "Getting Started", path: "/getting-started" }],
 });

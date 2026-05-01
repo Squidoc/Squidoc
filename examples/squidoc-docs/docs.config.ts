@@ -29,6 +29,16 @@ export default defineConfig({
         ],
       },
     },
+    {
+      name: "@squidoc/plugin-i18n",
+      options: {
+        defaultLocale: "en",
+        locales: [
+          { code: "en", label: "English" },
+          { code: "es", label: "Español" },
+        ],
+      },
+    },
   ],
   theme: {
     name: "@squidoc/theme-basic",
@@ -60,6 +70,7 @@ export default defineConfig({
         { title: "Pages", path: "/pages" },
         { title: "Themes", path: "/themes" },
         { title: "Versioning", path: "/versioning" },
+        { title: "Internationalization", path: "/i18n" },
         { title: "MDX", path: "/mdx" },
       ],
     },
