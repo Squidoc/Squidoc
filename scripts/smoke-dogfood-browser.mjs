@@ -78,6 +78,11 @@ try {
     await page.locator("[data-squidoc-copy-code]").first().click();
     await expectTextEventually(page.locator("[data-squidoc-copy-code]").first(), "Copied");
 
+    await page.goto(`${baseUrl}/docs/pages`, { waitUntil: "networkidle" });
+    await page.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight));
+    await expectTextEventually(page.locator(".sq-article-tree__link[data-active]"), "Limits");
+
+    await page.goto(`${baseUrl}/docs/configuration`, { waitUntil: "networkidle" });
     await expectText(page.locator(".sq-version-selector__label"), "Version");
     await page.locator("#squidoc-version-selector").selectOption("/docs/versions/0.1");
     await page.waitForURL(`${baseUrl}/docs/versions/0.1/configuration`, {

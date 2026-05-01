@@ -37,5 +37,7 @@ describe("@squidoc/plugin-article-tree", () => {
     });
     expect(themeSlots[0]?.html).toContain("data-squidoc-article-tree");
     expect(themeSlots[0]?.html).toContain("IntersectionObserver");
+    expect(themeSlots[0]?.html).toContain("requestAnimationFrame");
+    expect(themeSlots[0]?.html).toContain("isAtBottom");
   });
 });

@@ -44,17 +44,53 @@ if (!tree || !list || headings.length === 0) {
     }
   };
 
-  setActive(headings[0].id);
+  const getActiveHeading = () => {
+    const activationOffset = Math.min(160, window.innerHeight * 0.28);
+    const documentHeight = Math.max(
+      document.body.scrollHeight,
+      document.documentElement.scrollHeight,
+    );
+    const isAtBottom = window.scrollY + window.innerHeight >= documentHeight - 2;
 
-  const observer = new IntersectionObserver((entries) => {
-    const visible = entries
-      .filter((entry) => entry.isIntersecting)
-      .sort((first, second) => first.boundingClientRect.top - second.boundingClientRect.top)[0];
-
-    if (visible?.target?.id) {
-      setActive(visible.target.id);
+    if (isAtBottom) {
+      return headings.at(-1);
     }
-  }, {
+
+    let active = headings[0];
+
+    for (const heading of headings) {
+      if (heading.getBoundingClientRect().top <= activationOffset) {
+        active = heading;
+      } else {
+        break;
+      }
+    }
+
+    return active;
+  };
+
+  let frame = 0;
+  const updateActiveHeading = () => {
+    if (frame) {
+      return;
+    }
+
+    frame = window.requestAnimationFrame(() => {
+      frame = 0;
+      const active = getActiveHeading();
+
+      if (active?.id) {
+        setActive(active.id);
+      }
+    });
+  };
+
+  updateActiveHeading();
+
+  window.addEventListener("scroll", updateActiveHeading, { passive: true });
+  window.addEventListener("resize", updateActiveHeading);
+
+  const observer = new IntersectionObserver(updateActiveHeading, {
     rootMargin: "0px 0px -70% 0px",
     threshold: 0.1,
   });
