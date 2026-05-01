@@ -72,6 +72,12 @@ const pages = [
     canonical: "https://squidoc.dev/themes",
   },
   {
+    file: "versioning/index.html",
+    route: "/versioning",
+    title: "Versioning | Squidoc",
+    canonical: "https://squidoc.dev/versioning",
+  },
+  {
     file: "mdx/index.html",
     route: "/mdx",
     title: "MDX | Squidoc",
@@ -122,6 +128,7 @@ assertIncludes(llms, "[Deployment](https://squidoc.dev/deployment)", "llms.txt")
 assertIncludes(llms, "[Frontmatter](https://squidoc.dev/frontmatter)", "llms.txt");
 assertIncludes(llms, "[Plugins](https://squidoc.dev/plugins)", "llms.txt");
 assertIncludes(llms, "[Themes](https://squidoc.dev/themes)", "llms.txt");
+assertIncludes(llms, "[Versioning](https://squidoc.dev/versioning)", "llms.txt");
 assertIncludes(llms, "[Authoring Extensions](https://squidoc.dev/developers)", "llms.txt");
 assertIncludes(llms, "[Plugin Authoring](https://squidoc.dev/plugin-authoring)", "llms.txt");
 assertIncludes(llms, "[Theme Authoring](https://squidoc.dev/theme-authoring)", "llms.txt");
@@ -133,6 +140,7 @@ assertIncludes(llmsFull, "`doctor` reports:", "llms-full.txt");
 assertIncludes(llmsFull, "Supported fields", "llms-full.txt");
 assertIncludes(llmsFull, "Plugins add behavior to a Squidoc site", "llms-full.txt");
 assertIncludes(llmsFull, "Themes control the structure and presentation", "llms-full.txt");
+assertIncludes(llmsFull, "@squidoc/plugin-versions", "llms-full.txt");
 assertIncludes(llmsFull, "Squidoc is designed to stay simple for authors", "llms-full.txt");
 assertIncludes(llmsFull, "The setup API currently supports:", "llms-full.txt");
 assertIncludes(llmsFull, "Themes should be able to change navigation placement", "llms-full.txt");

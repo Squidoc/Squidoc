@@ -1,6 +1,6 @@
 import { access } from "node:fs/promises";
 import { dirname, join } from "node:path";
-import { discoverDocs, loadConfig, runPlugins } from "@squidoc/core";
+import { applyProjectTransforms, discoverDocs, loadConfig, runPlugins } from "@squidoc/core";
 import { validateProject } from "./check.js";
 
 export type DoctorReport = {
@@ -19,12 +19,17 @@ export async function inspectProject(cwd = process.cwd()): Promise<DoctorReport>
   const pages = await discoverDocs(loaded.config, cwd, {
     extensions: capabilities.docExtensions,
   });
-  const issues = validateProject(loaded.config, pages).map((issue) => issue.message);
+  const project = await applyProjectTransforms(
+    { pages, nav: loaded.config.nav },
+    capabilities.projectTransformers,
+  );
+  const config = { ...loaded.config, nav: project.nav };
+  const issues = validateProject(config, project.pages).map((issue) => issue.message);
 
   return {
     configPath: loaded.path,
     docsDir: loaded.config.docsDir,
-    pageCount: pages.length,
+    pageCount: project.pages.length,
     packageManager: await detectPackageManager(cwd),
     plugins: loaded.config.plugins.map(getPluginDisplayName),
     theme: typeof loaded.config.theme === "string" ? loaded.config.theme : loaded.config.theme.name,

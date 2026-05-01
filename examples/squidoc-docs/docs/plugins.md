@@ -59,6 +59,8 @@ Plugin order matters when plugins build on each other. Keep format plugins such 
 
 `@squidoc/plugin-llms` generates `llms.txt` and `llms-full.txt` so AI tools can discover and read your documentation in a predictable format.
 
+`@squidoc/plugin-versions` adds version metadata, a version selector slot, `versions.json`, and route handling for archived docs. See the [Versioning guide](/versioning).
+
 ## Removing a plugin
 
 Remove the package from `plugins` in `docs.config.ts`, then remove the dependency from your package manager if you no longer need it.

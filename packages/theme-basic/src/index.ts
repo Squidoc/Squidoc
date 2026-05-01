@@ -105,6 +105,31 @@ a {
   font-size: 14px;
 }
 
+.sq-version-selector {
+  display: grid;
+  gap: 7px;
+  margin: 0 0 18px;
+}
+
+.sq-version-selector__label {
+  color: var(--squidoc-muted);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.sq-version-selector__select {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 36px;
+  border: 1px solid var(--squidoc-border);
+  border-radius: 8px;
+  padding: 7px 9px;
+  color: var(--squidoc-text);
+  background: #ffffff;
+  font: inherit;
+  font-size: 14px;
+}
+
 .sq-nav__list {
   display: grid;
   gap: 8px;

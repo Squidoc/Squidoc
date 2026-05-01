@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import { discoverDocs, loadConfig, runPlugins } from "@squidoc/core";
+import { applyProjectTransforms, discoverDocs, loadConfig, runPlugins } from "@squidoc/core";
 import { type AddKind, addExtension } from "./add.js";
 import { buildSite, devSite, previewSite } from "./build.js";
 import { validateProject } from "./check.js";
@@ -92,11 +92,18 @@ async function checkProject(): Promise<void> {
     const pages = await discoverDocs(loaded.config, process.cwd(), {
       extensions: capabilities.docExtensions,
     });
+    const project = await applyProjectTransforms(
+      { pages, nav: loaded.config.nav },
+      capabilities.projectTransformers,
+    );
+    const config = { ...loaded.config, nav: project.nav };
 
     console.log(`Loaded config: ${loaded.path}`);
-    console.log(`Discovered ${pages.length} documentation page${pages.length === 1 ? "" : "s"}.`);
+    console.log(
+      `Discovered ${project.pages.length} documentation page${project.pages.length === 1 ? "" : "s"}.`,
+    );
 
-    const issues = validateProject(loaded.config, pages);
+    const issues = validateProject(config, project.pages);
 
     if (issues.length > 0) {
       throw new Error(issues.map((issue) => issue.message).join("\n"));

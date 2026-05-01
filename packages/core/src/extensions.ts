@@ -1,7 +1,7 @@
 import { join } from "node:path";
 import { createJiti } from "jiti";
 import type { DocPage } from "./docs.js";
-import type { ResolvedSquidocConfig } from "./schema.js";
+import type { NavItem, ResolvedSquidocConfig } from "./schema.js";
 
 export type PluginApi = {
   addDocExtension: (extension: string) => void;
@@ -9,6 +9,7 @@ export type PluginApi = {
   addHeadTags: (tags: HeadTag[]) => void;
   addHtmlTransformer: (transformer: HtmlTransformer) => void;
   addPageHeadTags: (factory: PageHeadTagFactory) => void;
+  addProjectTransformer: (transformer: ProjectTransformer) => void;
   addThemeSlot: (slot: ThemeSlot) => void;
   config: ResolvedSquidocConfig;
   pages: DocPage[];
@@ -29,6 +30,13 @@ export type HeadTag = {
 export type PageHeadTagFactory = (page: DocPage) => HeadTag[];
 
 export type HtmlTransformer = (html: string, page: DocPage) => string | Promise<string>;
+
+export type Project = {
+  pages: DocPage[];
+  nav: NavItem[];
+};
+
+export type ProjectTransformer = (project: Project) => Project | Promise<Project>;
 
 export type ThemeSlot = {
   name: string;
@@ -51,6 +59,7 @@ export type PluginContext = {
   headTags: HeadTag[];
   htmlTransformers: HtmlTransformer[];
   pageHeadTagFactories: PageHeadTagFactory[];
+  projectTransformers: ProjectTransformer[];
   themeSlots: ThemeSlot[];
 };
 
@@ -65,6 +74,7 @@ export async function runPlugins(
     headTags: [],
     htmlTransformers: [],
     pageHeadTagFactories: [],
+    projectTransformers: [],
     themeSlots: [],
   };
   const api: PluginApi = {
@@ -85,6 +95,9 @@ export async function runPlugins(
     addPageHeadTags(factory) {
       context.pageHeadTagFactories.push(factory);
     },
+    addProjectTransformer(transformer) {
+      context.projectTransformers.push(transformer);
+    },
     addThemeSlot(slot) {
       context.themeSlots.push(slot);
     },
@@ -103,6 +116,19 @@ export async function runPlugins(
   }
 
   return context;
+}
+
+export async function applyProjectTransforms(
+  project: Project,
+  transformers: ProjectTransformer[],
+): Promise<Project> {
+  let transformed = project;
+
+  for (const transformer of transformers) {
+    transformed = await transformer(transformed);
+  }
+
+  return transformed;
 }
 
 export type SquidocTheme = {

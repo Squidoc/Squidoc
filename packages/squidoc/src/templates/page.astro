@@ -52,6 +52,7 @@ const {
     </header>
     <div class={classes.shell}>
       <aside class={classes.sidebar}>
+        <Fragment set:html={slots.versionSelector} />
         <nav class={classes.nav} aria-label="Documentation">
           <Fragment set:html={navHtml} />
         </nav>

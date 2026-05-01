@@ -39,6 +39,7 @@ export default defineConfig({
       items: [
         { title: "Plugins", path: "/plugins" },
         { title: "Themes", path: "/themes" },
+        { title: "Versioning", path: "/versioning" },
         { title: "MDX", path: "/mdx" },
       ],
     },

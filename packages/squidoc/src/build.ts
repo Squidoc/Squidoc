@@ -7,11 +7,11 @@ import {
   type DocPage,
   type GeneratedFile,
   type HeadTag,
-  type LoadedConfig,
   type NavItem,
   type PluginContext,
   type ResolvedSquidocConfig,
   type SquidocTheme,
+  applyProjectTransforms,
   discoverDocs,
   loadConfig,
   loadTheme,
@@ -76,14 +76,19 @@ async function generateAstroProject(cwd: string, internalRoot: string): Promise<
   const pages = await discoverDocs(loaded.config, cwd, {
     extensions: capabilities.docExtensions,
   });
+  const project = await applyProjectTransforms(
+    { pages, nav: loaded.config.nav },
+    capabilities.projectTransformers,
+  );
+  const config = { ...loaded.config, nav: project.nav };
   const theme = await loadTheme(loaded.config, cwd);
-  const plugins = await runPlugins(loaded.config, pages, cwd);
+  const plugins = await runPlugins(config, project.pages, cwd);
 
-  if (pages.length === 0) {
+  if (project.pages.length === 0) {
     throw new Error(`No documentation pages found in ${loaded.config.docsDir}.`);
   }
 
-  await writeAstroProject(internalRoot, cwd, loaded, pages, theme, plugins);
+  await writeAstroProject(internalRoot, cwd, config, project.pages, theme, plugins);
   return plugins;
 }
 
@@ -105,7 +110,7 @@ async function linkResolvedPackage(packageName: string, nodeModules: string): Pr
 async function writeAstroProject(
   internalRoot: string,
   cwd: string,
-  loaded: LoadedConfig,
+  config: ResolvedSquidocConfig,
   pages: DocPage[],
   theme: SquidocTheme,
   plugins: PluginContext,
@@ -122,7 +127,7 @@ async function writeAstroProject(
       {
         outDir: join(cwd, "dist"),
         publicDir,
-        site: loaded.config.site.url,
+        site: config.site.url,
       },
       null,
       2,
@@ -134,7 +139,7 @@ async function writeAstroProject(
     join(templatesRoot, "page.astro"),
     join(internalRoot, "src", "pages", "[...route].astro"),
   );
-  await writeRenderData(internalRoot, loaded, pages, theme, plugins);
+  await writeRenderData(internalRoot, config, pages, theme, plugins);
 }
 
 async function preparePublicDir(
@@ -195,12 +200,12 @@ function getWatchedPaths(cwd: string, config: ResolvedSquidocConfig): string[] {
 
 async function writeRenderData(
   internalRoot: string,
-  loaded: LoadedConfig,
+  config: ResolvedSquidocConfig,
   pages: DocPage[],
   theme: SquidocTheme,
   plugins: PluginContext,
 ): Promise<void> {
-  const themeOptions = getThemeOptions(loaded.config);
+  const themeOptions = getThemeOptions(config);
   const headerLinksHtml = renderLinkListHtml(
     readLinks(themeOptions.headerLinks),
     "sq-topbar__link",
@@ -217,10 +222,11 @@ async function writeRenderData(
   const slots = {
     articleTree: renderThemeSlot(plugins, "article-tree"),
     search: renderThemeSlot(plugins, "search"),
+    versionSelector: renderThemeSlot(plugins, "version-selector"),
   };
   const renderPages = await Promise.all(
     pages.map(async (page) => ({
-      site: loaded.config.site,
+      site: config.site,
       page: {
         description: page.description,
         route: page.route,
@@ -236,7 +242,7 @@ async function writeRenderData(
       headerLinksHtml,
       footer: { text: footer.text },
       footerLinksHtml,
-      navHtml: renderNavHtml(buildNavTree(loaded.config.nav, pages), page.route),
+      navHtml: renderNavHtml(buildNavTree(config.nav, pages), page.route),
       slots,
     })),
   );
