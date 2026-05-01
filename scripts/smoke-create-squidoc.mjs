@@ -4,10 +4,12 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 
 const repoRoot = new URL("..", import.meta.url).pathname;
-const target = await mkdtemp(join(tmpdir(), "squidoc-smoke-"));
+const root = await mkdtemp(join(tmpdir(), "squidoc-smoke-"));
+const target = join(root, "Acme Docs!");
 
 try {
   await run("node", [join(repoRoot, "packages/create-squidoc/dist/cli.js"), target], repoRoot);
+  await assertGeneratedPackageName(target, "acme-docs");
   await assertGeneratedGitignore(target);
   await linkWorkspacePackages(target);
   await run(
@@ -23,7 +25,17 @@ try {
     smokeEnv(target),
   );
 } finally {
-  await rm(target, { recursive: true, force: true });
+  await rm(root, { recursive: true, force: true });
+}
+
+async function assertGeneratedPackageName(target, expectedName) {
+  const packageJson = JSON.parse(await readFile(join(target, "package.json"), "utf8"));
+
+  if (packageJson.name !== expectedName) {
+    throw new Error(
+      `Expected generated package name ${expectedName}, received ${packageJson.name}`,
+    );
+  }
 }
 
 async function assertGeneratedGitignore(target) {
