@@ -1,5 +1,5 @@
 import { spawn } from "node:child_process";
-import { mkdir, mkdtemp, rm, symlink } from "node:fs/promises";
+import { mkdir, mkdtemp, readFile, rm, symlink } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 
@@ -8,6 +8,7 @@ const target = await mkdtemp(join(tmpdir(), "squidoc-smoke-"));
 
 try {
   await run("node", [join(repoRoot, "packages/create-squidoc/dist/cli.js"), target], repoRoot);
+  await assertGeneratedGitignore(target);
   await linkWorkspacePackages(target);
   await run(
     "node",
@@ -23,6 +24,17 @@ try {
   );
 } finally {
   await rm(target, { recursive: true, force: true });
+}
+
+async function assertGeneratedGitignore(target) {
+  const gitignore = await readFile(join(target, ".gitignore"), "utf8");
+  const expectedEntries = ["node_modules/", "dist/", ".squidoc/"];
+
+  for (const entry of expectedEntries) {
+    if (!gitignore.includes(entry)) {
+      throw new Error(`Generated .gitignore is missing ${entry}`);
+    }
+  }
 }
 
 async function linkWorkspacePackages(target) {
