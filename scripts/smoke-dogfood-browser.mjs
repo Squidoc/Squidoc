@@ -48,6 +48,7 @@ try {
     await page.goto(`${baseUrl}/`, { waitUntil: "networkidle" });
     await expectText(page.locator("main h1"), "Squidoc");
     await expectAttribute(page.locator(".sq-home__primary"), "href", "/docs/getting-started");
+    await expectMobileTopbarLinks(page);
 
     await page.goto(`${baseUrl}/docs/developers`, { waitUntil: "networkidle" });
     await expectFooterNotAboveViewport(page);
@@ -219,6 +220,29 @@ async function expectSidebarFillsViewport(page) {
     Math.abs(sidebarBox.height - (viewport.height - 60)) <= 2,
     "Expected sidebar to fill the available viewport height below the navbar.",
   );
+}
+
+async function expectMobileTopbarLinks(page) {
+  await page.setViewportSize({ width: 390, height: 780 });
+  await page.reload({ waitUntil: "networkidle" });
+  await expectHidden(page.locator(".sq-topbar__nav"));
+  await page.locator(".sq-sidebar-toggle").click();
+  await expectVisible(page.locator(".sq-topbar__nav"));
+  await expectAttribute(
+    page.locator(".sq-topbar__nav a").filter({ hasText: "Docs" }),
+    "href",
+    "/docs",
+  );
+  await page.setViewportSize({ width: 1200, height: 720 });
+  await page.reload({ waitUntil: "networkidle" });
+}
+
+async function expectHidden(locator) {
+  assert(!(await locator.isVisible()), "Expected element to be hidden.");
+}
+
+async function expectVisible(locator) {
+  assert(await locator.isVisible(), "Expected element to be visible.");
 }
 
 function assert(condition, message) {

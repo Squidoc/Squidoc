@@ -612,6 +612,12 @@ a {
 
   .sq-topbar__nav {
     display: none;
+    order: 4;
+    flex-basis: 100%;
+    flex-direction: column;
+    gap: 10px;
+    border-top: 1px solid var(--squidoc-border);
+    padding-top: 12px;
   }
 
   .sq-search {
@@ -623,6 +629,10 @@ a {
 
   .sq-sidebar-control:checked + .sq-topbar .sq-search {
     display: block;
+  }
+
+  .sq-sidebar-control:checked + .sq-topbar .sq-topbar__nav {
+    display: flex;
   }
 
   .sq-sidebar-toggle {

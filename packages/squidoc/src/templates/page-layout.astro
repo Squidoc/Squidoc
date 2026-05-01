@@ -38,7 +38,7 @@ const isDocsLayout = layout === "docs";
       <nav class="sq-topbar__nav" aria-label="Site">
         <Fragment set:html={headerLinksHtml} />
       </nav>
-      {isDocsLayout && <label class="sq-sidebar-toggle" for="squidoc-sidebar-toggle">Menu</label>}
+      <label class="sq-sidebar-toggle" for="squidoc-sidebar-toggle">Menu</label>
     </header>
     {
       isDocsLayout ? (
