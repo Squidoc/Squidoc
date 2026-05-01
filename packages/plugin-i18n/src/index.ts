@@ -38,9 +38,12 @@ type LocaleManifestEntry = {
   routes: string[];
 };
 
+const LOCALE_CODE_PATTERN = /^[a-z]{2,3}(?:-[A-Z]{2})?$/;
+
 export default definePlugin({
   name: "@squidoc/plugin-i18n",
   setup(api) {
+    warnForPluginOrder(api.config.plugins);
     const locales = resolveLocales(api.pluginOptions);
     const versions = resolveVersionsFromConfig(api.config.plugins, api.config.docs.basePath);
 
@@ -200,7 +203,8 @@ function rewriteNav(items: NavItem[], routePrefix: string, routeSet: Set<string>
 function renderLocaleSelector(locales: ResolvedLocale[], pages: DocPage[]): string {
   const options = locales
     .map(
-      (locale) => `<option value="${escapeHtml(locale.code)}">${escapeHtml(locale.label)}</option>`,
+      (locale) =>
+        `<option value="${escapeHtml(locale.code)}"${locale.current ? " selected" : ""}>${escapeHtml(locale.label)}</option>`,
     )
     .join("");
   const manifest = JSON.stringify(toManifest(locales, pages));
@@ -272,6 +276,7 @@ function toManifest(locales: ResolvedLocale[], pages: DocPage[]): LocaleManifest
 
 function resolveLocales(options: Record<string, unknown>): ResolvedLocale[] {
   const defaultLocale = readString(options.defaultLocale) ?? "en";
+  validateLocaleCode(defaultLocale, "defaultLocale");
   const configuredLocales = Array.isArray(options.locales)
     ? options.locales.flatMap((locale) => {
         const config = readLocaleConfig(locale);
@@ -290,6 +295,27 @@ function resolveLocales(options: Record<string, unknown>): ResolvedLocale[] {
     routePrefix: locale.code === defaultLocale ? "/" : normalizeRoutePrefix(`/${locale.code}`),
     current: locale.code === defaultLocale,
   }));
+}
+
+function warnForPluginOrder(
+  plugins: Array<string | { name: string; options: Record<string, unknown> }>,
+): void {
+  const i18nIndex = plugins.findIndex((plugin) => getPluginName(plugin) === "@squidoc/plugin-i18n");
+  const versionsIndex = plugins.findIndex(
+    (plugin) => getPluginName(plugin) === "@squidoc/plugin-versions",
+  );
+
+  if (i18nIndex >= 0 && versionsIndex >= 0 && i18nIndex < versionsIndex) {
+    console.warn(
+      "@squidoc/plugin-i18n should be listed after @squidoc/plugin-versions so localized version routes compose correctly.",
+    );
+  }
+}
+
+function getPluginName(
+  plugin: string | { name: string; options: Record<string, unknown> },
+): string {
+  return typeof plugin === "string" ? plugin : plugin.name;
 }
 
 function resolveVersionsFromConfig(
@@ -338,7 +364,21 @@ function readLocaleConfig(value: unknown): LocaleConfig | undefined {
 
   const code = readString(value.code);
 
-  return code ? { code, label: readString(value.label) } : undefined;
+  if (!code) {
+    return undefined;
+  }
+
+  validateLocaleCode(code, "locale code");
+
+  return { code, label: readString(value.label) };
+}
+
+function validateLocaleCode(code: string, label: string): void {
+  if (!LOCALE_CODE_PATTERN.test(code)) {
+    throw new Error(
+      `@squidoc/plugin-i18n received invalid ${label} "${code}". Use BCP 47-style codes like "en", "es", or "pt-BR".`,
+    );
+  }
 }
 
 function readVersionConfig(value: unknown, current: boolean): VersionConfig | undefined {
