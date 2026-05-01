@@ -46,7 +46,7 @@ try {
   try {
     await page.setViewportSize({ width: 1200, height: 720 });
     await page.goto(`${baseUrl}/`, { waitUntil: "networkidle" });
-    await expectText(page.locator("main h1"), "Squidoc");
+    await expectText(page.locator("main h1"), "Docs that start simple and grow with your product.");
     await expectAttribute(page.locator(".sq-home__primary"), "href", "/docs/getting-started");
     await expectMobileTopbarLinks(page);
     await expectNarrowDocsLayout(page);

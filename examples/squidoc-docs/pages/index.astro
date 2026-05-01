@@ -7,33 +7,523 @@ export const squidoc = {
 
 <section class="sq-home">
   <div class="sq-home__inner">
-    <p class="sq-home__eyebrow">Static-first documentation</p>
-    <h1>Squidoc</h1>
-    <p class="sq-home__lead">
-      Build fast documentation sites with Markdown, versioning, search, SEO, and a plugin system
-      that leaves room for serious customization.
-    </p>
-    <div class="sq-home__actions">
-      <a class="sq-home__primary" href="/docs/getting-started">Get started</a>
-      <a class="sq-home__secondary" href="/docs/plugins">Explore plugins</a>
-    </div>
-    <pre class="sq-home__install"><code>npm create squidoc@latest my-docs
+    <div class="sq-home__copy">
+      <div class="sq-home__brand-lockup">
+        <img src="/android-chrome-192x192.png" alt="" />
+        <p class="sq-home__eyebrow">Static-first documentation platform</p>
+      </div>
+      <h1>Docs that start simple and grow with your product.</h1>
+      <p class="sq-home__lead">
+        Squidoc turns Markdown into fast, SEO-ready documentation, then gives teams a plugin and
+        theme system for search, versioning, custom pages, code blocks, and anything your docs grow
+        into next.
+      </p>
+      <div class="sq-home__actions">
+        <a class="sq-home__primary" href="/docs/getting-started">Start building</a>
+        <a class="sq-home__secondary" href="/docs/plugins">Explore plugins</a>
+      </div>
+      <pre class="sq-home__install"><code>npm create squidoc@latest my-docs
 cd my-docs
 npm run dev</code></pre>
+      <div class="sq-home__metrics" aria-label="Platform highlights">
+        <span><strong>Static</strong> output</span>
+        <span><strong>12</strong> packages</span>
+        <span><strong>2</strong> stable layouts</span>
+      </div>
+    </div>
+
+    <div class="sq-home-preview" aria-label="Squidoc site preview">
+      <div class="sq-home-preview__rail" aria-hidden="true">
+        <img src="/android-chrome-192x192.png" alt="" />
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+      <div class="sq-home-preview__bar">
+        <span></span>
+        <span></span>
+        <span></span>
+        <p>docs.config.ts</p>
+      </div>
+      <div class="sq-home-preview__body">
+        <aside>
+          <p class="sq-home-preview__label">Version</p>
+          <div class="sq-home-preview__select">Next</div>
+          <nav>
+            <a class="active">Introduction</a>
+            <a>Configuration</a>
+            <a>Plugins</a>
+            <a>Versioning</a>
+          </nav>
+        </aside>
+        <main>
+          <p class="sq-home-preview__tag">Published docs</p>
+          <h2>Configuration</h2>
+          <p>Use one config file to wire your site, nav, plugins, theme, and docs base path.</p>
+          <div class="sq-home-code">
+            <span>plugins: [</span>
+            <span>&nbsp;&nbsp;"@squidoc/plugin-seo",</span>
+            <span>&nbsp;&nbsp;"@squidoc/plugin-search",</span>
+            <span>&nbsp;&nbsp;"@squidoc/plugin-versions"</span>
+            <span>]</span>
+          </div>
+        </main>
+        <aside class="sq-home-preview__toc">
+          <p>On this page</p>
+          <a>Site metadata</a>
+          <a class="active">Plugins</a>
+          <a>Theme options</a>
+        </aside>
+      </div>
+    </div>
   </div>
 </section>
 
-<section class="sq-home-grid" aria-label="Highlights">
+<section class="sq-home-strip" aria-label="Core workflow">
   <article>
-    <h2>Docs by default</h2>
-    <p>Write Markdown in <code>docs/</code> and Squidoc publishes it under <code>/docs/</code>.</p>
+    <span>01</span>
+    <h2>Create</h2>
+    <p>Generate a starter with Markdown docs, a default theme, SEO, code blocks, and pages ready.</p>
   </article>
   <article>
-    <h2>Pages when needed</h2>
-    <p>Create Astro pages for homepages, changelogs, landing pages, and anything outside the docs tree.</p>
+    <span>02</span>
+    <h2>Extend</h2>
+    <p>Add plugins for search, versioning, MDX discovery, article trees, and AI-readable files.</p>
   </article>
   <article>
-    <h2>Theme contract</h2>
-    <p>Themes implement stable <code>docs</code> and <code>page</code> layouts so custom sites stay portable.</p>
+    <span>03</span>
+    <h2>Ship</h2>
+    <p>Push static output to Vercel, Netlify, GitHub Pages, Docker, or any static host.</p>
   </article>
 </section>
+
+<section class="sq-home-showcase" aria-label="What Squidoc gives you">
+  <div>
+    <p class="sq-home__eyebrow">Built for real docs work</p>
+    <h2>A small core with room for power users.</h2>
+    <p>
+      Squidoc keeps the authoring path obvious: edit Markdown, adjust config, deploy static files.
+      When your docs need more, plugins and themes can reshape behavior without turning the project
+      into a one-off.
+    </p>
+  </div>
+  <div class="sq-home-feature-grid">
+    <article>
+      <strong>Versioned docs</strong>
+      <p>Keep current and archived documentation side by side with version-aware search.</p>
+    </article>
+    <article>
+      <strong>Custom pages</strong>
+      <p>Build landing pages, changelogs, and product pages with Astro components.</p>
+    </article>
+    <article>
+      <strong>SEO by default</strong>
+      <p>Canonical URLs, sitemap, robots output, and metadata are handled by the default plugin.</p>
+    </article>
+    <article>
+      <strong>Themeable layouts</strong>
+      <p>Use stable docs and page contracts so themes can change structure without breaking sites.</p>
+    </article>
+  </div>
+</section>
+
+<section class="sq-home-plugin-flow" aria-label="Plugin flow">
+  <p>Markdown</p>
+  <span></span>
+  <p>Core</p>
+  <span></span>
+  <p>Plugins</p>
+  <span></span>
+  <p>Theme</p>
+  <span></span>
+  <p>Static site</p>
+</section>
+
+<style>
+  .sq-home {
+    position: relative;
+    overflow: hidden;
+    border-bottom: 1px solid var(--squidoc-border);
+    background:
+      linear-gradient(90deg, rgb(37 99 235 / 7%) 1px, transparent 1px),
+      linear-gradient(0deg, rgb(37 99 235 / 7%) 1px, transparent 1px),
+      linear-gradient(135deg, rgb(20 184 166 / 10%), transparent 42%),
+      linear-gradient(180deg, #f8fbff 0%, #ffffff 78%);
+    background-size:
+      44px 44px,
+      44px 44px,
+      auto,
+      auto;
+  }
+
+  .sq-home::before {
+    position: absolute;
+    inset: auto 0 0;
+    height: 140px;
+    background: linear-gradient(180deg, transparent, #ffffff);
+    content: "";
+  }
+
+  .sq-home__inner {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 0.92fr) minmax(420px, 1.08fr);
+    gap: 48px;
+    width: min(1180px, calc(100% - 48px));
+    margin: 0 auto;
+    padding: 86px 0 72px;
+  }
+
+  .sq-home__copy {
+    align-self: center;
+  }
+
+  .sq-home__brand-lockup {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 14px;
+  }
+
+  .sq-home__brand-lockup img {
+    width: 42px;
+    height: 42px;
+    border: 1px solid rgb(15 23 42 / 10%);
+    border-radius: 11px;
+    background: #ffffff;
+    box-shadow: 0 10px 26px rgb(15 23 42 / 10%);
+  }
+
+  .sq-home h1 {
+    max-width: 760px;
+    font-size: clamp(50px, 7vw, 88px);
+    letter-spacing: 0;
+  }
+
+  .sq-home__lead {
+    max-width: 680px;
+  }
+
+  .sq-home__metrics {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 22px;
+  }
+
+  .sq-home__metrics span {
+    border: 1px solid var(--squidoc-border);
+    border-radius: 999px;
+    padding: 8px 12px;
+    color: var(--squidoc-muted);
+    background: rgb(255 255 255 / 78%);
+    font-size: 13px;
+    font-weight: 700;
+  }
+
+  .sq-home__metrics strong {
+    color: var(--squidoc-text);
+  }
+
+  .sq-home-preview {
+    align-self: center;
+    position: relative;
+    overflow: hidden;
+    border: 1px solid #cfd8e6;
+    border-radius: 14px;
+    background: #ffffff;
+    box-shadow: 0 28px 70px rgb(23 32 51 / 14%);
+  }
+
+  .sq-home-preview__rail {
+    display: grid;
+    grid-template-columns: 34px repeat(3, 1fr);
+    align-items: center;
+    gap: 14px;
+    border-bottom: 1px solid var(--squidoc-border);
+    padding: 14px 16px;
+    background: #0f172a;
+  }
+
+  .sq-home-preview__rail img {
+    width: 34px;
+    height: 34px;
+    border-radius: 8px;
+    background: #ffffff;
+  }
+
+  .sq-home-preview__rail span {
+    height: 8px;
+    border-radius: 999px;
+    background: rgb(255 255 255 / 14%);
+  }
+
+  .sq-home-preview__rail span:first-of-type {
+    background: rgb(20 184 166 / 52%);
+  }
+
+  .sq-home-preview__bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border-bottom: 1px solid var(--squidoc-border);
+    padding: 12px 14px;
+    background: #f8fafc;
+  }
+
+  .sq-home-preview__bar span {
+    width: 10px;
+    height: 10px;
+    border-radius: 999px;
+    background: #94a3b8;
+  }
+
+  .sq-home-preview__bar span:first-child {
+    background: #ef4444;
+  }
+
+  .sq-home-preview__bar span:nth-child(2) {
+    background: #f59e0b;
+  }
+
+  .sq-home-preview__bar span:nth-child(3) {
+    background: #22c55e;
+  }
+
+  .sq-home-preview__bar p {
+    margin: 0 0 0 8px;
+    color: var(--squidoc-muted);
+    font-size: 13px;
+    font-weight: 800;
+  }
+
+  .sq-home-preview__body {
+    display: grid;
+    grid-template-columns: 150px minmax(0, 1fr) 130px;
+    min-height: 430px;
+  }
+
+  .sq-home-preview aside,
+  .sq-home-preview main {
+    padding: 22px;
+  }
+
+  .sq-home-preview aside {
+    border-right: 1px solid var(--squidoc-border);
+    background: #fbfdff;
+  }
+
+  .sq-home-preview__toc {
+    border-right: 0;
+    border-left: 1px solid var(--squidoc-border);
+  }
+
+  .sq-home-preview__label,
+  .sq-home-preview__toc p,
+  .sq-home-preview__tag {
+    margin: 0 0 10px;
+    color: var(--squidoc-muted);
+    font-size: 11px;
+    font-weight: 800;
+    text-transform: uppercase;
+  }
+
+  .sq-home-preview__select {
+    border: 1px solid var(--squidoc-border);
+    border-radius: 8px;
+    padding: 8px;
+    font-size: 13px;
+    font-weight: 800;
+  }
+
+  .sq-home-preview nav,
+  .sq-home-preview__toc {
+    display: grid;
+    gap: 10px;
+  }
+
+  .sq-home-preview a {
+    color: var(--squidoc-muted);
+    font-size: 13px;
+    font-weight: 700;
+    text-decoration: none;
+  }
+
+  .sq-home-preview a.active {
+    color: var(--squidoc-text);
+  }
+
+  .sq-home-preview h2 {
+    margin: 0;
+    font-size: 34px;
+  }
+
+  .sq-home-preview main p {
+    color: var(--squidoc-muted);
+    line-height: 1.6;
+  }
+
+  .sq-home-code {
+    display: grid;
+    gap: 6px;
+    margin-top: 28px;
+    border: 1px solid #1e293b;
+    border-radius: 10px;
+    padding: 18px;
+    color: #dbeafe;
+    background: #111827;
+    font-family:
+      "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+    font-size: 13px;
+  }
+
+  .sq-home-strip,
+  .sq-home-showcase,
+  .sq-home-plugin-flow {
+    width: min(1180px, calc(100% - 48px));
+    margin: 56px auto;
+  }
+
+  .sq-home-strip {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1px;
+    border: 1px solid var(--squidoc-border);
+    background: var(--squidoc-border);
+  }
+
+  .sq-home-strip article {
+    padding: 28px;
+    background: #ffffff;
+  }
+
+  .sq-home-strip span {
+    color: var(--squidoc-accent);
+    font-size: 13px;
+    font-weight: 900;
+  }
+
+  .sq-home-strip h2 {
+    margin: 12px 0 10px;
+    font-size: 24px;
+  }
+
+  .sq-home-strip p,
+  .sq-home-showcase p,
+  .sq-home-feature-grid p {
+    margin: 0;
+    color: var(--squidoc-muted);
+    line-height: 1.65;
+  }
+
+  .sq-home-showcase {
+    display: grid;
+    grid-template-columns: minmax(260px, 0.75fr) minmax(0, 1.25fr);
+    gap: 36px;
+    align-items: start;
+  }
+
+  .sq-home-showcase h2 {
+    margin: 0 0 16px;
+    font-size: 42px;
+    line-height: 1.1;
+  }
+
+  .sq-home-feature-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+  }
+
+  .sq-home-feature-grid article {
+    min-height: 120px;
+    border: 1px solid var(--squidoc-border);
+    border-radius: 10px;
+    padding: 20px;
+    background: #ffffff;
+  }
+
+  .sq-home-feature-grid strong {
+    display: block;
+    margin-bottom: 10px;
+    font-size: 17px;
+  }
+
+  .sq-home-plugin-flow {
+    display: grid;
+    grid-template-columns: max-content 1fr max-content 1fr max-content 1fr max-content 1fr max-content;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 72px;
+  }
+
+  .sq-home-plugin-flow p {
+    margin: 0;
+    border: 1px solid var(--squidoc-border);
+    border-radius: 999px;
+    padding: 10px 14px;
+    color: var(--squidoc-text);
+    background: #ffffff;
+    font-size: 13px;
+    font-weight: 900;
+  }
+
+  .sq-home-plugin-flow span {
+    height: 1px;
+    background: linear-gradient(90deg, var(--squidoc-border), var(--squidoc-accent));
+  }
+
+  @media (max-width: 980px) {
+    .sq-home__inner,
+    .sq-home-showcase {
+      grid-template-columns: 1fr;
+    }
+
+    .sq-home-preview__body {
+      grid-template-columns: 140px minmax(0, 1fr);
+    }
+
+    .sq-home-preview__toc {
+      display: none;
+    }
+  }
+
+  @media (max-width: 760px) {
+    .sq-home__inner,
+    .sq-home-strip,
+    .sq-home-showcase,
+    .sq-home-plugin-flow {
+      width: calc(100% - 32px);
+    }
+
+    .sq-home__inner {
+      padding: 56px 0;
+    }
+
+    .sq-home-preview__body,
+    .sq-home-strip,
+    .sq-home-feature-grid,
+    .sq-home-plugin-flow {
+      grid-template-columns: 1fr;
+    }
+
+    .sq-home-preview aside {
+      display: none;
+    }
+
+    .sq-home-preview main {
+      padding: 22px;
+    }
+
+    .sq-home-showcase h2 {
+      font-size: 34px;
+    }
+
+    .sq-home-plugin-flow span {
+      height: 24px;
+      width: 1px;
+      justify-self: center;
+      background: linear-gradient(180deg, var(--squidoc-border), var(--squidoc-accent));
+    }
+  }
+</style>
