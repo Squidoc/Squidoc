@@ -612,7 +612,7 @@ a {
   color: var(--squidoc-text);
 }
 
-@media (max-width: 760px) {
+@media (max-width: 900px) {
   body {
     overflow: auto;
   }

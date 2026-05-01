@@ -49,6 +49,7 @@ try {
     await expectText(page.locator("main h1"), "Squidoc");
     await expectAttribute(page.locator(".sq-home__primary"), "href", "/docs/getting-started");
     await expectMobileTopbarLinks(page);
+    await expectNarrowDocsLayout(page);
 
     await page.goto(`${baseUrl}/docs/developers`, { waitUntil: "networkidle" });
     await expectFooterNotAboveViewport(page);
@@ -283,6 +284,16 @@ async function expectMobileTopbarLinks(page) {
     "href",
     "/docs",
   );
+  await page.setViewportSize({ width: 1200, height: 720 });
+  await page.reload({ waitUntil: "networkidle" });
+}
+
+async function expectNarrowDocsLayout(page) {
+  await page.setViewportSize({ width: 763, height: 780 });
+  await page.goto(`${baseUrl}/docs/versioning`, { waitUntil: "networkidle" });
+  await expectVisible(page.locator(".sq-sidebar-toggle"));
+  await expectHidden(page.locator(".sq-topbar__nav"));
+  await expectHidden(page.locator(".sq-article-tree"));
   await page.setViewportSize({ width: 1200, height: 720 });
   await page.reload({ waitUntil: "networkidle" });
 }
