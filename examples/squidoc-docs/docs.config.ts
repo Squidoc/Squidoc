@@ -33,7 +33,10 @@ export default defineConfig({
   theme: {
     name: "@squidoc/theme-basic",
     options: {
-      headerLinks: [{ title: "GitHub", href: "https://github.com/Squidoc/Squidoc" }],
+      headerLinks: [
+        { title: "Docs", path: "/docs" },
+        { title: "GitHub", href: "https://github.com/Squidoc/Squidoc" },
+      ],
       footer: {
         text: "Built with Squidoc.",
         links: [
