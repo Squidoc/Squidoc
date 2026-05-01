@@ -61,16 +61,16 @@ const {
         <main class={classes.content}>
           <Fragment set:html={content} />
         </main>
-        <footer class="sq-footer">
-          {footer.text && <p class="sq-footer__text">{footer.text}</p>}
-          <nav class="sq-footer__nav" aria-label="Footer">
-            <Fragment set:html={footerLinksHtml} />
-          </nav>
-        </footer>
       </div>
       <aside class="sq-article-tree">
         <Fragment set:html={slots.articleTree} />
       </aside>
+      <footer class="sq-footer">
+        {footer.text && <p class="sq-footer__text">{footer.text}</p>}
+        <nav class="sq-footer__nav" aria-label="Footer">
+          <Fragment set:html={footerLinksHtml} />
+        </nav>
+      </footer>
     </div>
   </body>
 </html>

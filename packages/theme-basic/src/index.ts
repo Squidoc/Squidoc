@@ -24,6 +24,7 @@ a {
 .sq-shell {
   display: grid;
   grid-template-columns: minmax(220px, 280px) minmax(0, 1fr) minmax(180px, 240px);
+  grid-template-rows: minmax(0, 1fr) auto;
   min-height: calc(100vh - 60px);
 }
 
@@ -417,10 +418,8 @@ a {
 }
 
 .sq-page {
-  display: flex;
+  display: block;
   min-width: 0;
-  min-height: calc(100vh - 60px);
-  flex-direction: column;
 }
 
 .sq-article-tree {
@@ -568,6 +567,7 @@ a {
 
 .sq-footer {
   display: flex;
+  grid-column: 2 / -1;
   align-items: center;
   justify-content: space-between;
   gap: 20px;
@@ -693,6 +693,7 @@ a {
 
   .sq-footer {
     display: grid;
+    grid-column: auto;
     justify-content: center;
     justify-items: center;
     align-items: center;

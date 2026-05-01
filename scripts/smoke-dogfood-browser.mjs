@@ -52,6 +52,7 @@ try {
 
     await page.goto(`${baseUrl}/docs/developers`, { waitUntil: "networkidle" });
     await expectFooterNotAboveViewport(page);
+    await expectFooterSpansToViewportRight(page);
     await expectSidebarFillsViewport(page);
 
     await page.goto(`${baseUrl}/docs/configuration`, { waitUntil: "networkidle" });
@@ -219,6 +220,18 @@ async function expectSidebarFillsViewport(page) {
   assert(
     Math.abs(sidebarBox.height - (viewport.height - 60)) <= 2,
     "Expected sidebar to fill the available viewport height below the navbar.",
+  );
+}
+
+async function expectFooterSpansToViewportRight(page) {
+  const footerBox = await page.locator(".sq-footer").boundingBox();
+  const viewport = page.viewportSize();
+
+  assert(footerBox, "Expected footer to be visible.");
+  assert(viewport, "Expected a viewport size.");
+  assert(
+    Math.abs(footerBox.x + footerBox.width - viewport.width) <= 2,
+    "Expected footer to extend to the right edge of the viewport.",
   );
 }
 
