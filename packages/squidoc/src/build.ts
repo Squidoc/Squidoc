@@ -2,7 +2,6 @@ import { spawn } from "node:child_process";
 import { mkdir, rm, symlink, writeFile } from "node:fs/promises";
 import { createRequire } from "node:module";
 import { dirname, join, resolve, sep } from "node:path";
-import { fileURLToPath } from "node:url";
 import {
   type DocPage,
   type GeneratedFile,
@@ -21,7 +20,6 @@ import { type FSWatcher, watch } from "chokidar";
 import { renderMarkdown } from "./markdown.js";
 
 const require = createRequire(import.meta.url);
-const packageRoot = dirname(dirname(fileURLToPath(import.meta.url)));
 
 export type BuildOptions = {
   cwd?: string;
@@ -65,7 +63,7 @@ async function prepareAstroProject(cwd: string): Promise<PreparedAstroProject> {
   const internalRoot = join(cwd, ".squidoc", "astro");
   await rm(internalRoot, { recursive: true, force: true });
   const plugins = await generateAstroProject(cwd, internalRoot);
-  await linkPackageDependencies(internalRoot);
+  await linkRuntimeDependencies(internalRoot);
 
   return { internalRoot, plugins };
 }
@@ -87,10 +85,19 @@ async function generateAstroProject(cwd: string, internalRoot: string): Promise<
   return plugins;
 }
 
-async function linkPackageDependencies(internalRoot: string): Promise<void> {
-  const target = join(internalRoot, "node_modules");
-  await rm(target, { recursive: true, force: true });
-  await symlink(join(packageRoot, "node_modules"), target, "dir");
+async function linkRuntimeDependencies(internalRoot: string): Promise<void> {
+  const nodeModules = join(internalRoot, "node_modules");
+  await rm(nodeModules, { recursive: true, force: true });
+  await mkdir(nodeModules, { recursive: true });
+  await linkResolvedPackage("astro", nodeModules);
+}
+
+async function linkResolvedPackage(packageName: string, nodeModules: string): Promise<void> {
+  const source = dirname(require.resolve(`${packageName}/package.json`));
+  const target = join(nodeModules, ...packageName.split("/"));
+
+  await mkdir(dirname(target), { recursive: true });
+  await symlink(source, target, process.platform === "win32" ? "junction" : "dir");
 }
 
 async function writeAstroProject(
