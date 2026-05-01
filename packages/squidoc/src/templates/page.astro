@@ -26,7 +26,7 @@ const {
 } = data;
 ---
 
-<html lang="en">
+<html lang={page.lang ?? "en"}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -52,6 +52,7 @@ const {
     </header>
     <div class={classes.shell}>
       <aside class={classes.sidebar}>
+        <Fragment set:html={slots.localeSelector} />
         <Fragment set:html={slots.versionSelector} />
         <nav class={classes.nav} aria-label="Documentation">
           <Fragment set:html={navHtml} />

@@ -14,6 +14,7 @@
       "@squidoc/plugin-article-tree",
       "@squidoc/plugin-pages",
       "@squidoc/plugin-versions",
+      "@squidoc/plugin-i18n",
       "@squidoc/plugin-mdx",
       "@squidoc/plugin-search",
       "@squidoc/plugin-llms"

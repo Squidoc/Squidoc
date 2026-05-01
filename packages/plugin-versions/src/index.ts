@@ -25,6 +25,11 @@ type VersionManifestEntry = {
   label: string;
   routePrefix: string;
   current: boolean;
+  locale?: {
+    code: string;
+    label: string;
+    current: boolean;
+  };
   routes: string[];
 };
 
@@ -140,12 +145,6 @@ function renderVersionSelector(versions: ResolvedVersion[], pages: DocPage[]): s
     return "";
   }
 
-  const options = versions
-    .map(
-      (version) =>
-        `<option value="${escapeHtml(version.routePrefix)}">${escapeHtml(version.label)}</option>`,
-    )
-    .join("");
   const manifest = JSON.stringify(toManifest(versions, pages));
 
   return `<div class="sq-version-selector" data-squidoc-versions data-versions="${escapeHtml(
@@ -153,7 +152,6 @@ function renderVersionSelector(versions: ResolvedVersion[], pages: DocPage[]): s
   )}">
   <label class="sq-version-selector__label" for="squidoc-version-selector">Version</label>
   <select class="sq-version-selector__select" id="squidoc-version-selector" aria-label="Documentation version">
-    ${options}
   </select>
 </div>
 <script type="module">
@@ -167,17 +165,22 @@ function renderVersionSelector(versions: ResolvedVersion[], pages: DocPage[]): s
 
   const versions = JSON.parse(root.dataset.versions ?? "[]");
   const path = window.location.pathname.replace(/\\/+$/, "") || "/";
-  const active = versions
-    .filter((version) => version.routePrefix !== "/")
-    .sort((first, second) => second.routePrefix.length - first.routePrefix.length)
-    .find((version) => path === version.routePrefix || path.startsWith(version.routePrefix.replace(/\\/+$/, "") + "/")) ?? versions.find((version) => version.routePrefix === "/" && path === "/") ?? versions.find((version) => version.current);
+  const active = resolveActiveVersion(versions, path);
+  const scopedVersions = versions.filter((version) => sameLocale(version, active));
+
+  select.replaceChildren(...scopedVersions.map((version) => {
+    const option = document.createElement("option");
+    option.value = version.routePrefix;
+    option.textContent = version.label;
+    return option;
+  }));
 
   if (active) {
     select.value = active.routePrefix;
   }
 
   select.addEventListener("change", () => {
-    const target = versions.find((version) => version.routePrefix === select.value);
+    const target = scopedVersions.find((version) => version.routePrefix === select.value);
 
     if (!target || !active) {
       return;
@@ -190,21 +193,76 @@ function renderVersionSelector(versions: ResolvedVersion[], pages: DocPage[]): s
       : target.routePrefix;
     window.location.href = nextPath.startsWith("/") ? nextPath : "/" + nextPath;
   });
+
+  function resolveActiveVersion(versions, path) {
+    return versions
+    .filter((version) => version.routePrefix !== "/")
+    .sort((first, second) => second.routePrefix.length - first.routePrefix.length)
+    .find((version) => path === version.routePrefix || path.startsWith(version.routePrefix.replace(/\\/+$/, "") + "/")) ?? versions.find((version) => version.routePrefix === "/" && path === "/") ?? versions.find((version) => version.current);
+  }
+
+  function sameLocale(version, active) {
+    if (!active) {
+      return !version.locale || version.locale.current;
+    }
+
+    return (version.locale?.code ?? "") === (active.locale?.code ?? "");
+  }
 })();
 </script>`;
 }
 
 function toManifest(versions: ResolvedVersion[], pages: DocPage[]): VersionManifestEntry[] {
-  return versions.map(({ name, label, routePrefix, current }) => ({
-    name,
-    label,
-    routePrefix,
-    current,
-    routes: pages
-      .filter((page) => page.frontmatter.squidocVersionRoutePrefix === routePrefix)
-      .map((page) => page.route)
-      .sort(),
-  }));
+  const localized = pages
+    .map((page) => ({
+      name: readString(page.frontmatter.squidocVersion),
+      label: readString(page.frontmatter.squidocVersionLabel),
+      routePrefix: readString(page.frontmatter.squidocVersionRoutePrefix),
+      current: page.frontmatter.squidocVersionCurrent === true,
+      localeCode: readString(page.frontmatter.squidocLocale),
+      localeLabel: readString(page.frontmatter.squidocLocaleLabel),
+      localeCurrent: page.frontmatter.squidocLocaleCurrent === true,
+    }))
+    .filter((entry) => entry.name && entry.label && entry.routePrefix);
+
+  const source =
+    localized.length > 0
+      ? localized
+      : versions.map((version) => ({
+          name: version.name,
+          label: version.label,
+          routePrefix: version.routePrefix,
+          current: version.current,
+          localeCode: undefined,
+          localeLabel: undefined,
+          localeCurrent: false,
+        }));
+  const routePrefixes = [
+    ...new Set(source.flatMap((entry) => (entry.routePrefix ? [entry.routePrefix] : []))),
+  ];
+
+  return routePrefixes.map((routePrefix) => {
+    const entry = source.find((item) => item.routePrefix === routePrefix);
+
+    return {
+      name: entry?.name ?? routePrefix,
+      label: entry?.label ?? routePrefix,
+      routePrefix: routePrefix ?? "/",
+      current: entry?.current ?? false,
+      locale:
+        entry?.localeCode && entry.localeLabel
+          ? {
+              code: entry.localeCode,
+              label: entry.localeLabel,
+              current: entry.localeCurrent,
+            }
+          : undefined,
+      routes: pages
+        .filter((page) => page.frontmatter.squidocVersionRoutePrefix === routePrefix)
+        .map((page) => page.route)
+        .sort(),
+    };
+  });
 }
 
 function readVersionConfig(value: unknown): VersionConfig | undefined {

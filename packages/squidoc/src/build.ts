@@ -319,6 +319,7 @@ async function writeRenderData(
   };
   const slots = {
     articleTree: renderThemeSlot(plugins, "article-tree"),
+    localeSelector: renderThemeSlot(plugins, "locale-selector"),
     search: renderThemeSlot(plugins, "search"),
     versionSelector: renderThemeSlot(plugins, "version-selector"),
   };
@@ -327,6 +328,7 @@ async function writeRenderData(
       site: config.site,
       page: {
         description: page.description,
+        lang: readString(page.frontmatter.squidocLocale) ?? "en",
         route: page.route,
         title: page.title,
       },
@@ -397,6 +399,7 @@ function pagesForSiteShell(
   };
   const slots = {
     articleTree: renderThemeSlot(plugins, "article-tree"),
+    localeSelector: renderThemeSlot(plugins, "locale-selector"),
     search: renderThemeSlot(plugins, "search"),
     versionSelector: renderThemeSlot(plugins, "version-selector"),
   };
@@ -405,6 +408,7 @@ function pagesForSiteShell(
     site: config.site,
     page: {
       description: page.description,
+      lang: "en",
       route: page.route,
       title: page.title ?? config.site.name,
     },

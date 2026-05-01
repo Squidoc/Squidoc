@@ -10,6 +10,12 @@ export type SearchEntry = {
     routePrefix: string;
     current: boolean;
   };
+  locale?: {
+    code: string;
+    label: string;
+    routePrefix: string;
+    current: boolean;
+  };
 };
 
 export default definePlugin({
@@ -21,6 +27,7 @@ export default definePlugin({
       route: page.route,
       content: normalizeContent(page.content),
       version: readVersionMetadata(page.frontmatter),
+      locale: readLocaleMetadata(page.frontmatter),
     }));
 
     api.addGeneratedFile({
@@ -67,8 +74,10 @@ input?.addEventListener("input", () => {
     return;
   }
 
-  const activeVersion = resolveActiveVersion(entries);
+  const activeLocale = resolveActiveLocale(entries);
+  const activeVersion = resolveActiveVersion(entries, activeLocale);
   const matches = entries
+    .filter((entry) => !activeLocale || entry.locale?.code === activeLocale.code)
     .filter((entry) => !activeVersion || entry.version?.routePrefix === activeVersion.routePrefix)
     .filter((entry) => [entry.title, entry.description, entry.content].filter(Boolean).join(" ").toLowerCase().includes(query))
     .slice(0, 6);
@@ -113,8 +122,9 @@ input?.addEventListener("input", () => {
   }));
 });
 
-function resolveActiveVersion(entries) {
+function resolveActiveVersion(entries, activeLocale) {
   const versions = entries
+    .filter((entry) => !activeLocale || entry.locale?.code === activeLocale.code)
     .map((entry) => entry.version)
     .filter(Boolean)
     .filter((version, index, all) => all.findIndex((item) => item.routePrefix === version.routePrefix) === index)
@@ -130,6 +140,24 @@ function resolveActiveVersion(entries) {
     ?? versions.find((version) => version.current)
     ?? versions[0];
 }
+
+function resolveActiveLocale(entries) {
+  const locales = entries
+    .map((entry) => entry.locale)
+    .filter(Boolean)
+    .filter((locale, index, all) => all.findIndex((item) => item.code === locale.code) === index)
+    .sort((first, second) => second.routePrefix.length - first.routePrefix.length);
+
+  if (locales.length === 0) {
+    return undefined;
+  }
+
+  const path = window.location.pathname.replace(/\\/+$/, "") || "/";
+
+  return locales.find((locale) => locale.routePrefix !== "/" && (path === locale.routePrefix || path.startsWith(locale.routePrefix.replace(/\\/+$/, "") + "/")))
+    ?? locales.find((locale) => locale.current)
+    ?? locales[0];
+}
 </script>`;
 }
 
@@ -139,6 +167,15 @@ function readVersionMetadata(frontmatter: Record<string, unknown>): SearchEntry[
   const current = frontmatter.squidocVersionCurrent === true;
 
   return label && routePrefix ? { label, routePrefix, current } : undefined;
+}
+
+function readLocaleMetadata(frontmatter: Record<string, unknown>): SearchEntry["locale"] {
+  const code = readString(frontmatter.squidocLocale);
+  const label = readString(frontmatter.squidocLocaleLabel);
+  const routePrefix = readString(frontmatter.squidocLocaleRoutePrefix);
+  const current = frontmatter.squidocLocaleCurrent === true;
+
+  return code && label && routePrefix ? { code, label, routePrefix, current } : undefined;
 }
 
 function normalizeContent(content: string): string {

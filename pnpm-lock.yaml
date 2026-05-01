@@ -35,6 +35,9 @@ importers:
       '@squidoc/plugin-codeblocks':
         specifier: workspace:*
         version: link:../../packages/plugin-codeblocks
+      '@squidoc/plugin-i18n':
+        specifier: workspace:*
+        version: link:../../packages/plugin-i18n
       '@squidoc/plugin-llms':
         specifier: workspace:*
         version: link:../../packages/plugin-llms
@@ -112,6 +115,19 @@ importers:
       shiki:
         specifier: ^3.23.0
         version: 3.23.0
+    devDependencies:
+      typescript:
+        specifier: ^5.7.2
+        version: 5.9.3
+      vitest:
+        specifier: ^2.1.8
+        version: 2.1.9(@types/node@22.19.17)
+
+  packages/plugin-i18n:
+    dependencies:
+      '@squidoc/core':
+        specifier: workspace:*
+        version: link:../core
     devDependencies:
       typescript:
         specifier: ^5.7.2

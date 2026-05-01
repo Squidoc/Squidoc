@@ -25,6 +25,7 @@ export default definePlugin({
     api.addPageHeadTags((page) => {
       const description = page.description ?? api.config.site.description;
       const url = siteUrl ? `${siteUrl}${page.route}` : undefined;
+      const alternates = siteUrl ? findAlternates(page, api.pages, siteUrl) : [];
       const tags: HeadTag[] = [
         {
           tag: "meta",
@@ -43,6 +44,8 @@ export default definePlugin({
           { tag: "meta", attrs: { property: "og:url", content: url } },
         );
       }
+
+      tags.push(...alternates);
 
       return tags;
     });
@@ -68,3 +71,38 @@ export default definePlugin({
     }
   },
 });
+
+function findAlternates(
+  page: { frontmatter: Record<string, unknown> },
+  pages: Array<{ route: string; frontmatter: Record<string, unknown> }>,
+  siteUrl: string,
+): HeadTag[] {
+  const baseRoute = readString(page.frontmatter.squidocI18nBaseRoute);
+
+  if (!baseRoute) {
+    return [];
+  }
+
+  return pages
+    .filter((candidate) => candidate.frontmatter.squidocI18nBaseRoute === baseRoute)
+    .flatMap((candidate) => {
+      const locale = readString(candidate.frontmatter.squidocLocale);
+
+      return locale
+        ? [
+            {
+              tag: "link" as const,
+              attrs: {
+                rel: "alternate",
+                hreflang: locale,
+                href: `${siteUrl}${candidate.route}`,
+              },
+            },
+          ]
+        : [];
+    });
+}
+
+function readString(value: unknown): string | undefined {
+  return typeof value === "string" && value.trim().length > 0 ? value : undefined;
+}

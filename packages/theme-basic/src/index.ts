@@ -221,19 +221,22 @@ a {
   font-size: 14px;
 }
 
-.sq-version-selector {
+.sq-version-selector,
+.sq-locale-selector {
   display: grid;
   gap: 7px;
   margin: 0 0 18px;
 }
 
-.sq-version-selector__label {
+.sq-version-selector__label,
+.sq-locale-selector__label {
   color: var(--squidoc-muted);
   font-size: 12px;
   font-weight: 700;
 }
 
-.sq-version-selector__select {
+.sq-version-selector__select,
+.sq-locale-selector__select {
   box-sizing: border-box;
   width: 100%;
   min-height: 36px;
