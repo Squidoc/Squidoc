@@ -73,3 +73,5 @@ pnpm changeset
 pnpm version-packages
 pnpm publish-packages
 ```
+
+Tagged releases run through GitHub Actions and publish with npm provenance enabled, so npm can link each package back to the workflow run and commit that produced it.
