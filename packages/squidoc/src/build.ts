@@ -199,13 +199,31 @@ async function watchDevInputs(cwd: string, internalRoot: string): Promise<FSWatc
 }
 
 function getWatchedPaths(cwd: string, config: ResolvedSquidocConfig): string[] {
-  return [
+  return uniquePaths([
     join(cwd, config.docsDir),
-    join(cwd, "pages"),
+    ...getConfiguredPageDirs(config).map((pagesDir) => join(cwd, pagesDir)),
     join(cwd, "docs.config.ts"),
     join(cwd, "docs.config.mjs"),
     join(cwd, "docs.config.js"),
-  ];
+  ]);
+}
+
+function getConfiguredPageDirs(config: ResolvedSquidocConfig): string[] {
+  const pageDirs = new Set(["pages"]);
+
+  for (const plugin of config.plugins) {
+    if (typeof plugin === "string" || plugin.name !== "@squidoc/plugin-pages") {
+      continue;
+    }
+
+    pageDirs.add(readString(plugin.options.pagesDir) ?? "pages");
+  }
+
+  return [...pageDirs];
+}
+
+function uniquePaths(paths: string[]): string[] {
+  return [...new Set(paths)];
 }
 
 async function copySitePageSources(internalRoot: string, sitePages: SitePage[]): Promise<void> {

@@ -71,6 +71,25 @@ export const squidoc = {
 
 Pages are Astro components wrapped by the active Squidoc theme. You can write HTML, CSS classes, Astro expressions, and local component imports that Astro can compile statically.
 
+## Custom Directory
+
+By default, custom pages live in `pages/`. You can change that with the plugin options:
+
+```ts
+export default defineConfig({
+  plugins: [
+    {
+      name: "@squidoc/plugin-pages",
+      options: {
+        pagesDir: "custom-pages",
+      },
+    },
+  ],
+});
+```
+
+`squidoc dev` watches the configured directory, so edits in `custom-pages/` rebuild the internal Astro project the same way edits in `pages/` do.
+
 ## Layouts
 
 Squidoc currently supports exactly two page layouts:
@@ -98,3 +117,9 @@ Use `docs` only when the page should behave like part of the documentation exper
 Pages are static Astro pages. They are not API routes, SSR endpoints, or server-only pages. Route conflicts are not allowed: a page cannot publish to the same route as a documentation page.
 
 For example, with the default docs base path, `pages/docs.astro` conflicts with the docs index at `/docs` and `squidoc build` fails with a clear route collision error.
+
+Astro reserved routes such as `404.astro` and `500.astro` are not supported by the pages plugin. Squidoc fails the build with a clear error if those routes are present.
+
+Dynamic Astro routes are not supported yet. Files such as `pages/[slug].astro` and `pages/blog/[post].astro` fail with a clear error instead of generating routes.
+
+Page metadata must use a plain `export const squidoc = { ... }` object with string literal values for `title`, `description`, and `layout`. If Squidoc sees metadata it cannot parse, it logs a warning and falls back to defaults for the affected fields.
