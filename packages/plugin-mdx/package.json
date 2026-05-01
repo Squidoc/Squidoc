@@ -4,6 +4,9 @@
   "description": "Optional MDX support for Squidoc.",
   "license": "MIT",
   "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
   "homepage": "https://github.com/Squidoc/Squidoc#readme",
   "bugs": {
     "url": "https://github.com/Squidoc/Squidoc/issues"
