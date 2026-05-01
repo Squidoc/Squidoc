@@ -130,6 +130,12 @@ async function replaceAsync(
 
 function decodeHtml(value: string): string {
   return value
+    .replaceAll("&#x3C;", "<")
+    .replaceAll("&#x3c;", "<")
+    .replaceAll("&#60;", "<")
+    .replaceAll("&#x3E;", ">")
+    .replaceAll("&#x3e;", ">")
+    .replaceAll("&#62;", ">")
     .replaceAll("&lt;", "<")
     .replaceAll("&gt;", ">")
     .replaceAll("&quot;", '"')

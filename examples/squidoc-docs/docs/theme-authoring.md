@@ -30,4 +30,4 @@ The current renderer uses the `renderer` object to provide global CSS and class 
 
 Themes can also receive plugin slots. The basic theme renders the `search` slot in the sidebar, which lets `@squidoc/plugin-search` add UI without being hardcoded into the core renderer.
 
-Powerful themes are a core design goal. The long-term direction is closer to Shopify themes than simple CSS skins: themes should be able to change navigation placement, headers, footers, widgets, typography, and page structure while still receiving normalized docs data from Squidoc.
+Powerful themes are a core design goal. Themes should be able to change navigation placement, headers, footers, widgets, typography, and page structure while still receiving normalized docs data from Squidoc.

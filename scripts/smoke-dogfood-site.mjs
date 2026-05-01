@@ -135,7 +135,7 @@ assertIncludes(llmsFull, "Plugins add behavior to a Squidoc site", "llms-full.tx
 assertIncludes(llmsFull, "Themes control the structure and presentation", "llms-full.txt");
 assertIncludes(llmsFull, "Squidoc is designed to stay simple for authors", "llms-full.txt");
 assertIncludes(llmsFull, "The setup API currently supports:", "llms-full.txt");
-assertIncludes(llmsFull, "Powerful themes are a core design goal.", "llms-full.txt");
+assertIncludes(llmsFull, "Themes should be able to change navigation placement", "llms-full.txt");
 
 console.log("Dogfood generated-site smoke passed.");
 
