@@ -26,9 +26,7 @@ export async function inspectProject(cwd = process.cwd()): Promise<DoctorReport>
     docsDir: loaded.config.docsDir,
     pageCount: pages.length,
     packageManager: await detectPackageManager(cwd),
-    plugins: loaded.config.plugins.map((plugin) =>
-      typeof plugin === "string" ? plugin : "inline plugin",
-    ),
+    plugins: loaded.config.plugins.map(getPluginDisplayName),
     theme: typeof loaded.config.theme === "string" ? loaded.config.theme : loaded.config.theme.name,
     issues,
   };
@@ -61,6 +59,14 @@ async function detectPackageManager(cwd: string): Promise<DoctorReport["packageM
   }
 
   return "npm";
+}
+
+function getPluginDisplayName(plugin: string | Record<string, unknown>): string {
+  if (typeof plugin === "string") {
+    return plugin;
+  }
+
+  return typeof plugin.name === "string" ? plugin.name : "unknown plugin";
 }
 
 async function findUp(cwd: string, filename: string): Promise<string | undefined> {

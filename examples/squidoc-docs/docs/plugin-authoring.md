@@ -13,12 +13,30 @@ import { definePlugin } from "@squidoc/core";
 export default definePlugin({
   name: "@acme/squidoc-plugin-example",
   setup(api) {
+    const message =
+      typeof api.pluginOptions.message === "string"
+        ? api.pluginOptions.message
+        : "Generated during squidoc build.";
+
     api.addGeneratedFile({
       path: "example.txt",
-      contents: "Generated during squidoc build.\n",
+      contents: `${message}\n`,
     });
   },
 });
+```
+
+Users can configure that plugin with object form:
+
+```ts
+plugins: [
+  {
+    name: "@acme/squidoc-plugin-example",
+    options: {
+      message: "Generated from plugin options.",
+    },
+  },
+];
 ```
 
 The setup API currently supports:
@@ -28,6 +46,7 @@ The setup API currently supports:
 - `addPageHeadTags` for page-specific metadata such as canonical URLs.
 - `addDocExtension` for formats such as `.mdx`.
 - `addThemeSlot` for UI that a theme can render.
+- `pluginOptions` for the current plugin's `{ name, options }` config object.
 
 The search plugin uses generated files and a theme slot together. It writes `search-index.json`, then registers a `search` slot that the basic theme renders in the sidebar.
 

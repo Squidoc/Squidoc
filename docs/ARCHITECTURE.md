@@ -153,8 +153,11 @@ Phase 1 plugin hooks include:
 - `addDocExtension()`
 - `addHtmlTransformer()`
 - `addThemeSlot()`
+- `pluginOptions` on the setup API for object-form plugin config.
 
 Future plugin hooks can expand toward route injection, lifecycle hooks, config validation, and client script registration.
+
+Plugins can be configured as strings for default behavior or as `{ name, options }` objects when a plugin exposes options.
 
 ## SEO
 

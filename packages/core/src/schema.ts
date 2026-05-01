@@ -38,12 +38,20 @@ export const themeConfigSchema = z.union([
   }),
 ]);
 
+export const pluginConfigSchema = z.union([
+  z.string().min(1),
+  z.object({
+    name: z.string().min(1),
+    options: z.record(z.unknown()).default({}),
+  }),
+]);
+
 export const squidocConfigSchema = z.object({
   site: siteConfigSchema,
   docsDir: z.string().default("docs"),
   theme: themeConfigSchema.default("@squidoc/theme-basic"),
   plugins: z
-    .array(z.union([z.string(), z.record(z.unknown())]))
+    .array(pluginConfigSchema)
     .default(["@squidoc/plugin-seo", "@squidoc/plugin-codeblocks", "@squidoc/plugin-article-tree"]),
   nav: z.array(navItemSchema).default([]),
 });

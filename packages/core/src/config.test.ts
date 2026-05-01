@@ -2,6 +2,7 @@ import { mkdir, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import { describe, expect, test } from "vitest";
 import { loadConfig } from "./config.js";
+import { resolveConfig } from "./schema.js";
 
 describe("loadConfig", () => {
   test("loads and resolves docs.config.ts", async () => {
@@ -85,5 +86,14 @@ describe("loadConfig", () => {
         items: [{ title: "Config", path: "/config" }],
       },
     ]);
+  });
+
+  test("rejects object-form plugins without a name", () => {
+    expect(() =>
+      resolveConfig({
+        site: { name: "Test Docs" },
+        plugins: [{ options: { enabled: true } }],
+      }),
+    ).toThrow();
   });
 });

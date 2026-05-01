@@ -12,6 +12,7 @@ export type PluginApi = {
   addThemeSlot: (slot: ThemeSlot) => void;
   config: ResolvedSquidocConfig;
   pages: DocPage[];
+  pluginOptions: Record<string, unknown>;
 };
 
 export type GeneratedFile = {
@@ -89,16 +90,16 @@ export async function runPlugins(
     },
     config,
     pages,
+    pluginOptions: {},
   };
   const jiti = createJiti(join(cwd, "docs.config.ts"), { moduleCache: false });
 
   for (const pluginConfig of config.plugins) {
-    if (typeof pluginConfig !== "string") {
-      continue;
-    }
+    const pluginName = typeof pluginConfig === "string" ? pluginConfig : pluginConfig.name;
+    const pluginOptions = typeof pluginConfig === "string" ? {} : pluginConfig.options;
+    const plugin = await jiti.import<SquidocPlugin>(pluginName, { default: true });
 
-    const plugin = await jiti.import<SquidocPlugin>(pluginConfig, { default: true });
-    await plugin.setup?.(api);
+    await plugin.setup?.({ ...api, pluginOptions });
   }
 
   return context;

@@ -58,6 +58,19 @@ npx squidoc add plugin @squidoc/plugin-search
 npx squidoc add theme @squidoc/theme-basic
 ```
 
-Plugins can add generated files, metadata, document extensions, and theme slots. Themes control the page structure, classes, and styling that turn discovered docs into a site.
+Plugins can add generated files, metadata, document extensions, and theme slots. Use a string for default plugin behavior, or `{ name, options }` when a plugin exposes configuration:
+
+```ts
+plugins: [
+  {
+    name: "@acme/squidoc-plugin-example",
+    options: {
+      message: "Generated from plugin options.",
+    },
+  },
+];
+```
+
+Themes control the page structure, classes, and styling that turn discovered docs into a site.
 
 The basic theme reads `theme.options.headerLinks` for the top navigation and `theme.options.footer` for the footer. Footer links use the same `{ title, href }` or `{ title, path }` shape as header links.
