@@ -45,21 +45,13 @@ if (!tree || !list || headings.length === 0) {
   };
 
   const getActiveHeading = () => {
-    const activationOffset = Math.min(160, window.innerHeight * 0.28);
-    const documentHeight = Math.max(
-      document.body.scrollHeight,
-      document.documentElement.scrollHeight,
-    );
-    const isAtBottom = window.scrollY + window.innerHeight >= documentHeight - 2;
-
-    if (isAtBottom) {
-      return headings.at(-1);
-    }
-
+    const focusY = window.scrollY + window.innerHeight * 0.6;
     let active = headings[0];
 
     for (const heading of headings) {
-      if (heading.getBoundingClientRect().top <= activationOffset) {
+      const headingTop = heading.getBoundingClientRect().top + window.scrollY;
+
+      if (headingTop <= focusY) {
         active = heading;
       } else {
         break;
