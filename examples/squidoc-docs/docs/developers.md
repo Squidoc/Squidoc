@@ -1,9 +1,9 @@
 ---
-title: Developers
+title: Authoring Extensions
 description: Extend Squidoc with plugins, themes, and framework-level customization.
 ---
 
-# Developers
+# Authoring Extensions
 
 Squidoc is designed to stay simple for authors while giving developers real extension points.
 
@@ -15,4 +15,4 @@ Use plugins when you want to add behavior such as generated files, metadata, new
 - Themes control the default renderer and can decide where plugin slots appear.
 - The config file ties site metadata, navigation, plugins, and themes together.
 
-The guides in this section cover the Phase 1 APIs and the direction for the deeper theme system.
+Start with [Plugin Authoring](/plugin-authoring) when you want to add behavior. Start with [Theme Authoring](/theme-authoring) when you want to change site structure and presentation.

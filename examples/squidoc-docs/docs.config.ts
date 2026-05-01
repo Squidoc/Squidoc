@@ -31,16 +31,24 @@ export default defineConfig({
     { title: "Introduction", path: "/" },
     { title: "Getting Started", path: "/getting-started" },
     { title: "Configuration", path: "/configuration" },
+    { title: "Frontmatter", path: "/frontmatter" },
+    { title: "CLI Reference", path: "/cli" },
+    { title: "Deployment", path: "/deployment" },
     {
-      title: "Developers",
+      title: "Customization",
+      items: [
+        { title: "Plugins", path: "/plugins" },
+        { title: "Themes", path: "/themes" },
+        { title: "MDX", path: "/mdx" },
+      ],
+    },
+    {
+      title: "Authoring Extensions",
       path: "/developers",
       items: [
         { title: "Plugin Authoring", path: "/plugin-authoring" },
         { title: "Theme Authoring", path: "/theme-authoring" },
       ],
     },
-    { title: "Architecture", path: "/architecture" },
-    { title: "MDX", path: "/mdx" },
-    { title: "Testing", path: "/testing" },
   ],
 });

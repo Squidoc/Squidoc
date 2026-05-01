@@ -19,7 +19,6 @@ export default defineConfig({
   theme: {
     name: "@squidoc/theme-basic",
     options: {
-      primaryColor: "#2563eb",
       headerLinks: [{ title: "GitHub", href: "https://github.com/Squidoc/Squidoc" }],
       footer: {
         text: "Built with Squidoc.",
@@ -36,9 +35,18 @@ export default defineConfig({
     "@squidoc/plugin-article-tree",
   ],
   nav: [
+    { title: "Introduction", path: "/" },
     { title: "Getting Started", path: "/getting-started" },
+    { title: "Configuration", path: "/configuration" },
     {
-      title: "Developers",
+      title: "Customization",
+      items: [
+        { title: "Plugins", path: "/plugins" },
+        { title: "Themes", path: "/themes" },
+      ],
+    },
+    {
+      title: "Authoring Extensions",
       path: "/developers",
       items: [
         { title: "Plugin Authoring", path: "/plugin-authoring" },
@@ -74,3 +82,5 @@ plugins: [
 Themes control the page structure, classes, and styling that turn discovered docs into a site.
 
 The basic theme reads `theme.options.headerLinks` for the top navigation and `theme.options.footer` for the footer. Footer links use the same `{ title, href }` or `{ title, path }` shape as header links.
+
+For page-level metadata, use [frontmatter](/frontmatter). For command behavior, see the [CLI Reference](/cli).

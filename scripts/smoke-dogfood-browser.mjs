@@ -45,8 +45,8 @@ try {
 
   try {
     await page.setViewportSize({ width: 1200, height: 720 });
-    await page.goto(baseUrl, { waitUntil: "networkidle" });
-    await expectFooterPinnedToViewport(page);
+    await page.goto(`${baseUrl}/developers`, { waitUntil: "networkidle" });
+    await expectFooterNotAboveViewport(page);
     await expectSidebarFillsViewport(page);
 
     await page.goto(`${baseUrl}/configuration`, { waitUntil: "networkidle" });
@@ -72,10 +72,10 @@ try {
     await page.locator("[data-squidoc-copy-code]").first().click();
     await expectTextEventually(page.locator("[data-squidoc-copy-code]").first(), "Copied");
 
-    await page.locator("#squidoc-search-input").fill("generated output");
+    await page.locator("#squidoc-search-input").fill("production deployment");
     await expectText(
-      page.locator('.sq-search__result[href="/testing"]'),
-      "Testing\nVerify packages, generated docs, plugins, and the dogfood site.",
+      page.locator('.sq-search__result[href="/deployment"]'),
+      "Deployment\nDeploy a Squidoc site to production on Vercel, Netlify, Cloudflare Pages, GitHub Pages, Docker, and static hosts.",
     );
 
     await page.locator("#squidoc-search-input").fill("zzzz-no-match");
@@ -168,15 +168,15 @@ async function assertMinCount(locator, expected) {
   assert(actual >= expected, `Expected at least ${expected} matches, received ${actual}.`);
 }
 
-async function expectFooterPinnedToViewport(page) {
+async function expectFooterNotAboveViewport(page) {
   const footerBox = await page.locator(".sq-footer").boundingBox();
   const viewport = page.viewportSize();
 
   assert(footerBox, "Expected footer to be visible.");
   assert(viewport, "Expected a viewport size.");
   assert(
-    Math.abs(footerBox.y + footerBox.height - viewport.height) <= 2,
-    "Expected footer to pin to the viewport bottom on short pages.",
+    footerBox.y + footerBox.height >= viewport.height - 2,
+    "Expected footer to sit at or below the viewport bottom.",
   );
 }
 

@@ -12,10 +12,10 @@ const pages = [
     canonical: "https://squidoc.dev/",
   },
   {
-    file: "architecture/index.html",
-    route: "/architecture",
-    title: "Architecture | Squidoc",
-    canonical: "https://squidoc.dev/architecture",
+    file: "cli/index.html",
+    route: "/cli",
+    title: "CLI Reference | Squidoc",
+    canonical: "https://squidoc.dev/cli",
   },
   {
     file: "configuration/index.html",
@@ -26,8 +26,20 @@ const pages = [
   {
     file: "developers/index.html",
     route: "/developers",
-    title: "Developers | Squidoc",
+    title: "Authoring Extensions | Squidoc",
     canonical: "https://squidoc.dev/developers",
+  },
+  {
+    file: "deployment/index.html",
+    route: "/deployment",
+    title: "Deployment | Squidoc",
+    canonical: "https://squidoc.dev/deployment",
+  },
+  {
+    file: "frontmatter/index.html",
+    route: "/frontmatter",
+    title: "Frontmatter | Squidoc",
+    canonical: "https://squidoc.dev/frontmatter",
   },
   {
     file: "plugin-authoring/index.html",
@@ -48,16 +60,22 @@ const pages = [
     canonical: "https://squidoc.dev/getting-started",
   },
   {
+    file: "plugins/index.html",
+    route: "/plugins",
+    title: "Plugins | Squidoc",
+    canonical: "https://squidoc.dev/plugins",
+  },
+  {
+    file: "themes/index.html",
+    route: "/themes",
+    title: "Themes | Squidoc",
+    canonical: "https://squidoc.dev/themes",
+  },
+  {
     file: "mdx/index.html",
     route: "/mdx",
     title: "MDX | Squidoc",
     canonical: "https://squidoc.dev/mdx",
-  },
-  {
-    file: "testing/index.html",
-    route: "/testing",
-    title: "Testing | Squidoc",
-    canonical: "https://squidoc.dev/testing",
   },
 ];
 
@@ -99,15 +117,22 @@ assert(
 
 const llms = await readDistFile("llms.txt");
 assertIncludes(llms, "[MDX](https://squidoc.dev/mdx)", "llms.txt");
-assertIncludes(llms, "[Architecture](https://squidoc.dev/architecture)", "llms.txt");
-assertIncludes(llms, "[Testing](https://squidoc.dev/testing)", "llms.txt");
-assertIncludes(llms, "[Developers](https://squidoc.dev/developers)", "llms.txt");
+assertIncludes(llms, "[CLI Reference](https://squidoc.dev/cli)", "llms.txt");
+assertIncludes(llms, "[Deployment](https://squidoc.dev/deployment)", "llms.txt");
+assertIncludes(llms, "[Frontmatter](https://squidoc.dev/frontmatter)", "llms.txt");
+assertIncludes(llms, "[Plugins](https://squidoc.dev/plugins)", "llms.txt");
+assertIncludes(llms, "[Themes](https://squidoc.dev/themes)", "llms.txt");
+assertIncludes(llms, "[Authoring Extensions](https://squidoc.dev/developers)", "llms.txt");
 assertIncludes(llms, "[Plugin Authoring](https://squidoc.dev/plugin-authoring)", "llms.txt");
 assertIncludes(llms, "[Theme Authoring](https://squidoc.dev/theme-authoring)", "llms.txt");
 
 const llmsFull = await readDistFile("llms-full.txt");
-assertIncludes(llmsFull, "This page is written as an MDX file", "llms-full.txt");
-assertIncludes(llmsFull, "The generated-site smoke test checks for page titles", "llms-full.txt");
+assertIncludes(llmsFull, "Component-based MDX is not compiled yet.", "llms-full.txt");
+assertIncludes(llmsFull, "Squidoc builds a static site.", "llms-full.txt");
+assertIncludes(llmsFull, "`doctor` reports:", "llms-full.txt");
+assertIncludes(llmsFull, "Supported fields", "llms-full.txt");
+assertIncludes(llmsFull, "Plugins add behavior to a Squidoc site", "llms-full.txt");
+assertIncludes(llmsFull, "Themes control the structure and presentation", "llms-full.txt");
 assertIncludes(llmsFull, "Squidoc is designed to stay simple for authors", "llms-full.txt");
 assertIncludes(llmsFull, "The setup API currently supports:", "llms-full.txt");
 assertIncludes(llmsFull, "Powerful themes are a core design goal.", "llms-full.txt");

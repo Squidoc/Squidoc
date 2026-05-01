@@ -1,10 +1,54 @@
 ---
 title: MDX
-description: How Squidoc starts supporting MDX documents through a plugin.
+description: Add .mdx documents to a Squidoc site and understand the current MDX limits.
 ---
 
 # MDX
 
 Squidoc keeps Markdown as the default docs format, while `@squidoc/plugin-mdx` adds `.mdx` discovery for projects that want a gradual path toward richer documents.
 
-This page is written as an MDX file and rendered by the dogfood site.
+Install the plugin, then add it to `docs.config.ts`:
+
+```bash
+npx squidoc add plugin @squidoc/plugin-mdx
+```
+
+```ts
+export default defineConfig({
+  plugins: [
+    "@squidoc/plugin-seo",
+    "@squidoc/plugin-codeblocks",
+    "@squidoc/plugin-article-tree",
+    "@squidoc/plugin-mdx",
+  ],
+});
+```
+
+After that, Squidoc discovers files such as `docs/api.mdx` and routes them the same way it routes Markdown files. This page is written as an `.mdx` file and rendered by the dogfood site.
+
+## What works today
+
+Use `.mdx` files for Markdown content, frontmatter, headings, links, lists, tables, and code blocks. The default Markdown renderer still handles the final HTML output, so the same plugins that enhance Markdown pages also run on `.mdx` pages.
+
+```mdx
+---
+title: API Guide
+description: A guide written in an MDX file.
+---
+
+# API Guide
+
+Regular Markdown content works here.
+```
+
+## What does not work yet
+
+Component-based MDX is not compiled yet. JSX imports and custom React-style components are currently treated as document text rather than interactive components.
+
+```mdx
+import Callout from "../components/Callout";
+
+<Callout>This is not supported yet.</Callout>
+```
+
+If you need reusable UI today, put it in a theme or plugin slot. Full MDX component compilation is a natural future plugin capability, but the current plugin is intentionally small: it adds `.mdx` discovery without changing the rest of the rendering pipeline.

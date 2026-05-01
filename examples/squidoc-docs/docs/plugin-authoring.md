@@ -58,6 +58,6 @@ api.addThemeSlot({
 });
 ```
 
-The `html` field is the current Phase 1 rendering path. Component-based slots are part of the longer-term theme API direction.
+The `html` field is the current rendering path. Component-based slots are part of the longer-term theme API direction.
 
 The article tree plugin uses the same slot pattern. It registers an `article-tree` slot that the basic theme renders beside the article, then builds an on-page heading tree from the rendered `h2` and `h3` elements.
