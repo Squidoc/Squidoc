@@ -35,7 +35,7 @@ pnpm -r --filter './packages/**' exec npm pack --dry-run --cache /private/tmp/sq
 - Component-based theme slots.
 - Richer theme data contracts.
 - Dark mode plugin.
-- Copy-code button plugin.
+- Code tabs and richer code block annotations.
 - Versioned docs.
 - Redirects and route aliases.
 - Structured data expansion in the SEO plugin.

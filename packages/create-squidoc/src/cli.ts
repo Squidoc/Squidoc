@@ -18,7 +18,7 @@ async function copyTemplate(from: string, to: string): Promise<void> {
 
   for (const entry of entries) {
     const source = join(from, entry.name);
-    const destination = join(to, entry.name);
+    const destination = join(to, getTemplateOutputName(entry.name));
 
     if (entry.isDirectory()) {
       await copyTemplate(source, destination);
@@ -28,6 +28,10 @@ async function copyTemplate(from: string, to: string): Promise<void> {
     const contents = await readFile(source, "utf8");
     await writeFile(destination, contents);
   }
+}
+
+function getTemplateOutputName(name: string): string {
+  return name === "gitignore" ? ".gitignore" : name;
 }
 
 await copyTemplate(templateDir, targetDir);
