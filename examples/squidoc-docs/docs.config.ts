@@ -13,6 +13,21 @@ export default defineConfig({
     "@squidoc/plugin-article-tree",
     "@squidoc/plugin-search",
     "@squidoc/plugin-mdx",
+    {
+      name: "@squidoc/plugin-versions",
+      options: {
+        current: {
+          name: "next",
+          label: "Next",
+        },
+        versions: [
+          {
+            name: "0.1",
+            label: "0.1",
+          },
+        ],
+      },
+    },
   ],
   theme: {
     name: "@squidoc/theme-basic",

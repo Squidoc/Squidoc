@@ -72,6 +72,13 @@ try {
     await page.locator("[data-squidoc-copy-code]").first().click();
     await expectTextEventually(page.locator("[data-squidoc-copy-code]").first(), "Copied");
 
+    await expectText(page.locator(".sq-version-selector__label"), "Version");
+    await page.locator("#squidoc-version-selector").selectOption("/versions/0.1");
+    await page.waitForURL(`${baseUrl}/versions/0.1/configuration`, { waitUntil: "networkidle" });
+    await expectText(page.locator("main h1"), "Configuration");
+    await page.locator("#squidoc-version-selector").selectOption("/");
+    await page.waitForURL(`${baseUrl}/configuration`, { waitUntil: "networkidle" });
+
     await page.locator("#squidoc-search-input").fill("production deployment");
     await expectText(
       page.locator('.sq-search__result[href="/deployment"]'),
@@ -86,6 +93,10 @@ try {
     assert(
       searchIndex.some((entry) => entry.route === "/configuration"),
       "search-index.json should include /configuration",
+    );
+    assert(
+      searchIndex.some((entry) => entry.route === "/versions/0.1/configuration"),
+      "search-index.json should include archived version routes",
     );
   } finally {
     await browser.close();

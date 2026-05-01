@@ -14,6 +14,7 @@
     "@squidoc/plugin-mdx": "workspace:*",
     "@squidoc/plugin-search": "workspace:*",
     "@squidoc/plugin-seo": "workspace:*",
+    "@squidoc/plugin-versions": "workspace:*",
     "@squidoc/plugin-codeblocks": "workspace:*",
     "@squidoc/theme-basic": "workspace:*",
     "squidoc": "workspace:*"

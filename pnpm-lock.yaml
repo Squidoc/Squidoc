@@ -47,6 +47,9 @@ importers:
       '@squidoc/plugin-seo':
         specifier: workspace:*
         version: link:../../packages/plugin-seo
+      '@squidoc/plugin-versions':
+        specifier: workspace:*
+        version: link:../../packages/plugin-versions
       '@squidoc/theme-basic':
         specifier: workspace:*
         version: link:../../packages/theme-basic

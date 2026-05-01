@@ -84,14 +84,24 @@ const pages = [
     canonical: "https://squidoc.dev/mdx",
   },
 ];
+const archivedPages = pages.map((page) => ({
+  ...page,
+  file: `versions/0.1/${page.file}`,
+  route: page.route === "/" ? "/versions/0.1" : `/versions/0.1${page.route}`,
+  canonical:
+    page.route === "/"
+      ? "https://squidoc.dev/versions/0.1"
+      : `https://squidoc.dev/versions/0.1${page.route}`,
+}));
+const allPages = [...pages, ...archivedPages];
 
-for (const page of pages) {
+for (const page of allPages) {
   const html = await readDistFile(page.file);
 
   assertIncludes(html, `<title>${page.title}</title>`, page.file);
   assertIncludes(html, `rel="canonical" href="${page.canonical}"`, page.file);
   assertIncludes(html, "data-squidoc-search", page.file);
-  assertIncludes(html, `href="${page.route}"`, page.file);
+  assertIncludes(html, "data-squidoc-versions", page.file);
 }
 
 const pluginAuthoring = await readDistFile("plugin-authoring/index.html");
@@ -104,6 +114,7 @@ assertIncludes(pluginAuthoring, "IntersectionObserver", "plugin-authoring/index.
 assertIncludes(pluginAuthoring, "sq-topbar", "plugin-authoring/index.html");
 assertIncludes(pluginAuthoring, "sq-sidebar-toggle", "plugin-authoring/index.html");
 assertIncludes(pluginAuthoring, "sq-footer", "plugin-authoring/index.html");
+assertIncludes(pluginAuthoring, "sq-version-selector", "plugin-authoring/index.html");
 assertIncludes(pluginAuthoring, "Built with Squidoc.", "plugin-authoring/index.html");
 assert(
   pluginAuthoring.indexOf('class="sq-search" data-squidoc-search') <
@@ -113,12 +124,20 @@ assert(
 
 const searchIndex = JSON.parse(await readDistFile("search-index.json"));
 assert(
-  Array.isArray(searchIndex) && searchIndex.length === pages.length,
+  Array.isArray(searchIndex) && searchIndex.length === allPages.length,
   "search-index.json should include every dogfood page",
 );
 assert(
-  pages.every((page) => searchIndex.some((entry) => entry.route === page.route)),
+  allPages.every((page) => searchIndex.some((entry) => entry.route === page.route)),
   "search-index.json is missing one or more dogfood routes",
+);
+
+const versions = JSON.parse(await readDistFile("versions.json"));
+assert(
+  Array.isArray(versions) &&
+    versions.some((version) => version.name === "next" && version.current === true) &&
+    versions.some((version) => version.name === "0.1" && version.routePrefix === "/versions/0.1"),
+  "versions.json should include current and archived dogfood versions",
 );
 
 const llms = await readDistFile("llms.txt");
@@ -129,6 +148,7 @@ assertIncludes(llms, "[Frontmatter](https://squidoc.dev/frontmatter)", "llms.txt
 assertIncludes(llms, "[Plugins](https://squidoc.dev/plugins)", "llms.txt");
 assertIncludes(llms, "[Themes](https://squidoc.dev/themes)", "llms.txt");
 assertIncludes(llms, "[Versioning](https://squidoc.dev/versioning)", "llms.txt");
+assertIncludes(llms, "[Versioning](https://squidoc.dev/versions/0.1/versioning)", "llms.txt");
 assertIncludes(llms, "[Authoring Extensions](https://squidoc.dev/developers)", "llms.txt");
 assertIncludes(llms, "[Plugin Authoring](https://squidoc.dev/plugin-authoring)", "llms.txt");
 assertIncludes(llms, "[Theme Authoring](https://squidoc.dev/theme-authoring)", "llms.txt");
