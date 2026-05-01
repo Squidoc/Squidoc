@@ -17,8 +17,9 @@ The generated project includes:
 
 - `docs.config.ts` for site metadata, navigation, plugins, and theme selection.
 - `docs/` for Markdown articles.
+- `pages/` for custom Astro pages such as a homepage or changelog.
 - `package.json` scripts for local development, validation, builds, and previews.
-- The basic theme and default plugins for SEO, code blocks, and the article tree.
+- The basic theme and default plugins for SEO, pages, code blocks, and the article tree.
 
 ## Add your first page
 
@@ -44,7 +45,7 @@ nav: [
 ];
 ```
 
-Squidoc routes are based on file paths. `docs/api-guide.md` becomes `/api-guide`, and `docs/index.md` becomes `/`.
+Squidoc routes are based on file paths under your docs base path. By default, `docs/api-guide.md` becomes `/docs/api-guide`, and `docs/index.md` becomes `/docs`.
 
 ## Validate before shipping
 
@@ -60,4 +61,4 @@ npm run preview
 
 `squidoc dev` watches docs and config files, then regenerates the internal Astro project without requiring a manual server restart.
 
-Next, learn how to configure [frontmatter](/frontmatter), [plugins](/plugins), [themes](/themes), and [deployment](/deployment).
+Next, learn how to configure [frontmatter](/frontmatter), [plugins](/plugins), [pages](/pages), [themes](/themes), and [deployment](/deployment).

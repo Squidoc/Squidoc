@@ -23,6 +23,7 @@ npm install @squidoc/plugin-search
 export default defineConfig({
   plugins: [
     "@squidoc/plugin-seo",
+    "@squidoc/plugin-pages",
     "@squidoc/plugin-codeblocks",
     "@squidoc/plugin-article-tree",
     "@squidoc/plugin-search",
@@ -51,6 +52,8 @@ Plugin order matters when plugins build on each other. Keep format plugins such 
 
 `@squidoc/plugin-codeblocks` ships in the default config. It adds syntax highlighting, code block styling hooks, and copy buttons for code examples.
 
+`@squidoc/plugin-pages` ships in the default config. It adds Astro page support for homepages, changelogs, landing pages, and other non-doc routes. See the [Pages guide](/pages).
+
 `@squidoc/plugin-article-tree` ships in the default config. It adds the on-page heading tree that tracks `h2` and `h3` sections as readers scroll.
 
 `@squidoc/plugin-search` adds `search-index.json` and a search UI slot. The basic theme renders that slot in the navbar on desktop and inside the mobile menu on small screens.
@@ -68,6 +71,7 @@ Remove the package from `plugins` in `docs.config.ts`, then remove the dependenc
 ```ts
 plugins: [
   "@squidoc/plugin-seo",
+  "@squidoc/plugin-pages",
   "@squidoc/plugin-codeblocks",
   "@squidoc/plugin-article-tree",
 ];

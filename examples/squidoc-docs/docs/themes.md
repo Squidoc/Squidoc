@@ -27,7 +27,7 @@ export default defineConfig({
         text: "Built with Squidoc.",
         links: [
           { title: "GitHub", href: "https://github.com/Squidoc/Squidoc" },
-          { title: "Configuration", path: "/configuration" },
+          { title: "Configuration", path: "/docs/configuration" },
         ],
       },
     },
@@ -57,12 +57,12 @@ export default defineConfig({
 
 ## Basic theme options
 
-`headerLinks` adds links to the desktop navbar. Use `href` for external links and `path` for internal docs routes.
+`headerLinks` adds links to the desktop navbar. Use `href` for external links and `path` for internal site routes.
 
 ```ts
 headerLinks: [
   { title: "GitHub", href: "https://github.com/Squidoc/Squidoc" },
-  { title: "Deployment", path: "/deployment" },
+  { title: "Deployment", path: "/docs/deployment" },
 ];
 ```
 
@@ -73,7 +73,7 @@ footer: {
   text: "Built with Squidoc.",
   links: [
     { title: "GitHub", href: "https://github.com/Squidoc/Squidoc" },
-    { title: "Plugins", path: "/plugins" },
+    { title: "Plugins", path: "/docs/plugins" },
   ],
 };
 ```

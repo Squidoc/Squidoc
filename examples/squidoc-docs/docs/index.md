@@ -13,13 +13,14 @@ It is built for teams that want the first five minutes to feel simple: create a 
 
 A Squidoc project has four moving parts:
 
-- `docs/` contains the articles that become routes.
+- `docs/` contains the articles that publish under `/docs` by default.
+- `pages/` contains optional Astro pages for custom routes such as `/` or `/changelog`.
 - `docs.config.ts` defines site metadata, navigation, plugins, and the active theme.
-- Plugins add behavior such as SEO tags, generated files, search indexes, code block enhancements, article trees, and additional document formats.
-- Themes decide how the normalized docs data becomes pages, navigation, headers, footers, and layout.
+- Plugins add behavior such as SEO tags, generated files, custom pages, search indexes, code block enhancements, article trees, and additional document formats.
+- Themes decide how docs and custom pages become navigation, headers, footers, and layouts.
 
 Squidoc generates an internal Astro project during development and build. You do not need to author Astro pages to use Squidoc; Astro is the static rendering engine that gives the generated site fast builds, static output, and easy deployment.
 
 ## Start here
 
-Begin with [Getting Started](/getting-started), then read [Configuration](/configuration), [Frontmatter](/frontmatter), and the [CLI Reference](/cli). When you are ready to publish, use the [Deployment](/deployment) guide.
+Begin with [Getting Started](/getting-started), then read [Configuration](/configuration), [Frontmatter](/frontmatter), [Pages](/pages), and the [CLI Reference](/cli). When you are ready to publish, use the [Deployment](/deployment) guide.
