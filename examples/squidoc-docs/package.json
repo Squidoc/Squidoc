@@ -12,6 +12,7 @@
     "@squidoc/plugin-article-tree": "workspace:*",
     "@squidoc/plugin-llms": "workspace:*",
     "@squidoc/plugin-mdx": "workspace:*",
+    "@squidoc/plugin-pages": "workspace:*",
     "@squidoc/plugin-search": "workspace:*",
     "@squidoc/plugin-seo": "workspace:*",
     "@squidoc/plugin-versions": "workspace:*",

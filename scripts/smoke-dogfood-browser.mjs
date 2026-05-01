@@ -45,16 +45,20 @@ try {
 
   try {
     await page.setViewportSize({ width: 1200, height: 720 });
-    await page.goto(`${baseUrl}/developers`, { waitUntil: "networkidle" });
+    await page.goto(`${baseUrl}/`, { waitUntil: "networkidle" });
+    await expectText(page.locator("main h1"), "Squidoc");
+    await expectAttribute(page.locator(".sq-home__primary"), "href", "/docs/getting-started");
+
+    await page.goto(`${baseUrl}/docs/developers`, { waitUntil: "networkidle" });
     await expectFooterNotAboveViewport(page);
     await expectSidebarFillsViewport(page);
 
-    await page.goto(`${baseUrl}/configuration`, { waitUntil: "networkidle" });
+    await page.goto(`${baseUrl}/docs/configuration`, { waitUntil: "networkidle" });
     await expectText(page.locator("main h1"), "Configuration");
     await expectAttribute(
       page.locator('link[rel="canonical"]'),
       "href",
-      "https://squidoc.dev/configuration",
+      "https://squidoc.dev/docs/configuration",
     );
     await assertMinCount(page.locator("[data-squidoc-codeblock]"), 2);
     await assertMinCount(page.locator("[data-squidoc-copy-code]"), 2);
@@ -73,13 +77,15 @@ try {
     await expectTextEventually(page.locator("[data-squidoc-copy-code]").first(), "Copied");
 
     await expectText(page.locator(".sq-version-selector__label"), "Version");
-    await page.locator("#squidoc-version-selector").selectOption("/versions/0.1");
-    await page.waitForURL(`${baseUrl}/versions/0.1/configuration`, { waitUntil: "networkidle" });
+    await page.locator("#squidoc-version-selector").selectOption("/docs/versions/0.1");
+    await page.waitForURL(`${baseUrl}/docs/versions/0.1/configuration`, {
+      waitUntil: "networkidle",
+    });
     await expectText(page.locator("main h1"), "Configuration");
     await expectAttribute(
       page.locator('nav[aria-label="Documentation"] a').filter({ hasText: "Plugin Authoring" }),
       "href",
-      "/versions/0.1/plugin-authoring",
+      "/docs/versions/0.1/plugin-authoring",
     );
     assert(
       (await page
@@ -88,12 +94,12 @@ try {
         .count()) === 0,
       "Archived docs should not render a redundant Versions nav folder.",
     );
-    await page.locator("#squidoc-version-selector").selectOption("/");
-    await page.waitForURL(`${baseUrl}/configuration`, { waitUntil: "networkidle" });
+    await page.locator("#squidoc-version-selector").selectOption("/docs");
+    await page.waitForURL(`${baseUrl}/docs/configuration`, { waitUntil: "networkidle" });
 
     await page.locator("#squidoc-search-input").fill("production deployment");
     await expectText(
-      page.locator('.sq-search__result[href="/deployment"]'),
+      page.locator('.sq-search__result[href="/docs/deployment"]'),
       "Deployment\nDeploy a Squidoc site to production on Vercel, Netlify, Cloudflare Pages, GitHub Pages, Docker, and static hosts.",
     );
 
@@ -103,11 +109,11 @@ try {
     await page.goto(`${baseUrl}/search-index.json`, { waitUntil: "networkidle" });
     const searchIndex = JSON.parse(await page.locator("body").innerText());
     assert(
-      searchIndex.some((entry) => entry.route === "/configuration"),
-      "search-index.json should include /configuration",
+      searchIndex.some((entry) => entry.route === "/docs/configuration"),
+      "search-index.json should include /docs/configuration",
     );
     assert(
-      searchIndex.some((entry) => entry.route === "/versions/0.1/configuration"),
+      searchIndex.some((entry) => entry.route === "/docs/versions/0.1/configuration"),
       "search-index.json should include archived version routes",
     );
   } finally {

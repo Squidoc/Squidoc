@@ -12,6 +12,7 @@ export type DiscoverDocsOptions = {
 export type DocPage = {
   sourcePath: string;
   route: string;
+  docsRoute: string;
   title: string;
   description?: string;
   frontmatter: Record<string, unknown>;
@@ -27,7 +28,9 @@ export async function discoverDocs(
   const docsRoot = join(cwd, config.docsDir);
   const extensions = new Set([...DEFAULT_DOC_EXTENSIONS, ...(options.extensions ?? [])]);
   const files = await listDocFiles(docsRoot, extensions);
-  const pages = await Promise.all(files.map((file) => readDocPage(file, docsRoot)));
+  const pages = await Promise.all(
+    files.map((file) => readDocPage(file, docsRoot, config.docs.basePath)),
+  );
 
   return pages.sort((first, second) => first.route.localeCompare(second.route));
 }
@@ -53,14 +56,20 @@ async function listDocFiles(directory: string, extensions: Set<string>): Promise
   return files.flat();
 }
 
-async function readDocPage(filePath: string, docsRoot: string): Promise<DocPage> {
+async function readDocPage(
+  filePath: string,
+  docsRoot: string,
+  docsBasePath: string,
+): Promise<DocPage> {
   const raw = await readFile(filePath, "utf8");
   const parsed = matter(raw);
   const frontmatter = parsed.data;
+  const docsRoute = routeFromFilePath(filePath, docsRoot);
 
   return {
     sourcePath: filePath,
-    route: routeFromFilePath(filePath, docsRoot),
+    route: joinRoutes(docsBasePath, docsRoute),
+    docsRoute,
     title:
       readString(frontmatter.title) ??
       titleFromContent(parsed.content) ??
@@ -69,6 +78,28 @@ async function readDocPage(filePath: string, docsRoot: string): Promise<DocPage>
     frontmatter,
     content: parsed.content.trim(),
   };
+}
+
+function joinRoutes(prefix: string, remainder: string): string {
+  const normalizedPrefix = normalizeRoutePath(prefix);
+  const cleanRemainder = stripLeadingSlash(remainder).replace(/\/+$/, "");
+
+  if (!cleanRemainder) {
+    return normalizedPrefix;
+  }
+
+  return `${normalizedPrefix === "/" ? "" : normalizedPrefix}/${cleanRemainder}`;
+}
+
+function normalizeRoutePath(value: string): string {
+  const prefixed = value.startsWith("/") ? value : `/${value}`;
+  const withoutTrailingSlash = prefixed.replace(/\/+$/, "");
+
+  return withoutTrailingSlash === "" ? "/" : withoutTrailingSlash;
+}
+
+function stripLeadingSlash(value: string): string {
+  return value.replace(/^\/+/, "");
 }
 
 export function routeFromFilePath(filePath: string, docsRoot: string): string {

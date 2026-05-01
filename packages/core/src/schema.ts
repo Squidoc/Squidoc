@@ -6,6 +6,10 @@ export const siteConfigSchema = z.object({
   description: z.string().optional(),
 });
 
+export const docsConfigSchema = z.object({
+  basePath: z.string().min(1).default("/docs").transform(normalizeRoutePath),
+});
+
 export type NavItemInput = {
   title: string;
   path?: string;
@@ -48,6 +52,7 @@ export const pluginConfigSchema = z.union([
 
 export const squidocConfigSchema = z.object({
   site: siteConfigSchema,
+  docs: docsConfigSchema.default({ basePath: "/docs" }),
   docsDir: z.string().default("docs"),
   theme: themeConfigSchema.default("@squidoc/theme-basic"),
   plugins: z
@@ -65,4 +70,11 @@ export function defineConfig(config: SquidocConfig): SquidocConfig {
 
 export function resolveConfig(config: unknown): ResolvedSquidocConfig {
   return squidocConfigSchema.parse(config);
+}
+
+function normalizeRoutePath(value: string): string {
+  const prefixed = value.startsWith("/") ? value : `/${value}`;
+  const withoutTrailingSlash = prefixed.replace(/\/+$/, "");
+
+  return withoutTrailingSlash === "" ? "/" : withoutTrailingSlash;
 }

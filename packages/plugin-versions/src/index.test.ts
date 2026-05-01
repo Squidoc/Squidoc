@@ -20,14 +20,16 @@ describe("@squidoc/plugin-versions", () => {
       pages: [
         {
           title: "Current",
-          route: "/configuration",
+          route: "/docs/configuration",
+          docsRoute: "/configuration",
           sourcePath: "/repo/docs/configuration.md",
           frontmatter: {},
           content: "# Current",
         },
         {
           title: "Legacy",
-          route: "/versions/0.9/configuration",
+          route: "/docs/versions/0.9/configuration",
+          docsRoute: "/versions/0.9/configuration",
           sourcePath: "/repo/docs/versions/0.9/configuration.md",
           frontmatter: {},
           content: "# Legacy",
@@ -37,26 +39,28 @@ describe("@squidoc/plugin-versions", () => {
     });
 
     expect(project?.pages.map((page) => page.route)).toEqual([
-      "/configuration",
-      "/versions/0.9/configuration",
+      "/docs/configuration",
+      "/docs/versions/0.9/configuration",
     ]);
     expect(project?.pages[1]?.frontmatter).toMatchObject({
       squidocVersion: "0.9",
       squidocVersionLabel: "0.9",
-      squidocVersionRoutePrefix: "/versions/0.9",
+      squidocVersionRoutePrefix: "/docs/versions/0.9",
       squidocVersionCurrent: false,
     });
     expect(project?.nav).toEqual([{ title: "Configuration", path: "/configuration" }]);
-    expect(project?.pages[0]?.nav).toEqual([{ title: "Configuration", path: "/configuration" }]);
+    expect(project?.pages[0]?.nav).toEqual([
+      { title: "Configuration", path: "/docs/configuration" },
+    ]);
     expect(project?.pages[1]?.nav).toEqual([
-      { title: "Configuration", path: "/versions/0.9/configuration" },
+      { title: "Configuration", path: "/docs/versions/0.9/configuration" },
     ]);
     expect(generatedFiles[0]).toEqual({
       path: "versions.json",
       contents: `${JSON.stringify(
         [
-          { name: "1.0", label: "1.0", routePrefix: "/", current: true },
-          { name: "0.9", label: "0.9", routePrefix: "/versions/0.9", current: false },
+          { name: "1.0", label: "1.0", routePrefix: "/docs", current: true },
+          { name: "0.9", label: "0.9", routePrefix: "/docs/versions/0.9", current: false },
         ],
         null,
         2,
@@ -77,14 +81,16 @@ describe("@squidoc/plugin-versions", () => {
       pages: [
         {
           title: "Legacy Home",
-          route: "/archive/v1",
+          route: "/docs/archive/v1",
+          docsRoute: "/archive/v1",
           sourcePath: "/repo/docs/archive/v1/index.md",
           frontmatter: {},
           content: "# Legacy",
         },
         {
           title: "Legacy API",
-          route: "/archive/v1/api",
+          route: "/docs/archive/v1/api",
+          docsRoute: "/archive/v1/api",
           sourcePath: "/repo/docs/archive/v1/api.md",
           frontmatter: {},
           content: "# API",
@@ -93,7 +99,7 @@ describe("@squidoc/plugin-versions", () => {
       nav: [],
     });
 
-    expect(project?.pages.map((page) => page.route)).toEqual(["/v1", "/v1/api"]);
+    expect(project?.pages.map((page) => page.route)).toEqual(["/docs/v1", "/docs/v1/api"]);
   });
 });
 
@@ -112,16 +118,19 @@ async function setupPlugin(options: Record<string, unknown>) {
     addProjectTransformer(transformer) {
       transformers.push(transformer);
     },
+    addSitePage() {},
     addThemeSlot(slot) {
       slots.push(slot);
     },
     config: {
       site: { name: "Test Docs" },
+      docs: { basePath: "/docs" },
       docsDir: "docs",
       theme: "@squidoc/theme-basic",
       plugins: [{ name: "@squidoc/plugin-versions", options }],
       nav: [],
     } satisfies ResolvedSquidocConfig,
+    cwd: "/repo",
     pages: [],
     pluginOptions: options,
   };

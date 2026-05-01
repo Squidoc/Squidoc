@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@squidoc/plugin-article-tree": "^0.1.0",
+    "@squidoc/plugin-pages": "^0.1.0",
     "@squidoc/plugin-seo": "^0.1.0",
     "@squidoc/plugin-codeblocks": "^0.1.0",
     "@squidoc/theme-basic": "^0.1.0",

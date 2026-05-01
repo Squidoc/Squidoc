@@ -12,6 +12,7 @@ export default defineConfig({
     "@squidoc/plugin-codeblocks",
     "@squidoc/plugin-article-tree",
     "@squidoc/plugin-search",
+    "@squidoc/plugin-pages",
     "@squidoc/plugin-mdx",
     {
       name: "@squidoc/plugin-versions",
@@ -37,7 +38,7 @@ export default defineConfig({
         text: "Built with Squidoc.",
         links: [
           { title: "GitHub", href: "https://github.com/Squidoc/Squidoc" },
-          { title: "Configuration", path: "/configuration" },
+          { title: "Configuration", path: "/docs/configuration" },
         ],
       },
     },
@@ -53,6 +54,7 @@ export default defineConfig({
       title: "Customization",
       items: [
         { title: "Plugins", path: "/plugins" },
+        { title: "Pages", path: "/pages" },
         { title: "Themes", path: "/themes" },
         { title: "Versioning", path: "/versioning" },
         { title: "MDX", path: "/mdx" },

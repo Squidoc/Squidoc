@@ -28,7 +28,8 @@ Hello.
 
     const pages = await discoverDocs(resolveConfig({ site: { name: "Test" } }), cwd);
 
-    expect(pages.map((page) => page.route)).toEqual(["/", "/guides/getting-started"]);
+    expect(pages.map((page) => page.route)).toEqual(["/docs", "/docs/guides/getting-started"]);
+    expect(pages.map((page) => page.docsRoute)).toEqual(["/", "/guides/getting-started"]);
     expect(pages[0]).toMatchObject({
       title: "Home",
       description: "Welcome home.",
@@ -49,7 +50,8 @@ Hello.
       extensions: [".mdx"],
     });
 
-    expect(pages.map((page) => page.route)).toEqual(["/", "/component-guide"]);
+    expect(pages.map((page) => page.route)).toEqual(["/docs", "/docs/component-guide"]);
+    expect(pages.map((page) => page.docsRoute)).toEqual(["/", "/component-guide"]);
     expect(pages[1]).toMatchObject({
       title: "Component Guide",
       content: "# Component Guide",

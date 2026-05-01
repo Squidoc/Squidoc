@@ -14,26 +14,32 @@ describe("@squidoc/plugin-search", () => {
       addHeadTags() {},
       addHtmlTransformer() {},
       addPageHeadTags() {},
+      addProjectTransformer() {},
+      addSitePage() {},
       addThemeSlot(slot) {
         themeSlots.push(slot);
       },
       config: {
         site: { name: "Test Docs" },
+        docs: { basePath: "/docs" },
         docsDir: "docs",
         theme: "@squidoc/theme-basic",
         plugins: ["@squidoc/plugin-search"],
         nav: [],
       } satisfies ResolvedSquidocConfig,
+      cwd: "/tmp/test-docs",
       pages: [
         {
           title: "Getting Started",
           description: "Start here.",
           route: "/getting-started",
+          docsRoute: "/getting-started",
           sourcePath: "/tmp/test-docs/docs/getting-started.md",
           frontmatter: {},
           content: "# Getting Started\n\nRead the [guide](/guide) and `install` it.",
         },
       ],
+      pluginOptions: {},
     };
 
     await plugin.setup?.(api);

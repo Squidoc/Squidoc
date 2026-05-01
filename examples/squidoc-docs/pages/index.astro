@@ -1,0 +1,39 @@
+---
+export const squidoc = {
+  title: "Squidoc",
+  description: "Static docs with a plugin system, versioning, and themeable pages.",
+};
+---
+
+<section class="sq-home">
+  <div class="sq-home__inner">
+    <p class="sq-home__eyebrow">Static-first documentation</p>
+    <h1>Squidoc</h1>
+    <p class="sq-home__lead">
+      Build fast documentation sites with Markdown, versioning, search, SEO, and a plugin system
+      that leaves room for serious customization.
+    </p>
+    <div class="sq-home__actions">
+      <a class="sq-home__primary" href="/docs/getting-started">Get started</a>
+      <a class="sq-home__secondary" href="/docs/plugins">Explore plugins</a>
+    </div>
+    <pre class="sq-home__install"><code>npm create squidoc@latest my-docs
+cd my-docs
+npm run dev</code></pre>
+  </div>
+</section>
+
+<section class="sq-home-grid" aria-label="Highlights">
+  <article>
+    <h2>Docs by default</h2>
+    <p>Write Markdown in <code>docs/</code> and Squidoc publishes it under <code>/docs/</code>.</p>
+  </article>
+  <article>
+    <h2>Pages when needed</h2>
+    <p>Create Astro pages for homepages, changelogs, landing pages, and anything outside the docs tree.</p>
+  </article>
+  <article>
+    <h2>Theme contract</h2>
+    <p>Themes implement stable <code>docs</code> and <code>page</code> layouts so custom sites stay portable.</p>
+  </article>
+</section>

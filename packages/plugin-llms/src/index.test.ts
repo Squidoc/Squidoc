@@ -13,6 +13,8 @@ describe("@squidoc/plugin-llms", () => {
       addHeadTags() {},
       addHtmlTransformer() {},
       addPageHeadTags() {},
+      addProjectTransformer() {},
+      addSitePage() {},
       addThemeSlot(_slot: ThemeSlot) {},
       config: {
         site: {
@@ -20,21 +22,25 @@ describe("@squidoc/plugin-llms", () => {
           url: "https://docs.example.com",
           description: "Helpful docs.",
         },
+        docs: { basePath: "/docs" },
         docsDir: "docs",
         theme: "@squidoc/theme-basic",
         plugins: ["@squidoc/plugin-llms"],
         nav: [],
       } satisfies ResolvedSquidocConfig,
+      cwd: "/tmp/test-docs",
       pages: [
         {
           title: "Guide",
           description: "A deeper guide.",
           route: "/guide",
+          docsRoute: "/guide",
           sourcePath: "/tmp/test-docs/docs/guide.md",
           frontmatter: {},
           content: "# Guide\n\nRead this.",
         },
       ],
+      pluginOptions: {},
     };
 
     await plugin.setup?.(api);

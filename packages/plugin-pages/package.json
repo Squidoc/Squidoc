@@ -1,0 +1,43 @@
+{
+  "name": "@squidoc/plugin-pages",
+  "version": "0.1.0",
+  "description": "Custom Astro pages for Squidoc sites.",
+  "license": "MIT",
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "homepage": "https://github.com/Squidoc/Squidoc#readme",
+  "bugs": {
+    "url": "https://github.com/Squidoc/Squidoc/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Squidoc/Squidoc.git",
+    "directory": "packages/plugin-pages"
+  },
+  "keywords": ["astro", "docs", "documentation", "pages", "squidoc", "plugin"],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": ["dist"],
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "check": "tsc -p tsconfig.json --noEmit",
+    "clean": "rm -rf dist",
+    "test": "vitest run --passWithNoTests"
+  },
+  "dependencies": {
+    "@squidoc/core": "workspace:*"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.2",
+    "vitest": "^2.1.8"
+  }
+}

@@ -11,17 +11,22 @@ describe("@squidoc/plugin-article-tree", () => {
       addHeadTags() {},
       addHtmlTransformer() {},
       addPageHeadTags() {},
+      addProjectTransformer() {},
+      addSitePage() {},
       addThemeSlot(slot) {
         themeSlots.push(slot);
       },
       config: {
         site: { name: "Test Docs" },
+        docs: { basePath: "/docs" },
         docsDir: "docs",
         theme: "@squidoc/theme-basic",
         plugins: ["@squidoc/plugin-article-tree"],
         nav: [],
       } satisfies ResolvedSquidocConfig,
+      cwd: "/tmp/test-docs",
       pages: [],
+      pluginOptions: {},
     };
 
     await plugin.setup?.(api);

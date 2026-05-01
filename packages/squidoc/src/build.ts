@@ -1,7 +1,7 @@
 import { spawn } from "node:child_process";
 import { copyFile, cp, mkdir, rm, symlink, writeFile } from "node:fs/promises";
 import { createRequire } from "node:module";
-import { dirname, join, resolve, sep } from "node:path";
+import { dirname, join, relative, resolve, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 import {
   type DocPage,
@@ -10,6 +10,7 @@ import {
   type NavItem,
   type PluginContext,
   type ResolvedSquidocConfig,
+  type SitePage,
   type SquidocTheme,
   applyProjectTransforms,
   discoverDocs,
@@ -88,6 +89,7 @@ async function generateAstroProject(cwd: string, internalRoot: string): Promise<
     throw new Error(`No documentation pages found in ${loaded.config.docsDir}.`);
   }
 
+  validateRouteCollisions(project.pages, plugins.sitePages);
   await writeAstroProject(internalRoot, cwd, config, project.pages, theme, plugins);
   return plugins;
 }
@@ -139,6 +141,13 @@ async function writeAstroProject(
     join(templatesRoot, "page.astro"),
     join(internalRoot, "src", "pages", "[...route].astro"),
   );
+  await mkdir(join(internalRoot, "src", "layouts"), { recursive: true });
+  await copyFile(
+    join(templatesRoot, "page-layout.astro"),
+    join(internalRoot, "src", "layouts", "SquidocPageLayout.astro"),
+  );
+  await copySitePageSources(internalRoot, plugins.sitePages);
+  await writeSitePageRoutes(internalRoot, config, pages, plugins.sitePages);
   await writeRenderData(internalRoot, config, pages, theme, plugins);
 }
 
@@ -192,10 +201,81 @@ async function watchDevInputs(cwd: string, internalRoot: string): Promise<FSWatc
 function getWatchedPaths(cwd: string, config: ResolvedSquidocConfig): string[] {
   return [
     join(cwd, config.docsDir),
+    join(cwd, "pages"),
     join(cwd, "docs.config.ts"),
     join(cwd, "docs.config.mjs"),
     join(cwd, "docs.config.js"),
   ];
+}
+
+async function copySitePageSources(internalRoot: string, sitePages: SitePage[]): Promise<void> {
+  const roots = [...new Set(sitePages.map((page) => page.sourceRoot))];
+
+  await Promise.all(
+    roots.map((root, index) =>
+      cp(root, join(internalRoot, "src", "squidoc-pages", String(index)), {
+        recursive: true,
+        force: true,
+      }),
+    ),
+  );
+}
+
+async function writeSitePageRoutes(
+  internalRoot: string,
+  config: ResolvedSquidocConfig,
+  docsPages: DocPage[],
+  sitePages: SitePage[],
+): Promise<void> {
+  const sourceRoots = [...new Set(sitePages.map((page) => page.sourceRoot))];
+
+  for (const [index, page] of sitePages.entries()) {
+    const target = join(
+      internalRoot,
+      "src",
+      "pages",
+      ...routeToSegments(page.route),
+      "index.astro",
+    );
+    const sourceRootIndex = sourceRoots.indexOf(page.sourceRoot);
+    const sourceRelativePath = relative(page.sourceRoot, page.sourcePath);
+    const componentPath = join(
+      internalRoot,
+      "src",
+      "squidoc-pages",
+      String(sourceRootIndex),
+      sourceRelativePath,
+    );
+    const componentImport = normalizeImportPath(relative(dirname(target), componentPath));
+    const layoutImport = normalizeImportPath(
+      relative(dirname(target), join(internalRoot, "src", "layouts", "SquidocPageLayout.astro")),
+    );
+
+    await mkdir(dirname(target), { recursive: true });
+    await writeFile(
+      target,
+      `---
+import PageLayout from "${layoutImport}";
+import UserPage from "${componentImport}";
+import { sitePages } from "${normalizeImportPath(relative(dirname(target), join(internalRoot, "src", "squidoc-data.mjs")))}";
+
+const data = sitePages[${index}];
+---
+
+<PageLayout data={data}>
+  <UserPage />
+</PageLayout>
+`,
+    );
+  }
+
+  if (!sitePages.some((page) => page.route === "/")) {
+    const target = join(internalRoot, "src", "pages", "index.astro");
+    await writeFile(
+      target,
+      renderRedirectPage(config.docs.basePath, docsPages[0]?.title ?? config.site.name),
+    );
+  }
 }
 
 async function writeRenderData(
@@ -232,7 +312,11 @@ async function writeRenderData(
         route: page.route,
         title: page.title,
       },
-      content: await transformHtml(await renderMarkdown(page.content), page, plugins),
+      content: await transformHtml(
+        rewriteDocsLinks(await renderMarkdown(page.content), pages),
+        page,
+        plugins,
+      ),
       classes,
       globalCss: theme.renderer?.globalCss ?? "",
       headHtml: renderHeadTags([
@@ -242,14 +326,19 @@ async function writeRenderData(
       headerLinksHtml,
       footer: { text: footer.text },
       footerLinksHtml,
-      navHtml: renderNavHtml(buildNavTree(page.nav ?? config.nav, pages), page.route),
+      navHtml: renderNavHtml(
+        buildNavTree(page.nav ?? prefixNav(config.nav, config.docs.basePath), pages),
+        page.route,
+      ),
       slots,
     })),
   );
+  const sitePages = pagesForSiteShell(config, pages, theme, plugins, plugins.sitePages);
 
   await writeFile(
     join(internalRoot, "src", "squidoc-data.mjs"),
     `export const pages = ${JSON.stringify(renderPages, null, 2)};
+export const sitePages = ${JSON.stringify(sitePages, null, 2)};
 `,
   );
 }
@@ -271,6 +360,80 @@ type RenderFooter = {
 };
 
 type ThemeOptions = Record<string, unknown>;
+
+function pagesForSiteShell(
+  config: ResolvedSquidocConfig,
+  docsPages: DocPage[],
+  theme: SquidocTheme,
+  plugins: PluginContext,
+  sitePages: SitePage[],
+) {
+  const themeOptions = getThemeOptions(config);
+  const footer = readFooter(themeOptions.footer);
+  const classes = {
+    brand: theme.renderer?.classes?.brand ?? "brand",
+    content: theme.renderer?.classes?.content ?? "content",
+    nav: theme.renderer?.classes?.nav ?? "nav",
+    shell: theme.renderer?.classes?.shell ?? "shell",
+    sidebar: theme.renderer?.classes?.sidebar ?? "sidebar",
+  };
+  const slots = {
+    articleTree: renderThemeSlot(plugins, "article-tree"),
+    search: renderThemeSlot(plugins, "search"),
+    versionSelector: renderThemeSlot(plugins, "version-selector"),
+  };
+
+  return sitePages.map((page) => ({
+    site: config.site,
+    page: {
+      description: page.description,
+      route: page.route,
+      title: page.title ?? config.site.name,
+    },
+    layout: page.layout,
+    classes,
+    globalCss: theme.renderer?.globalCss ?? "",
+    headHtml: renderHeadTags(plugins.headTags),
+    headerLinksHtml: renderLinkListHtml(readLinks(themeOptions.headerLinks), "sq-topbar__link"),
+    footer: { text: footer.text },
+    footerLinksHtml: renderLinkListHtml(footer.links, "sq-footer__link"),
+    navHtml: renderNavHtml(
+      buildNavTree(prefixNav(config.nav, config.docs.basePath), docsPages),
+      page.route,
+    ),
+    slots,
+  }));
+}
+
+function prefixNav(items: NavItem[], docsBasePath: string): NavItem[] {
+  return items.map((item) => ({
+    ...item,
+    path: item.path ? joinRoutes(docsBasePath, item.path) : undefined,
+    items: item.items ? prefixNav(item.items, docsBasePath) : undefined,
+  }));
+}
+
+function rewriteDocsLinks(html: string, pages: DocPage[]): string {
+  const routeByDocsRoute = new Map(pages.map((page) => [page.docsRoute, page.route]));
+
+  return html.replaceAll(/href="([^"]+)"/g, (match, href: string) => {
+    if (!href.startsWith("/")) {
+      return match;
+    }
+
+    const [pathWithQuery = "", hash = ""] = href.split("#");
+    const [path = "", query = ""] = pathWithQuery.split("?");
+    const normalizedPath = normalizeRoute(path);
+    const route = routeByDocsRoute.get(normalizedPath);
+
+    if (!route) {
+      return match;
+    }
+
+    const suffix = `${query ? `?${query}` : ""}${hash ? `#${hash}` : ""}`;
+    return `href="${escapeHtml(`${route}${suffix}`)}"`;
+  });
+}
 
 function getThemeOptions(config: ResolvedSquidocConfig): ThemeOptions {
   return typeof config.theme === "string" ? {} : config.theme.options;
@@ -395,6 +558,72 @@ function escapeHtml(value: string): string {
     .replaceAll('"', "&quot;")
     .replaceAll("<", "&lt;")
     .replaceAll(">", "&gt;");
+}
+
+function validateRouteCollisions(docsPages: DocPage[], sitePages: SitePage[]): void {
+  const routes = new Set(docsPages.map((page) => page.route));
+  const duplicateSiteRoutes = new Set<string>();
+
+  for (const page of sitePages) {
+    if (routes.has(page.route)) {
+      throw new Error(`Page route conflicts with a documentation route: ${page.route}`);
+    }
+
+    if (duplicateSiteRoutes.has(page.route)) {
+      throw new Error(`Duplicate page route found: ${page.route}`);
+    }
+
+    duplicateSiteRoutes.add(page.route);
+  }
+}
+
+function renderRedirectPage(target: string, title: string): string {
+  const href = escapeHtml(target);
+
+  return `---
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="refresh" content="0; url=${href}" />
+    <link rel="canonical" href="${href}" />
+    <title>${escapeHtml(title)}</title>
+  </head>
+  <body>
+    <p>Redirecting to <a href="${href}">${href}</a>.</p>
+    <script>window.location.replace(${JSON.stringify(target)});</script>
+  </body>
+</html>
+`;
+}
+
+function routeToSegments(route: string): string[] {
+  return normalizeRoute(route).split("/").filter(Boolean);
+}
+
+function normalizeImportPath(path: string): string {
+  const normalized = path.split(sep).join("/");
+
+  return normalized.startsWith(".") ? normalized : `./${normalized}`;
+}
+
+function joinRoutes(prefix: string, remainder: string): string {
+  const normalizedPrefix = normalizeRoute(prefix);
+  const cleanRemainder = remainder.replace(/^\/+/, "").replace(/\/+$/, "");
+
+  if (!cleanRemainder) {
+    return normalizedPrefix;
+  }
+
+  return `${normalizedPrefix === "/" ? "" : normalizedPrefix}/${cleanRemainder}`;
+}
+
+function normalizeRoute(route: string): string {
+  const prefixed = route.startsWith("/") ? route : `/${route}`;
+  const withoutTrailingSlash = prefixed.replace(/\/index$/, "").replace(/\/+$/, "");
+
+  return withoutTrailingSlash === "" ? "/" : withoutTrailingSlash;
 }
 
 function readString(value: unknown): string | undefined {

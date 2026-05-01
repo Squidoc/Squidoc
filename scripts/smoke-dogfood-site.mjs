@@ -6,92 +6,101 @@ const distRoot = join(repoRoot, "examples/squidoc-docs/dist");
 
 const pages = [
   {
-    file: "index.html",
-    route: "/",
+    file: "docs/index.html",
+    route: "/docs",
     title: "Introduction | Squidoc",
-    canonical: "https://squidoc.dev/",
+    canonical: "https://squidoc.dev/docs",
   },
   {
-    file: "cli/index.html",
-    route: "/cli",
+    file: "docs/cli/index.html",
+    route: "/docs/cli",
     title: "CLI Reference | Squidoc",
-    canonical: "https://squidoc.dev/cli",
+    canonical: "https://squidoc.dev/docs/cli",
   },
   {
-    file: "configuration/index.html",
-    route: "/configuration",
+    file: "docs/configuration/index.html",
+    route: "/docs/configuration",
     title: "Configuration | Squidoc",
-    canonical: "https://squidoc.dev/configuration",
+    canonical: "https://squidoc.dev/docs/configuration",
   },
   {
-    file: "developers/index.html",
-    route: "/developers",
+    file: "docs/developers/index.html",
+    route: "/docs/developers",
     title: "Authoring Extensions | Squidoc",
-    canonical: "https://squidoc.dev/developers",
+    canonical: "https://squidoc.dev/docs/developers",
   },
   {
-    file: "deployment/index.html",
-    route: "/deployment",
+    file: "docs/deployment/index.html",
+    route: "/docs/deployment",
     title: "Deployment | Squidoc",
-    canonical: "https://squidoc.dev/deployment",
+    canonical: "https://squidoc.dev/docs/deployment",
   },
   {
-    file: "frontmatter/index.html",
-    route: "/frontmatter",
+    file: "docs/frontmatter/index.html",
+    route: "/docs/frontmatter",
     title: "Frontmatter | Squidoc",
-    canonical: "https://squidoc.dev/frontmatter",
+    canonical: "https://squidoc.dev/docs/frontmatter",
   },
   {
-    file: "plugin-authoring/index.html",
-    route: "/plugin-authoring",
+    file: "docs/plugin-authoring/index.html",
+    route: "/docs/plugin-authoring",
     title: "Plugin Authoring | Squidoc",
-    canonical: "https://squidoc.dev/plugin-authoring",
+    canonical: "https://squidoc.dev/docs/plugin-authoring",
   },
   {
-    file: "theme-authoring/index.html",
-    route: "/theme-authoring",
+    file: "docs/theme-authoring/index.html",
+    route: "/docs/theme-authoring",
     title: "Theme Authoring | Squidoc",
-    canonical: "https://squidoc.dev/theme-authoring",
+    canonical: "https://squidoc.dev/docs/theme-authoring",
   },
   {
-    file: "getting-started/index.html",
-    route: "/getting-started",
+    file: "docs/getting-started/index.html",
+    route: "/docs/getting-started",
     title: "Getting Started | Squidoc",
-    canonical: "https://squidoc.dev/getting-started",
+    canonical: "https://squidoc.dev/docs/getting-started",
   },
   {
-    file: "plugins/index.html",
-    route: "/plugins",
+    file: "docs/plugins/index.html",
+    route: "/docs/plugins",
     title: "Plugins | Squidoc",
-    canonical: "https://squidoc.dev/plugins",
+    canonical: "https://squidoc.dev/docs/plugins",
   },
   {
-    file: "themes/index.html",
-    route: "/themes",
+    file: "docs/pages/index.html",
+    route: "/docs/pages",
+    title: "Pages | Squidoc",
+    canonical: "https://squidoc.dev/docs/pages",
+  },
+  {
+    file: "docs/themes/index.html",
+    route: "/docs/themes",
     title: "Themes | Squidoc",
-    canonical: "https://squidoc.dev/themes",
+    canonical: "https://squidoc.dev/docs/themes",
   },
   {
-    file: "versioning/index.html",
-    route: "/versioning",
+    file: "docs/versioning/index.html",
+    route: "/docs/versioning",
     title: "Versioning | Squidoc",
-    canonical: "https://squidoc.dev/versioning",
+    canonical: "https://squidoc.dev/docs/versioning",
   },
   {
-    file: "mdx/index.html",
-    route: "/mdx",
+    file: "docs/mdx/index.html",
+    route: "/docs/mdx",
     title: "MDX | Squidoc",
-    canonical: "https://squidoc.dev/mdx",
+    canonical: "https://squidoc.dev/docs/mdx",
   },
 ];
 const archivedPages = pages.map((page) => ({
   ...page,
-  file: `versions/0.1/${page.file}`,
-  route: page.route === "/" ? "/versions/0.1" : `/versions/0.1${page.route}`,
+  file: page.file.replace("docs/", "docs/versions/0.1/"),
+  route:
+    page.route === "/docs"
+      ? "/docs/versions/0.1"
+      : page.route.replace("/docs", "/docs/versions/0.1"),
   canonical:
-    page.route === "/"
-      ? "https://squidoc.dev/versions/0.1"
-      : `https://squidoc.dev/versions/0.1${page.route}`,
+    page.route === "/docs"
+      ? "https://squidoc.dev/docs/versions/0.1"
+      : `https://squidoc.dev${page.route.replace("/docs", "/docs/versions/0.1")}`,
 }));
 const allPages = [...pages, ...archivedPages];
 
@@ -104,38 +113,43 @@ for (const page of allPages) {
   assertIncludes(html, "data-squidoc-versions", page.file);
 }
 
-const pluginAuthoring = await readDistFile("plugin-authoring/index.html");
-assertIncludes(pluginAuthoring, 'class="shiki github-light"', "plugin-authoring/index.html");
-assertIncludes(pluginAuthoring, "data-squidoc-codeblock", "plugin-authoring/index.html");
-assertIncludes(pluginAuthoring, "data-squidoc-copy-code", "plugin-authoring/index.html");
-assertIncludes(pluginAuthoring, "<details open>", "plugin-authoring/index.html");
-assertIncludes(pluginAuthoring, "data-squidoc-article-tree", "plugin-authoring/index.html");
-assertIncludes(pluginAuthoring, "IntersectionObserver", "plugin-authoring/index.html");
-assertIncludes(pluginAuthoring, "sq-topbar", "plugin-authoring/index.html");
-assertIncludes(pluginAuthoring, "sq-sidebar-toggle", "plugin-authoring/index.html");
-assertIncludes(pluginAuthoring, "sq-footer", "plugin-authoring/index.html");
-assertIncludes(pluginAuthoring, "sq-version-selector", "plugin-authoring/index.html");
-assertIncludes(pluginAuthoring, "Built with Squidoc.", "plugin-authoring/index.html");
+const home = await readDistFile("index.html");
+assertIncludes(home, "<title>Squidoc | Squidoc</title>", "index.html");
+assertIncludes(home, 'href="/docs/getting-started"', "index.html");
+assertIncludes(home, "sq-home", "index.html");
+
+const pluginAuthoring = await readDistFile("docs/plugin-authoring/index.html");
+assertIncludes(pluginAuthoring, 'class="shiki github-light"', "docs/plugin-authoring/index.html");
+assertIncludes(pluginAuthoring, "data-squidoc-codeblock", "docs/plugin-authoring/index.html");
+assertIncludes(pluginAuthoring, "data-squidoc-copy-code", "docs/plugin-authoring/index.html");
+assertIncludes(pluginAuthoring, "<details open>", "docs/plugin-authoring/index.html");
+assertIncludes(pluginAuthoring, "data-squidoc-article-tree", "docs/plugin-authoring/index.html");
+assertIncludes(pluginAuthoring, "IntersectionObserver", "docs/plugin-authoring/index.html");
+assertIncludes(pluginAuthoring, "sq-topbar", "docs/plugin-authoring/index.html");
+assertIncludes(pluginAuthoring, "sq-sidebar-toggle", "docs/plugin-authoring/index.html");
+assertIncludes(pluginAuthoring, "sq-footer", "docs/plugin-authoring/index.html");
+assertIncludes(pluginAuthoring, "sq-version-selector", "docs/plugin-authoring/index.html");
+assertIncludes(pluginAuthoring, "Built with Squidoc.", "docs/plugin-authoring/index.html");
 assert(
   pluginAuthoring.indexOf('class="sq-search" data-squidoc-search') <
     pluginAuthoring.indexOf('class="sq-sidebar"'),
   "plugin-authoring/index.html should render search before the sidebar",
 );
 
-const archivedVersioning = await readDistFile("versions/0.1/versioning/index.html");
+const archivedVersioning = await readDistFile("docs/versions/0.1/versioning/index.html");
 assertIncludes(
   archivedVersioning,
-  'href="/versions/0.1/configuration"',
-  "versions/0.1/versioning/index.html",
+  'href="/docs/versions/0.1/configuration"',
+  "docs/versions/0.1/versioning/index.html",
 );
 assertIncludes(
   archivedVersioning,
-  'href="/versions/0.1/plugin-authoring"',
-  "versions/0.1/versioning/index.html",
+  'href="/docs/versions/0.1/plugin-authoring"',
+  "docs/versions/0.1/versioning/index.html",
 );
 assert(
   !archivedVersioning.includes("<span>Versions</span>"),
-  "versions/0.1/versioning/index.html should not render a redundant Versions nav folder",
+  "docs/versions/0.1/versioning/index.html should not render a redundant Versions nav folder",
 );
 
 const searchIndex = JSON.parse(await readDistFile("search-index.json"));
@@ -152,22 +166,24 @@ const versions = JSON.parse(await readDistFile("versions.json"));
 assert(
   Array.isArray(versions) &&
     versions.some((version) => version.name === "next" && version.current === true) &&
-    versions.some((version) => version.name === "0.1" && version.routePrefix === "/versions/0.1"),
+    versions.some(
+      (version) => version.name === "0.1" && version.routePrefix === "/docs/versions/0.1",
+    ),
   "versions.json should include current and archived dogfood versions",
 );
 
 const llms = await readDistFile("llms.txt");
-assertIncludes(llms, "[MDX](https://squidoc.dev/mdx)", "llms.txt");
-assertIncludes(llms, "[CLI Reference](https://squidoc.dev/cli)", "llms.txt");
-assertIncludes(llms, "[Deployment](https://squidoc.dev/deployment)", "llms.txt");
-assertIncludes(llms, "[Frontmatter](https://squidoc.dev/frontmatter)", "llms.txt");
-assertIncludes(llms, "[Plugins](https://squidoc.dev/plugins)", "llms.txt");
-assertIncludes(llms, "[Themes](https://squidoc.dev/themes)", "llms.txt");
-assertIncludes(llms, "[Versioning](https://squidoc.dev/versioning)", "llms.txt");
-assertIncludes(llms, "[Versioning](https://squidoc.dev/versions/0.1/versioning)", "llms.txt");
-assertIncludes(llms, "[Authoring Extensions](https://squidoc.dev/developers)", "llms.txt");
-assertIncludes(llms, "[Plugin Authoring](https://squidoc.dev/plugin-authoring)", "llms.txt");
-assertIncludes(llms, "[Theme Authoring](https://squidoc.dev/theme-authoring)", "llms.txt");
+assertIncludes(llms, "[MDX](https://squidoc.dev/docs/mdx)", "llms.txt");
+assertIncludes(llms, "[CLI Reference](https://squidoc.dev/docs/cli)", "llms.txt");
+assertIncludes(llms, "[Deployment](https://squidoc.dev/docs/deployment)", "llms.txt");
+assertIncludes(llms, "[Frontmatter](https://squidoc.dev/docs/frontmatter)", "llms.txt");
+assertIncludes(llms, "[Plugins](https://squidoc.dev/docs/plugins)", "llms.txt");
+assertIncludes(llms, "[Themes](https://squidoc.dev/docs/themes)", "llms.txt");
+assertIncludes(llms, "[Versioning](https://squidoc.dev/docs/versioning)", "llms.txt");
+assertIncludes(llms, "[Versioning](https://squidoc.dev/docs/versions/0.1/versioning)", "llms.txt");
+assertIncludes(llms, "[Authoring Extensions](https://squidoc.dev/docs/developers)", "llms.txt");
+assertIncludes(llms, "[Plugin Authoring](https://squidoc.dev/docs/plugin-authoring)", "llms.txt");
+assertIncludes(llms, "[Theme Authoring](https://squidoc.dev/docs/theme-authoring)", "llms.txt");
 
 const llmsFull = await readDistFile("llms-full.txt");
 assertIncludes(llmsFull, "Component-based MDX is not compiled yet.", "llms-full.txt");

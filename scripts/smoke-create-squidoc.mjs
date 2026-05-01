@@ -73,6 +73,11 @@ async function linkWorkspacePackages(target) {
     "dir",
   );
   await symlink(
+    join(repoRoot, "packages/plugin-pages"),
+    join(target, "node_modules", "@squidoc", "plugin-pages"),
+    "dir",
+  );
+  await symlink(
     join(repoRoot, "packages/plugin-article-tree"),
     join(target, "node_modules", "@squidoc", "plugin-article-tree"),
     "dir",

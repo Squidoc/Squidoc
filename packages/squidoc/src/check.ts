@@ -20,7 +20,7 @@ export function validateProject(config: ResolvedSquidocConfig, pages: DocPage[])
 }
 
 function validateNavRoutes(config: ResolvedSquidocConfig, pages: DocPage[]): CheckIssue[] {
-  const routes = new Set(pages.map((page) => page.route));
+  const routes = new Set(pages.flatMap((page) => [page.docsRoute, page.route]));
 
   return flattenNavItems(config.nav)
     .filter((item) => item.path && !routes.has(item.path))
@@ -32,7 +32,7 @@ function flattenNavItems(items: NavItem[]): NavItem[] {
 }
 
 function validateMarkdownLinks(pages: DocPage[]): CheckIssue[] {
-  const routes = new Set(pages.map((page) => page.route));
+  const routes = new Set(pages.flatMap((page) => [page.docsRoute, page.route]));
   const issues: CheckIssue[] = [];
 
   for (const page of pages) {
@@ -43,7 +43,7 @@ function validateMarkdownLinks(pages: DocPage[]): CheckIssue[] {
         continue;
       }
 
-      const route = normalizeInternalHref(href, page.route);
+      const route = normalizeInternalHref(href, page.docsRoute);
 
       if (route && !routes.has(route)) {
         issues.push({

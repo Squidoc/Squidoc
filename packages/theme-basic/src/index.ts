@@ -27,6 +27,121 @@ a {
   min-height: calc(100vh - 60px);
 }
 
+.sq-page-shell {
+  display: flex;
+  min-height: calc(100vh - 60px);
+  flex-direction: column;
+}
+
+.sq-page-content {
+  flex: 1;
+}
+
+.sq-home {
+  display: grid;
+  min-height: min(720px, calc(100vh - 60px));
+  align-items: center;
+  border-bottom: 1px solid var(--squidoc-border);
+  padding: 72px 24px;
+  background: linear-gradient(180deg, #f8fbff 0%, #ffffff 100%);
+}
+
+.sq-home__inner {
+  width: min(920px, 100%);
+  margin: 0 auto;
+}
+
+.sq-home__eyebrow {
+  margin: 0 0 14px;
+  color: var(--squidoc-accent);
+  font-size: 14px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.sq-home h1 {
+  margin: 0;
+  color: var(--squidoc-text);
+  font-size: clamp(52px, 9vw, 96px);
+  line-height: 0.95;
+}
+
+.sq-home__lead {
+  max-width: 680px;
+  margin: 24px 0 0;
+  color: var(--squidoc-muted);
+  font-size: 22px;
+  line-height: 1.5;
+}
+
+.sq-home__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 32px 0 0;
+}
+
+.sq-home__primary,
+.sq-home__secondary {
+  display: inline-flex;
+  min-height: 42px;
+  align-items: center;
+  border-radius: 8px;
+  padding: 0 16px;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.sq-home__primary {
+  color: #ffffff;
+  background: var(--squidoc-accent);
+}
+
+.sq-home__secondary {
+  border: 1px solid var(--squidoc-border);
+  color: var(--squidoc-text);
+  background: #ffffff;
+}
+
+.sq-home__install {
+  max-width: 520px;
+  margin: 32px 0 0;
+  border: 1px solid #233048;
+  border-radius: 8px;
+  padding: 18px;
+  overflow: auto;
+  color: #dce7ff;
+  background: #101827;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.sq-home-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1px;
+  width: min(1120px, calc(100% - 48px));
+  margin: 56px auto;
+  border: 1px solid var(--squidoc-border);
+  background: var(--squidoc-border);
+}
+
+.sq-home-grid article {
+  padding: 28px;
+  background: #ffffff;
+}
+
+.sq-home-grid h2 {
+  margin: 0 0 10px;
+  font-size: 20px;
+}
+
+.sq-home-grid p {
+  margin: 0;
+  color: var(--squidoc-muted);
+  line-height: 1.6;
+}
+
 .sq-topbar {
   position: sticky;
   z-index: 10;
@@ -539,6 +654,25 @@ a {
     padding: 28px;
   }
 
+  .sq-home {
+    min-height: auto;
+    padding: 48px 20px;
+  }
+
+  .sq-home h1 {
+    font-size: 56px;
+  }
+
+  .sq-home__lead {
+    font-size: 18px;
+  }
+
+  .sq-home-grid {
+    grid-template-columns: 1fr;
+    width: calc(100% - 32px);
+    margin: 32px auto;
+  }
+
   .sq-page {
     overflow: visible;
   }
@@ -570,8 +704,8 @@ a {
 export default defineTheme({
   name: "@squidoc/theme-basic",
   layouts: {
-    doc: "./layouts/DocPage.astro",
-    home: "./layouts/HomePage.astro",
+    docs: "./layouts/Docs.astro",
+    page: "./layouts/Page.astro",
     root: "./layouts/Root.astro",
   },
   renderer: {

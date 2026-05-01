@@ -48,6 +48,7 @@ describe("runPlugins", () => {
           {
             sourcePath: "/tmp/docs/index.md",
             route: "/",
+            docsRoute: "/",
             title: "Home",
             frontmatter: {},
             content: "# Home",

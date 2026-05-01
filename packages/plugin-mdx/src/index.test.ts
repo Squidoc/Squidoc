@@ -13,15 +13,20 @@ describe("@squidoc/plugin-mdx", () => {
       addHeadTags() {},
       addHtmlTransformer() {},
       addPageHeadTags() {},
+      addProjectTransformer() {},
+      addSitePage() {},
       addThemeSlot() {},
       config: {
         site: { name: "Test Docs" },
+        docs: { basePath: "/docs" },
         docsDir: "docs",
         theme: "@squidoc/theme-basic",
         plugins: ["@squidoc/plugin-mdx"],
         nav: [],
       } satisfies ResolvedSquidocConfig,
+      cwd: "/tmp/test-docs",
       pages: [],
+      pluginOptions: {},
     };
 
     await plugin.setup?.(api);

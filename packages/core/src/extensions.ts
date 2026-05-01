@@ -10,8 +10,10 @@ export type PluginApi = {
   addHtmlTransformer: (transformer: HtmlTransformer) => void;
   addPageHeadTags: (factory: PageHeadTagFactory) => void;
   addProjectTransformer: (transformer: ProjectTransformer) => void;
+  addSitePage: (page: SitePage) => void;
   addThemeSlot: (slot: ThemeSlot) => void;
   config: ResolvedSquidocConfig;
+  cwd: string;
   pages: DocPage[];
   pluginOptions: Record<string, unknown>;
 };
@@ -19,6 +21,17 @@ export type PluginApi = {
 export type GeneratedFile = {
   path: string;
   contents: string;
+};
+
+export type SitePageLayout = "docs" | "page";
+
+export type SitePage = {
+  sourcePath: string;
+  sourceRoot: string;
+  route: string;
+  layout: SitePageLayout;
+  title?: string;
+  description?: string;
 };
 
 export type HeadTag = {
@@ -60,6 +73,7 @@ export type PluginContext = {
   htmlTransformers: HtmlTransformer[];
   pageHeadTagFactories: PageHeadTagFactory[];
   projectTransformers: ProjectTransformer[];
+  sitePages: SitePage[];
   themeSlots: ThemeSlot[];
 };
 
@@ -75,6 +89,7 @@ export async function runPlugins(
     htmlTransformers: [],
     pageHeadTagFactories: [],
     projectTransformers: [],
+    sitePages: [],
     themeSlots: [],
   };
   const api: PluginApi = {
@@ -98,10 +113,14 @@ export async function runPlugins(
     addProjectTransformer(transformer) {
       context.projectTransformers.push(transformer);
     },
+    addSitePage(page) {
+      context.sitePages.push(page);
+    },
     addThemeSlot(slot) {
       context.themeSlots.push(slot);
     },
     config,
+    cwd,
     pages,
     pluginOptions: {},
   };
@@ -135,8 +154,8 @@ export type SquidocTheme = {
   name: string;
   layouts: {
     root?: string;
-    doc: string;
-    home?: string;
+    docs: string;
+    page: string;
   };
   renderer?: {
     globalCss?: string;

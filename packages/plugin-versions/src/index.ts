@@ -30,7 +30,7 @@ type VersionManifestEntry = {
 export default definePlugin({
   name: "@squidoc/plugin-versions",
   setup(api) {
-    const versions = resolveVersions(api.pluginOptions);
+    const versions = resolveVersions(api.pluginOptions, api.config.docs.basePath);
 
     api.addProjectTransformer((project) => {
       const pages = project.pages.map((page) => transformPage(page, versions, project.nav));
@@ -51,7 +51,10 @@ export default definePlugin({
   },
 });
 
-function resolveVersions(options: Record<string, unknown>): ResolvedVersion[] {
+function resolveVersions(
+  options: Record<string, unknown>,
+  docsBasePath: string,
+): ResolvedVersion[] {
   const current = readVersionConfig(options.current) ?? { name: "current", label: "Current" };
   const archived = Array.isArray(options.versions)
     ? options.versions.flatMap((version) => {
@@ -64,14 +67,14 @@ function resolveVersions(options: Record<string, unknown>): ResolvedVersion[] {
     {
       name: current.name,
       label: current.label ?? current.name,
-      routePrefix: normalizeRoutePrefix(current.routePrefix ?? "/"),
+      routePrefix: joinRoutes(docsBasePath, current.routePrefix ?? "/"),
       docsPrefix: current.docsPrefix,
       current: true,
     },
     ...archived.map((version) => ({
       name: version.name,
       label: version.label ?? version.name,
-      routePrefix: normalizeRoutePrefix(version.routePrefix ?? `/versions/${version.name}`),
+      routePrefix: joinRoutes(docsBasePath, version.routePrefix ?? `/versions/${version.name}`),
       docsPrefix: normalizeDocsPrefix(version.docsPrefix ?? `versions/${version.name}`),
       current: false,
     })),
@@ -104,7 +107,7 @@ function findVersionForPage(
   versions: ResolvedVersion[],
 ): { version: ResolvedVersion; route: string } | undefined {
   const archived = versions.filter((version) => !version.current && version.docsPrefix);
-  const sourceRoute = stripLeadingSlash(page.route);
+  const sourceRoute = stripLeadingSlash(page.docsRoute);
 
   for (const version of archived) {
     const docsPrefix = version.docsPrefix ?? "";
@@ -165,6 +168,7 @@ function renderVersionSelector(versions: ResolvedVersion[]): string {
   const path = window.location.pathname.replace(/\\/+$/, "") || "/";
   const active = versions
     .filter((version) => version.routePrefix !== "/")
+    .sort((first, second) => second.routePrefix.length - first.routePrefix.length)
     .find((version) => path === version.routePrefix || path.startsWith(version.routePrefix.replace(/\\/+$/, "") + "/")) ?? versions.find((version) => version.routePrefix === "/" && path === "/") ?? versions.find((version) => version.current);
 
   if (active) {

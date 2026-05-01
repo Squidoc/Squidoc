@@ -1,0 +1,82 @@
+---
+const { data } = Astro.props;
+const {
+  site,
+  page,
+  layout,
+  classes,
+  globalCss,
+  headHtml,
+  headerLinksHtml,
+  footer,
+  footerLinksHtml,
+  navHtml,
+  slots,
+} = data;
+const isDocsLayout = layout === "docs";
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{page.title} | {site.name}</title>
+    {page.description && <meta name="description" content={page.description} />}
+    <Fragment set:html={headHtml} />
+    <style set:html={globalCss}></style>
+  </head>
+  <body>
+    <input
+      class="sq-sidebar-control"
+      id="squidoc-sidebar-toggle"
+      type="checkbox"
+      aria-label="Toggle documentation navigation"
+    />
+    <header class="sq-topbar">
+      <a class="sq-topbar__brand" href="/">{site.name}</a>
+      <Fragment set:html={slots.search} />
+      <nav class="sq-topbar__nav" aria-label="Site">
+        <Fragment set:html={headerLinksHtml} />
+      </nav>
+      {isDocsLayout && <label class="sq-sidebar-toggle" for="squidoc-sidebar-toggle">Menu</label>}
+    </header>
+    {
+      isDocsLayout ? (
+        <div class={classes.shell}>
+          <aside class={classes.sidebar}>
+            <Fragment set:html={slots.versionSelector} />
+            <nav class={classes.nav} aria-label="Documentation">
+              <Fragment set:html={navHtml} />
+            </nav>
+          </aside>
+          <div class="sq-page">
+            <main class={classes.content}>
+              <slot />
+            </main>
+            <footer class="sq-footer">
+              {footer.text && <p class="sq-footer__text">{footer.text}</p>}
+              <nav class="sq-footer__nav" aria-label="Footer">
+                <Fragment set:html={footerLinksHtml} />
+              </nav>
+            </footer>
+          </div>
+          <aside class="sq-article-tree">
+            <Fragment set:html={slots.articleTree} />
+          </aside>
+        </div>
+      ) : (
+        <div class="sq-page-shell">
+          <main class="sq-page-content">
+            <slot />
+          </main>
+          <footer class="sq-footer">
+            {footer.text && <p class="sq-footer__text">{footer.text}</p>}
+            <nav class="sq-footer__nav" aria-label="Footer">
+              <Fragment set:html={footerLinksHtml} />
+            </nav>
+          </footer>
+        </div>
+      )
+    }
+  </body>
+</html>
