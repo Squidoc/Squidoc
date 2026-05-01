@@ -76,6 +76,18 @@ try {
     await page.locator("#squidoc-version-selector").selectOption("/versions/0.1");
     await page.waitForURL(`${baseUrl}/versions/0.1/configuration`, { waitUntil: "networkidle" });
     await expectText(page.locator("main h1"), "Configuration");
+    await expectAttribute(
+      page.locator('nav[aria-label="Documentation"] a').filter({ hasText: "Plugin Authoring" }),
+      "href",
+      "/versions/0.1/plugin-authoring",
+    );
+    assert(
+      (await page
+        .locator('nav[aria-label="Documentation"] summary')
+        .filter({ hasText: "Versions" })
+        .count()) === 0,
+      "Archived docs should not render a redundant Versions nav folder.",
+    );
     await page.locator("#squidoc-version-selector").selectOption("/");
     await page.waitForURL(`${baseUrl}/configuration`, { waitUntil: "networkidle" });
 

@@ -33,10 +33,9 @@ export default definePlugin({
     const versions = resolveVersions(api.pluginOptions);
 
     api.addProjectTransformer((project) => {
-      const pages = project.pages.map((page) => transformPage(page, versions));
-      const nav = appendVersionsNav(project.nav, versions);
+      const pages = project.pages.map((page) => transformPage(page, versions, project.nav));
 
-      return { pages, nav };
+      return { pages, nav: project.nav };
     });
 
     api.addGeneratedFile({
@@ -79,7 +78,7 @@ function resolveVersions(options: Record<string, unknown>): ResolvedVersion[] {
   ];
 }
 
-function transformPage(page: DocPage, versions: ResolvedVersion[]): DocPage {
+function transformPage(page: DocPage, versions: ResolvedVersion[], nav: NavItem[]): DocPage {
   const matched = findVersionForPage(page, versions);
 
   if (!matched) {
@@ -89,6 +88,7 @@ function transformPage(page: DocPage, versions: ResolvedVersion[]): DocPage {
   return {
     ...page,
     route: matched.route,
+    nav: rewriteNav(nav, matched.version.routePrefix),
     frontmatter: {
       ...page.frontmatter,
       squidocVersion: matched.version.name,
@@ -123,21 +123,12 @@ function findVersionForPage(
   return current ? { version: current, route: page.route } : undefined;
 }
 
-function appendVersionsNav(nav: NavItem[], versions: ResolvedVersion[]): NavItem[] {
-  if (versions.length <= 1 || nav.some((item) => item.title === "Versions")) {
-    return nav;
-  }
-
-  return [
-    ...nav,
-    {
-      title: "Versions",
-      items: versions.map((version) => ({
-        title: version.label,
-        path: version.routePrefix,
-      })),
-    },
-  ];
+function rewriteNav(items: NavItem[], routePrefix: string): NavItem[] {
+  return items.map((item) => ({
+    ...item,
+    path: item.path ? joinRoutes(routePrefix, item.path) : undefined,
+    items: item.items ? rewriteNav(item.items, routePrefix) : undefined,
+  }));
 }
 
 function renderVersionSelector(versions: ResolvedVersion[]): string {

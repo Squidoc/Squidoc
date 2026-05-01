@@ -122,6 +122,22 @@ assert(
   "plugin-authoring/index.html should render search before the sidebar",
 );
 
+const archivedVersioning = await readDistFile("versions/0.1/versioning/index.html");
+assertIncludes(
+  archivedVersioning,
+  'href="/versions/0.1/configuration"',
+  "versions/0.1/versioning/index.html",
+);
+assertIncludes(
+  archivedVersioning,
+  'href="/versions/0.1/plugin-authoring"',
+  "versions/0.1/versioning/index.html",
+);
+assert(
+  !archivedVersioning.includes("<span>Versions</span>"),
+  "versions/0.1/versioning/index.html should not render a redundant Versions nav folder",
+);
+
 const searchIndex = JSON.parse(await readDistFile("search-index.json"));
 assert(
   Array.isArray(searchIndex) && searchIndex.length === allPages.length,

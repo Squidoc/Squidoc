@@ -242,7 +242,7 @@ async function writeRenderData(
       headerLinksHtml,
       footer: { text: footer.text },
       footerLinksHtml,
-      navHtml: renderNavHtml(buildNavTree(config.nav, pages), page.route),
+      navHtml: renderNavHtml(buildNavTree(page.nav ?? config.nav, pages), page.route),
       slots,
     })),
   );

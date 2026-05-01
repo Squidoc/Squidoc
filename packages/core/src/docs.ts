@@ -1,7 +1,7 @@
 import { readFile, readdir } from "node:fs/promises";
 import { extname, join, relative, sep } from "node:path";
 import matter from "gray-matter";
-import type { ResolvedSquidocConfig } from "./schema.js";
+import type { NavItem, ResolvedSquidocConfig } from "./schema.js";
 
 const DEFAULT_DOC_EXTENSIONS = [".md"];
 
@@ -15,6 +15,7 @@ export type DocPage = {
   title: string;
   description?: string;
   frontmatter: Record<string, unknown>;
+  nav?: NavItem[];
   content: string;
 };
 

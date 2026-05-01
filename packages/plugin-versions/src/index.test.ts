@@ -46,13 +46,11 @@ describe("@squidoc/plugin-versions", () => {
       squidocVersionRoutePrefix: "/versions/0.9",
       squidocVersionCurrent: false,
     });
-    expect(project?.nav.at(-1)).toEqual({
-      title: "Versions",
-      items: [
-        { title: "1.0", path: "/" },
-        { title: "0.9", path: "/versions/0.9" },
-      ],
-    });
+    expect(project?.nav).toEqual([{ title: "Configuration", path: "/configuration" }]);
+    expect(project?.pages[0]?.nav).toEqual([{ title: "Configuration", path: "/configuration" }]);
+    expect(project?.pages[1]?.nav).toEqual([
+      { title: "Configuration", path: "/versions/0.9/configuration" },
+    ]);
     expect(generatedFiles[0]).toEqual({
       path: "versions.json",
       contents: `${JSON.stringify(
