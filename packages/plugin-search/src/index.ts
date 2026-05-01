@@ -5,6 +5,11 @@ export type SearchEntry = {
   description?: string;
   route: string;
   content: string;
+  version?: {
+    label: string;
+    routePrefix: string;
+    current: boolean;
+  };
 };
 
 export default definePlugin({
@@ -15,6 +20,7 @@ export default definePlugin({
       description: page.description,
       route: page.route,
       content: normalizeContent(page.content),
+      version: readVersionMetadata(page.frontmatter),
     }));
 
     api.addGeneratedFile({
@@ -61,7 +67,9 @@ input?.addEventListener("input", () => {
     return;
   }
 
+  const activeVersion = resolveActiveVersion(entries);
   const matches = entries
+    .filter((entry) => !activeVersion || entry.version?.routePrefix === activeVersion.routePrefix)
     .filter((entry) => [entry.title, entry.description, entry.content].filter(Boolean).join(" ").toLowerCase().includes(query))
     .slice(0, 6);
 
@@ -87,6 +95,13 @@ input?.addEventListener("input", () => {
     title.textContent = entry.title;
     link.append(title);
 
+    if (entry.version) {
+      const version = document.createElement("span");
+      version.className = "sq-search__result-version";
+      version.textContent = entry.version.label;
+      title.append(version);
+    }
+
     if (entry.description) {
       const description = document.createElement("span");
       description.className = "sq-search__result-description";
@@ -97,7 +112,33 @@ input?.addEventListener("input", () => {
     return link;
   }));
 });
+
+function resolveActiveVersion(entries) {
+  const versions = entries
+    .map((entry) => entry.version)
+    .filter(Boolean)
+    .filter((version, index, all) => all.findIndex((item) => item.routePrefix === version.routePrefix) === index)
+    .sort((first, second) => second.routePrefix.length - first.routePrefix.length);
+
+  if (versions.length === 0) {
+    return undefined;
+  }
+
+  const path = window.location.pathname.replace(/\\/+$/, "") || "/";
+
+  return versions.find((version) => path === version.routePrefix || path.startsWith(version.routePrefix.replace(/\\/+$/, "") + "/"))
+    ?? versions.find((version) => version.current)
+    ?? versions[0];
+}
 </script>`;
+}
+
+function readVersionMetadata(frontmatter: Record<string, unknown>): SearchEntry["version"] {
+  const label = readString(frontmatter.squidocVersionLabel);
+  const routePrefix = readString(frontmatter.squidocVersionRoutePrefix);
+  const current = frontmatter.squidocVersionCurrent === true;
+
+  return label && routePrefix ? { label, routePrefix, current } : undefined;
 }
 
 function normalizeContent(content: string): string {
@@ -109,4 +150,8 @@ function normalizeContent(content: string): string {
     .replace(/[#>*_~|-]/g, " ")
     .replace(/\s+/g, " ")
     .trim();
+}
+
+function readString(value: unknown): string | undefined {
+  return typeof value === "string" && value.trim().length > 0 ? value : undefined;
 }

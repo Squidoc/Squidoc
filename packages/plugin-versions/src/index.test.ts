@@ -11,10 +11,34 @@ import plugin from "./index.js";
 
 describe("@squidoc/plugin-versions", () => {
   test("rewrites archived version routes and annotates page frontmatter", async () => {
-    const { transformers, generatedFiles, slots } = await setupPlugin({
-      current: { name: "1.0", label: "1.0" },
-      versions: [{ name: "0.9", label: "0.9" }],
-    });
+    const { transformers, generatedFiles, slots } = await setupPlugin(
+      {
+        current: { name: "1.0", label: "1.0" },
+        versions: [{ name: "0.9", label: "0.9" }],
+      },
+      [
+        {
+          title: "Current",
+          route: "/docs/configuration",
+          docsRoute: "/configuration",
+          sourcePath: "/repo/docs/configuration.md",
+          frontmatter: {
+            squidocVersionRoutePrefix: "/docs",
+          },
+          content: "# Current",
+        },
+        {
+          title: "Legacy",
+          route: "/docs/versions/0.9/configuration",
+          docsRoute: "/versions/0.9/configuration",
+          sourcePath: "/repo/docs/versions/0.9/configuration.md",
+          frontmatter: {
+            squidocVersionRoutePrefix: "/docs/versions/0.9",
+          },
+          content: "# Legacy",
+        },
+      ],
+    );
 
     const project = await transformers[0]?.({
       pages: [
@@ -59,8 +83,20 @@ describe("@squidoc/plugin-versions", () => {
       path: "versions.json",
       contents: `${JSON.stringify(
         [
-          { name: "1.0", label: "1.0", routePrefix: "/docs", current: true },
-          { name: "0.9", label: "0.9", routePrefix: "/docs/versions/0.9", current: false },
+          {
+            name: "1.0",
+            label: "1.0",
+            routePrefix: "/docs",
+            current: true,
+            routes: ["/docs/configuration"],
+          },
+          {
+            name: "0.9",
+            label: "0.9",
+            routePrefix: "/docs/versions/0.9",
+            current: false,
+            routes: ["/docs/versions/0.9/configuration"],
+          },
         ],
         null,
         2,
@@ -69,6 +105,7 @@ describe("@squidoc/plugin-versions", () => {
     expect(slots[0]?.name).toBe("version-selector");
     expect(slots[0]?.html).toContain("data-squidoc-versions");
     expect(slots[0]?.html).toContain('version.routePrefix !== "/"');
+    expect(slots[0]?.html).toContain("target.routes.includes");
   });
 
   test("supports custom docs and route prefixes", async () => {
@@ -103,7 +140,7 @@ describe("@squidoc/plugin-versions", () => {
   });
 });
 
-async function setupPlugin(options: Record<string, unknown>) {
+async function setupPlugin(options: Record<string, unknown>, pages: PluginApi["pages"] = []) {
   const transformers: ProjectTransformer[] = [];
   const generatedFiles: GeneratedFile[] = [];
   const slots: ThemeSlot[] = [];
@@ -131,7 +168,7 @@ async function setupPlugin(options: Record<string, unknown>) {
       nav: [],
     } satisfies ResolvedSquidocConfig,
     cwd: "/repo",
-    pages: [],
+    pages,
     pluginOptions: options,
   };
 

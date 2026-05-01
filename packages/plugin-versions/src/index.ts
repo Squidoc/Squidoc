@@ -25,6 +25,7 @@ type VersionManifestEntry = {
   label: string;
   routePrefix: string;
   current: boolean;
+  routes: string[];
 };
 
 export default definePlugin({
@@ -40,13 +41,13 @@ export default definePlugin({
 
     api.addGeneratedFile({
       path: "versions.json",
-      contents: `${JSON.stringify(toManifest(versions), null, 2)}\n`,
+      contents: `${JSON.stringify(toManifest(versions, api.pages), null, 2)}\n`,
     });
 
     api.addThemeSlot({
       name: "version-selector",
       component: "@squidoc/plugin-versions/VersionSelector.astro",
-      html: renderVersionSelector(versions),
+      html: renderVersionSelector(versions, api.pages),
     });
   },
 });
@@ -134,7 +135,7 @@ function rewriteNav(items: NavItem[], routePrefix: string): NavItem[] {
   }));
 }
 
-function renderVersionSelector(versions: ResolvedVersion[]): string {
+function renderVersionSelector(versions: ResolvedVersion[], pages: DocPage[]): string {
   if (versions.length <= 1) {
     return "";
   }
@@ -145,7 +146,7 @@ function renderVersionSelector(versions: ResolvedVersion[]): string {
         `<option value="${escapeHtml(version.routePrefix)}">${escapeHtml(version.label)}</option>`,
     )
     .join("");
-  const manifest = JSON.stringify(toManifest(versions));
+  const manifest = JSON.stringify(toManifest(versions, pages));
 
   return `<div class="sq-version-selector" data-squidoc-versions data-versions="${escapeHtml(
     manifest,
@@ -183,19 +184,26 @@ function renderVersionSelector(versions: ResolvedVersion[]): string {
     }
 
     const relative = path === active.routePrefix ? "" : path.slice(active.routePrefix.length).replace(/^\\/+/, "");
-    const nextPath = [target.routePrefix.replace(/\\/+$/, ""), relative].filter(Boolean).join("/");
+    const candidate = [target.routePrefix.replace(/\\/+$/, ""), relative].filter(Boolean).join("/");
+    const nextPath = target.routes.includes(candidate.startsWith("/") ? candidate : "/" + candidate)
+      ? candidate
+      : target.routePrefix;
     window.location.href = nextPath.startsWith("/") ? nextPath : "/" + nextPath;
   });
 })();
 </script>`;
 }
 
-function toManifest(versions: ResolvedVersion[]): VersionManifestEntry[] {
+function toManifest(versions: ResolvedVersion[], pages: DocPage[]): VersionManifestEntry[] {
   return versions.map(({ name, label, routePrefix, current }) => ({
     name,
     label,
     routePrefix,
     current,
+    routes: pages
+      .filter((page) => page.frontmatter.squidocVersionRoutePrefix === routePrefix)
+      .map((page) => page.route)
+      .sort(),
   }));
 }
 

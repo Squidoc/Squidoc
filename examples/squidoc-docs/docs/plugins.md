@@ -56,7 +56,7 @@ Plugin order matters when plugins build on each other. Keep format plugins such 
 
 `@squidoc/plugin-article-tree` ships in the default config. It adds the on-page heading tree that tracks `h2` and `h3` sections as readers scroll.
 
-`@squidoc/plugin-search` adds `search-index.json` and a search UI slot. The basic theme renders that slot in the navbar on desktop and inside the mobile menu on small screens.
+`@squidoc/plugin-search` adds `search-index.json` and a search UI slot. The basic theme renders that slot in the navbar on desktop and inside the mobile menu on small screens. When versioning is enabled, search results are scoped to the active version and labeled with the version they belong to.
 
 `@squidoc/plugin-mdx` adds `.mdx` file discovery. It does not compile JSX components yet; see the [MDX guide](/mdx) for the current limits.
 

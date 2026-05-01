@@ -35,7 +35,11 @@ describe("@squidoc/plugin-search", () => {
           route: "/getting-started",
           docsRoute: "/getting-started",
           sourcePath: "/tmp/test-docs/docs/getting-started.md",
-          frontmatter: {},
+          frontmatter: {
+            squidocVersionLabel: "Next",
+            squidocVersionRoutePrefix: "/docs",
+            squidocVersionCurrent: true,
+          },
           content: "# Getting Started\n\nRead the [guide](/guide) and `install` it.",
         },
       ],
@@ -50,6 +54,11 @@ describe("@squidoc/plugin-search", () => {
         description: "Start here.",
         route: "/getting-started",
         content: "Getting Started Read the guide and install it.",
+        version: {
+          label: "Next",
+          routePrefix: "/docs",
+          current: true,
+        },
       },
     ]);
     expect(themeSlots[0]).toMatchObject({
@@ -58,5 +67,7 @@ describe("@squidoc/plugin-search", () => {
     });
     expect(themeSlots[0]?.html).toContain("data-squidoc-search");
     expect(themeSlots[0]?.html).toContain("No results found.");
+    expect(themeSlots[0]?.html).toContain("sq-search__result-version");
+    expect(themeSlots[0]?.html).toContain("resolveActiveVersion");
   });
 });

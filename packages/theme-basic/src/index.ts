@@ -392,8 +392,22 @@ a {
 }
 
 .sq-search__result-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
   font-size: 14px;
   font-weight: 700;
+}
+
+.sq-search__result-version {
+  border: 1px solid var(--squidoc-border);
+  border-radius: 999px;
+  padding: 2px 7px;
+  color: var(--squidoc-muted);
+  font-size: 11px;
+  font-weight: 700;
+  white-space: nowrap;
 }
 
 .sq-search__result-description {

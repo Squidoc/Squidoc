@@ -97,13 +97,15 @@ The plugin adds `versions.json` to the generated static output:
     "name": "1.0",
     "label": "1.0",
     "routePrefix": "/docs",
-    "current": true
+    "current": true,
+    "routes": ["/docs", "/docs/configuration"]
   },
   {
     "name": "0.9",
     "label": "0.9",
     "routePrefix": "/docs/versions/0.9",
-    "current": false
+    "current": false,
+    "routes": ["/docs/versions/0.9", "/docs/versions/0.9/configuration"]
   }
 ]
 ```
@@ -122,6 +124,18 @@ Each page gets version metadata in its frontmatter data:
 ```
 
 Themes and plugins can use that metadata to customize labels, badges, search behavior, or page chrome.
+
+## Missing Pages
+
+Version switching tries to keep readers on the equivalent page in the target version. If that page does not exist, the selector sends them to the target version root instead of a 404.
+
+For example, switching from `/docs/new-feature` to `0.9` goes to `/docs/versions/0.9` when `docs/versions/0.9/new-feature.md` does not exist.
+
+## Search Behavior
+
+When `@squidoc/plugin-search` and `@squidoc/plugin-versions` are both enabled, search entries include version metadata. The search UI scopes results to the active version and shows the version label beside each result title.
+
+On `/docs/configuration`, search returns current-version results. On `/docs/versions/0.9/configuration`, search returns `0.9` results. This keeps readers from accidentally jumping between documentation versions while searching.
 
 ## Planning for languages
 

@@ -96,13 +96,28 @@ try {
         .count()) === 0,
       "Archived docs should not render a redundant Versions nav folder.",
     );
+    await page.locator("#squidoc-search-input").fill("production deployment");
+    await expectText(
+      page.locator(
+        '.sq-search__result[href="/docs/versions/0.1/deployment"] .sq-search__result-version',
+      ),
+      "0.1",
+    );
     await page.locator("#squidoc-version-selector").selectOption("/docs");
     await page.waitForURL(`${baseUrl}/docs/configuration`, { waitUntil: "networkidle" });
 
     await page.locator("#squidoc-search-input").fill("production deployment");
     await expectText(
-      page.locator('.sq-search__result[href="/docs/deployment"]'),
-      "Deployment\nDeploy a Squidoc site to production on Vercel, Netlify, Cloudflare Pages, GitHub Pages, Docker, and static hosts.",
+      page.locator('.sq-search__result[href="/docs/deployment"] .sq-search__result-title'),
+      "DeploymentNext",
+    );
+    await expectText(
+      page.locator('.sq-search__result[href="/docs/deployment"] .sq-search__result-version'),
+      "Next",
+    );
+    await expectText(
+      page.locator('.sq-search__result[href="/docs/deployment"] .sq-search__result-description'),
+      "Deploy a Squidoc site to production on Vercel, Netlify, Cloudflare Pages, GitHub Pages, Docker, and static hosts.",
     );
 
     await page.locator("#squidoc-search-input").fill("zzzz-no-match");
@@ -111,12 +126,17 @@ try {
     await page.goto(`${baseUrl}/search-index.json`, { waitUntil: "networkidle" });
     const searchIndex = JSON.parse(await page.locator("body").innerText());
     assert(
-      searchIndex.some((entry) => entry.route === "/docs/configuration"),
-      "search-index.json should include /docs/configuration",
+      searchIndex.some(
+        (entry) => entry.route === "/docs/configuration" && entry.version?.label === "Next",
+      ),
+      "search-index.json should include current version metadata",
     );
     assert(
-      searchIndex.some((entry) => entry.route === "/docs/versions/0.1/configuration"),
-      "search-index.json should include archived version routes",
+      searchIndex.some(
+        (entry) =>
+          entry.route === "/docs/versions/0.1/configuration" && entry.version?.label === "0.1",
+      ),
+      "search-index.json should include archived version metadata",
     );
   } finally {
     await browser.close();
