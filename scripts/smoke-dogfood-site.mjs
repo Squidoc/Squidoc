@@ -117,6 +117,23 @@ const home = await readDistFile("index.html");
 assertIncludes(home, "<title>Squidoc | Squidoc</title>", "index.html");
 assertIncludes(home, 'href="/docs/getting-started"', "index.html");
 assertIncludes(home, "sq-home", "index.html");
+assertIncludes(home, 'rel="apple-touch-icon"', "index.html");
+assertIncludes(home, 'href="/favicon-32x32.png"', "index.html");
+assertIncludes(home, 'href="/favicon-16x16.png"', "index.html");
+assertIncludes(home, 'rel="manifest" href="/site.webmanifest"', "index.html");
+assertIncludes(home, 'rel="shortcut icon" href="/favicon.ico"', "index.html");
+
+for (const file of [
+  "android-chrome-192x192.png",
+  "android-chrome-512x512.png",
+  "apple-touch-icon.png",
+  "favicon-16x16.png",
+  "favicon-32x32.png",
+  "favicon.ico",
+  "site.webmanifest",
+]) {
+  await readDistFile(file);
+}
 
 const pluginAuthoring = await readDistFile("docs/plugin-authoring/index.html");
 assertIncludes(pluginAuthoring, 'class="shiki github-light"', "docs/plugin-authoring/index.html");

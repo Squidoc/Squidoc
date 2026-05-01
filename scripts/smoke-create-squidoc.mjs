@@ -11,6 +11,7 @@ try {
   await run("node", [join(repoRoot, "packages/create-squidoc/dist/cli.js"), target], repoRoot);
   await assertGeneratedPackageName(target, "acme-docs");
   await assertGeneratedGitignore(target);
+  await assertGeneratedFavicons(target);
   await linkWorkspacePackages(target);
   await run(
     "node",
@@ -46,6 +47,22 @@ async function assertGeneratedGitignore(target) {
     if (!gitignore.includes(entry)) {
       throw new Error(`Generated .gitignore is missing ${entry}`);
     }
+  }
+}
+
+async function assertGeneratedFavicons(target) {
+  const expectedFiles = [
+    "android-chrome-192x192.png",
+    "android-chrome-512x512.png",
+    "apple-touch-icon.png",
+    "favicon-16x16.png",
+    "favicon-32x32.png",
+    "favicon.ico",
+    "site.webmanifest",
+  ];
+
+  for (const file of expectedFiles) {
+    await readFile(join(target, "public", file));
   }
 }
 

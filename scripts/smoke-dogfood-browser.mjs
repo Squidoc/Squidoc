@@ -109,7 +109,7 @@ try {
     await page.locator("#squidoc-search-input").fill("production deployment");
     await expectText(
       page.locator('.sq-search__result[href="/docs/deployment"] .sq-search__result-title'),
-      "DeploymentNext",
+      "Deployment\nNext",
     );
     await expectText(
       page.locator('.sq-search__result[href="/docs/deployment"] .sq-search__result-version'),
