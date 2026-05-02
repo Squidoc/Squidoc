@@ -295,21 +295,18 @@ a {
   font-size: 14px;
 }
 
-.sq-version-selector,
 .sq-locale-selector {
   display: grid;
   gap: 7px;
   margin: 0 0 18px;
 }
 
-.sq-version-selector__label,
 .sq-locale-selector__label {
   color: var(--squidoc-muted);
   font-size: 12px;
   font-weight: 700;
 }
 
-.sq-version-selector__select,
 .sq-locale-selector__select {
   appearance: none;
   box-sizing: border-box;
@@ -325,6 +322,52 @@ a {
     #ffffff;
   font: inherit;
   font-size: 14px;
+}
+
+.sq-version-selector {
+  display: grid;
+  gap: 8px;
+  margin: 0 0 22px;
+  border: 1px solid color-mix(in srgb, var(--squidoc-accent), var(--squidoc-border) 72%);
+  border-radius: 8px;
+  padding: 10px;
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--squidoc-accent), transparent 94%), transparent),
+    #ffffff;
+}
+
+.sq-version-selector__label {
+  color: var(--squidoc-muted);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.sq-version-selector__select {
+  appearance: none;
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 40px;
+  border: 1px solid var(--squidoc-border);
+  border-radius: 8px;
+  padding: 8px 34px 8px 34px;
+  color: var(--squidoc-text);
+  background:
+    url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%234a54df' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.8'%3E%3Cpath d='M8 4h8l2 3v13l-6-3-6 3V7l2-3Z'/%3E%3Cpath d='M8 4v4h8V4'/%3E%3C/g%3E%3C/svg%3E")
+      left 10px center / 16px 16px no-repeat,
+    url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='m7 10 5 5 5-5' fill='none' stroke='%235f6f89' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.8'/%3E%3C/svg%3E")
+      right 10px center / 16px 16px no-repeat,
+    #ffffff;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 750;
+}
+
+.sq-version-selector__select:focus {
+  border-color: var(--squidoc-accent);
+  outline: 2px solid color-mix(in srgb, var(--squidoc-accent), transparent 78%);
+  outline-offset: 1px;
 }
 
 .sq-nav__list {
