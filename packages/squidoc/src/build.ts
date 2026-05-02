@@ -310,6 +310,7 @@ async function writeRenderData(
   );
   const footer = readFooter(themeOptions.footer);
   const footerLinksHtml = renderLinkListHtml(footer.links, "sq-footer__link");
+  const globalCss = renderGlobalCss(theme, themeOptions);
   const classes = {
     brand: theme.renderer?.classes?.brand ?? "brand",
     content: theme.renderer?.classes?.content ?? "content",
@@ -338,7 +339,7 @@ async function writeRenderData(
         plugins,
       ),
       classes,
-      globalCss: theme.renderer?.globalCss ?? "",
+      globalCss,
       headHtml: renderHeadTags([
         ...plugins.headTags,
         ...plugins.pageHeadTagFactories.flatMap((factory) => factory(page)),
@@ -390,6 +391,7 @@ function pagesForSiteShell(
 ) {
   const themeOptions = getThemeOptions(config);
   const footer = readFooter(themeOptions.footer);
+  const globalCss = renderGlobalCss(theme, themeOptions);
   const classes = {
     brand: theme.renderer?.classes?.brand ?? "brand",
     content: theme.renderer?.classes?.content ?? "content",
@@ -414,7 +416,7 @@ function pagesForSiteShell(
     },
     layout: page.layout,
     classes,
-    globalCss: theme.renderer?.globalCss ?? "",
+    globalCss,
     headHtml: renderHeadTags(plugins.headTags),
     headerLinksHtml: renderLinkListHtml(readLinks(themeOptions.headerLinks), "sq-topbar__link"),
     footer: { text: footer.text },
@@ -459,6 +461,35 @@ function rewriteDocsLinks(html: string, pages: DocPage[]): string {
 
 function getThemeOptions(config: ResolvedSquidocConfig): ThemeOptions {
   return typeof config.theme === "string" ? {} : config.theme.options;
+}
+
+function renderGlobalCss(theme: SquidocTheme, themeOptions: ThemeOptions): string {
+  const baseCss = theme.renderer?.globalCss ?? "";
+  const primaryColor = readCssColor(themeOptions.primaryColor);
+
+  if (!primaryColor) {
+    return baseCss;
+  }
+
+  return `${baseCss}
+:root {
+  --squidoc-accent: ${primaryColor};
+}
+`;
+}
+
+function readCssColor(value: unknown): string | undefined {
+  const color = readString(value);
+
+  if (!color) {
+    return undefined;
+  }
+
+  if (!/^[#a-zA-Z0-9(),.%\s-]+$/.test(color)) {
+    return undefined;
+  }
+
+  return color;
 }
 
 function readFooter(value: unknown): RenderFooter {

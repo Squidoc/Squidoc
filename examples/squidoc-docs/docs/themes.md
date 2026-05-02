@@ -57,6 +57,12 @@ export default defineConfig({
 
 ## Basic theme options
 
+`primaryColor` controls the default accent color used for links, buttons, focused inputs, and active UI states. The basic theme defaults to Squidoc's primary color, `#4a54df`.
+
+```ts
+primaryColor: "#4a54df";
+```
+
 `headerLinks` adds links to the desktop navbar. Use `href` for external links and `path` for internal site routes.
 
 ```ts

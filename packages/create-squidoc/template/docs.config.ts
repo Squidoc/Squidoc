@@ -8,7 +8,7 @@ export default defineConfig({
   theme: {
     name: "@squidoc/theme-basic",
     options: {
-      primaryColor: "#2563eb",
+      primaryColor: "#4a54df",
       headerLinks: [{ title: "GitHub", href: "https://github.com/Squidoc/Squidoc" }],
       footer: {
         text: "Built with Squidoc.",

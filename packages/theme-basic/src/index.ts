@@ -2,7 +2,7 @@ import { defineTheme } from "@squidoc/core";
 
 export const globalCss = `:root {
   color-scheme: light;
-  --squidoc-accent: #2563eb;
+  --squidoc-accent: #4a54df;
   --squidoc-border: #d8dee8;
   --squidoc-text: #172033;
   --squidoc-muted: #5f6f89;
