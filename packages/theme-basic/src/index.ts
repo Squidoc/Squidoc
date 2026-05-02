@@ -170,7 +170,7 @@ a {
 .sq-topbar__logo {
   display: block;
   width: auto;
-  height: 34px;
+  height: 44px;
 }
 
 .sq-topbar__brand-text {
@@ -640,7 +640,7 @@ a {
 
   .sq-topbar {
     flex-wrap: wrap;
-    min-height: 56px;
+    min-height: 64px;
     gap: 10px;
     padding: 10px 16px;
   }
