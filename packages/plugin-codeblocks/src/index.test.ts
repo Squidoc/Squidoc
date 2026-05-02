@@ -93,4 +93,47 @@ describe("@squidoc/plugin-codeblocks", () => {
     expect(html).toContain("&#x3C;div");
     expect(html).toContain("&#x3C;/div>");
   });
+
+  test("uses a configured shiki theme", async () => {
+    const transformers: HtmlTransformer[] = [];
+    const api: PluginApi = {
+      addDocExtension() {},
+      addGeneratedFile() {},
+      addHeadTags() {},
+      addHtmlTransformer(transformer) {
+        transformers.push(transformer);
+      },
+      addPageHeadTags() {},
+      addProjectTransformer() {},
+      addSitePage() {},
+      addThemeSlot() {},
+      config: {
+        site: { name: "Test Docs" },
+        docs: { basePath: "/docs" },
+        docsDir: "docs",
+        theme: "@squidoc/theme-basic",
+        plugins: ["@squidoc/plugin-codeblocks"],
+        nav: [],
+      } satisfies ResolvedSquidocConfig,
+      cwd: "/tmp/test-docs",
+      pages: [],
+      pluginOptions: { theme: "github-dark" },
+    };
+
+    await plugin.setup?.(api);
+    const html = await transformers[0]?.(
+      '<pre><code class="language-ts">const value = 1;</code></pre>',
+      {
+        title: "Code",
+        route: "/code",
+        docsRoute: "/code",
+        sourcePath: "/tmp/code.md",
+        frontmatter: {},
+        content: "",
+      },
+    );
+
+    expect(html).toContain("github-dark");
+    expect(html).toContain("background-color:#24292e");
+  });
 });

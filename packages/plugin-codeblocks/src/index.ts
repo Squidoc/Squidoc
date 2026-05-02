@@ -81,6 +81,8 @@ const COPY_SCRIPT = `<script>
 export default definePlugin({
   name: "@squidoc/plugin-codeblocks",
   setup(api) {
+    const theme = readString(api.pluginOptions.theme) ?? "github-light";
+
     api.addHtmlTransformer(async (html) => {
       let transformedCodeblocks = 0;
       const transformed = await replaceAsync(
@@ -90,7 +92,7 @@ export default definePlugin({
           const code = decodeHtml(encodedCode);
           const highlighted = await codeToHtml(code, {
             lang: language || "text",
-            theme: "github-light",
+            theme,
           });
 
           transformedCodeblocks += 1;
@@ -142,4 +144,8 @@ function decodeHtml(value: string): string {
     .replaceAll("&#x27;", "'")
     .replaceAll("&#39;", "'")
     .replaceAll("&amp;", "&");
+}
+
+function readString(value: unknown): string | undefined {
+  return typeof value === "string" && value.trim().length > 0 ? value : undefined;
 }
