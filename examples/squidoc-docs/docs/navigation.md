@@ -57,8 +57,8 @@ Squidoc generates:
 - Introduction
 - Getting Started
 - Developers
-- Plugin Authoring
-- Theme Authoring
+  - Plugin Authoring
+  - Theme Authoring
 
 If a folder has an `index.md` or `index.mdx`, the folder becomes a clickable article. If it does not, the folder only expands and collapses.
 
