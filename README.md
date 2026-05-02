@@ -1,4 +1,6 @@
-# Squidoc
+<p align="center">
+  <img src="./examples/squidoc-docs/public/squidoc-logo.svg" alt="Squidoc" width="360">
+</p>
 
 Squidoc is a static-first documentation platform for teams that want a Docusaurus-style workflow with simpler setup, first-class plugins, flexible themes, and SEO-friendly output from day one.
 
