@@ -58,6 +58,7 @@ async function assertGeneratedFavicons(target) {
     "favicon-16x16.png",
     "favicon-32x32.png",
     "favicon.ico",
+    "squidoc-logo.svg",
     "site.webmanifest",
   ];
 

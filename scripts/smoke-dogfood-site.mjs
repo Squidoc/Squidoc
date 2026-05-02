@@ -161,6 +161,7 @@ assertIncludes(home, 'href="/favicon-32x32.png"', "index.html");
 assertIncludes(home, 'href="/favicon-16x16.png"', "index.html");
 assertIncludes(home, 'rel="manifest" href="/site.webmanifest"', "index.html");
 assertIncludes(home, 'rel="shortcut icon" href="/favicon.ico"', "index.html");
+assertIncludes(home, 'src="/squidoc-logo.svg"', "index.html");
 
 for (const file of [
   "android-chrome-192x192.png",
@@ -169,6 +170,7 @@ for (const file of [
   "favicon-16x16.png",
   "favicon-32x32.png",
   "favicon.ico",
+  "squidoc-logo.svg",
   "site.webmanifest",
 ]) {
   await readDistFile(file);

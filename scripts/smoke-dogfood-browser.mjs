@@ -48,6 +48,7 @@ try {
     await page.goto(`${baseUrl}/`, { waitUntil: "networkidle" });
     await expectText(page.locator("main h1"), "Docs that start simple and grow with your product.");
     await expectAttribute(page.locator(".sq-home__primary"), "href", "/docs/getting-started");
+    await expectAttribute(page.locator(".sq-topbar__logo"), "src", "/squidoc-logo.svg");
     await expectMobileTopbarLinks(page);
     await expectNarrowDocsLayout(page);
 

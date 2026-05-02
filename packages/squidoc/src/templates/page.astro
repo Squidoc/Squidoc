@@ -43,7 +43,10 @@ const {
       aria-label="Toggle documentation navigation"
     />
     <header class="sq-topbar">
-      <a class="sq-topbar__brand" href="/">{site.name}</a>
+      <a class="sq-topbar__brand" href="/">
+        <img class="sq-topbar__logo" src="/squidoc-logo.svg" alt="" />
+        <span class="sq-topbar__brand-text">{site.name}</span>
+      </a>
       <Fragment set:html={slots.search} />
       <nav class="sq-topbar__nav" aria-label="Site">
         <Fragment set:html={headerLinksHtml} />

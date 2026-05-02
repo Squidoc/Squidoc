@@ -158,10 +158,28 @@ a {
 }
 
 .sq-topbar__brand {
+  display: inline-flex;
+  align-items: center;
+  min-width: 0;
   flex: 0 0 auto;
   color: var(--squidoc-text);
   font-weight: 800;
   text-decoration: none;
+}
+
+.sq-topbar__logo {
+  display: block;
+  width: auto;
+  height: 34px;
+}
+
+.sq-topbar__brand-text {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
 }
 
 .sq-topbar__nav {
