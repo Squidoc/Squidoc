@@ -17,6 +17,7 @@ type SortableNavItem = NavItem & {
 const DEFAULT_AUTOGENERATE: NavAutogenerate = {
   from: "/",
   exclude: [],
+  generatedPosition: "before",
 };
 
 export function resolveNavConfig(nav: NavConfig, pages: DocPage[]): NavItem[] {
@@ -44,7 +45,10 @@ function resolveNavItem(item: NavConfigItem, pages: DocPage[]): NavItem[] {
 
   const generated = generateNav(pages, item.autogenerate, false);
   const manualChildren = item.items?.flatMap((child) => resolveNavItem(child, pages)) ?? [];
-  const children = [...generated, ...manualChildren];
+  const children =
+    item.autogenerate.generatedPosition === "after"
+      ? [...manualChildren, ...generated]
+      : [...generated, ...manualChildren];
 
   return [
     {
@@ -63,10 +67,13 @@ function generateNav(
   const from = normalizeRoute(options.from);
   const root = createNode("", "/");
   const pageByRoute = new Map(pages.map((page) => [page.docsRoute, page]));
+  const hiddenChildrenRoutes = pages
+    .filter((page) => isHidden(page) && shouldHideChildren(page))
+    .map((page) => page.docsRoute);
 
   for (const page of pages) {
     if (
-      isHidden(page) ||
+      shouldSkipHiddenSubtree(page.docsRoute, hiddenChildrenRoutes) ||
       !isWithinRoute(page.docsRoute, from) ||
       isExcluded(page.docsRoute, options.exclude)
     ) {
@@ -99,7 +106,7 @@ function generateNav(
     .filter((item): item is SortableNavItem => Boolean(item))
     .sort(compareNavItems);
 
-  if (includeRootPage && root.page) {
+  if (includeRootPage && root.page && !isHidden(root.page)) {
     items.unshift({
       title: titleForPage(root.page),
       path: root.page.docsRoute,
@@ -123,13 +130,13 @@ function toNavItem(
     .map(cleanNavItem);
   const page = node.page ?? pageByRoute.get(node.path);
 
-  if (!page && children.length === 0) {
+  if ((!page || isHidden(page)) && children.length === 0) {
     return undefined;
   }
 
   return {
     title: page ? titleForPage(page) : titleFromSegment(node.segment),
-    path: page?.docsRoute,
+    path: page && !isHidden(page) ? page.docsRoute : undefined,
     items: children.length > 0 ? children : undefined,
     _index: node.path === page?.docsRoute,
     _order: readNavOrder(page),
@@ -138,8 +145,12 @@ function toNavItem(
 }
 
 function cleanNavItem(item: SortableNavItem): NavItem {
-  const { _index, _order, _sortTitle, ...clean } = item;
-  return clean;
+  const { _index, _order, _sortTitle, items, path, ...clean } = item;
+  return {
+    ...clean,
+    ...(path ? { path } : {}),
+    ...(items && items.length > 0 ? { items } : {}),
+  };
 }
 
 function compareNavItems(first: SortableNavItem, second: SortableNavItem): number {
@@ -218,6 +229,14 @@ function stripNumericPrefix(value: string): string {
 
 function isHidden(page: DocPage): boolean {
   return readNavConfig(page)?.hidden === true;
+}
+
+function shouldHideChildren(page: DocPage): boolean {
+  return readNavConfig(page)?.hideChildren === true;
+}
+
+function shouldSkipHiddenSubtree(route: string, hiddenChildrenRoutes: string[]): boolean {
+  return hiddenChildrenRoutes.some((hiddenRoute) => isWithinRoute(route, hiddenRoute));
 }
 
 function readNavOrder(page: DocPage | undefined): number | undefined {

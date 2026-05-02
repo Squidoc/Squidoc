@@ -26,11 +26,13 @@ export type NavItem = {
 export type NavAutogenerateInput = {
   from?: string;
   exclude?: string[];
+  generatedPosition?: "before" | "after";
 };
 
 export type NavAutogenerate = {
   from: string;
   exclude: string[];
+  generatedPosition: "before" | "after";
 };
 
 export type NavConfigItem = {
@@ -46,10 +48,12 @@ export const navAutogenerateSchema = z
   .object({
     from: z.string().min(1).default("/"),
     exclude: z.array(z.string().min(1)).default([]),
+    generatedPosition: z.enum(["before", "after"]).default("before"),
   })
   .transform((value) => ({
     from: normalizeRoutePath(value.from),
     exclude: value.exclude,
+    generatedPosition: value.generatedPosition,
   }));
 
 export const navItemSchema: z.ZodType<NavConfigItem, z.ZodTypeDef, NavItemInput> = z.lazy(() =>

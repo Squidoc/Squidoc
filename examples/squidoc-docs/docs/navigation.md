@@ -102,7 +102,7 @@ export default defineConfig({
 
 When the generated section has an index page, Squidoc uses it as the folder link. In the example above, `docs/developers/index.md` becomes the clickable `Developers` article.
 
-You can also append manual children to generated children:
+By default, generated children appear before manual children:
 
 ```ts
 {
@@ -112,6 +112,21 @@ You can also append manual children to generated children:
   },
   items: [
     { title: "External API", path: "/external-api" },
+  ],
+}
+```
+
+Set `generatedPosition: "after"` when a manual item should appear first:
+
+```ts
+{
+  title: "Developers",
+  autogenerate: {
+    from: "/developers",
+    generatedPosition: "after",
+  },
+  items: [
+    { title: "Overview", path: "/developers/overview" },
   ],
 }
 ```
@@ -162,13 +177,26 @@ Numeric prefixes are stripped from generated labels, so a file titled `01 Gettin
 
 ## Hiding pages
 
-Use `nav.hidden` to keep a page out of generated navigation while still publishing it.
+Use `nav.hidden` to keep a page link out of generated navigation while still publishing it.
 
 ```md
 ---
 title: Internal Migration Notes
 nav:
   hidden: true
+---
+```
+
+When a folder index page is hidden, Squidoc keeps its children grouped under the folder label. This hides the clickable folder article without flattening the children.
+
+Use `nav.hideChildren` when the whole folder subtree should disappear from generated navigation:
+
+```md
+---
+title: Internal Notes
+nav:
+  hidden: true
+  hideChildren: true
 ---
 ```
 

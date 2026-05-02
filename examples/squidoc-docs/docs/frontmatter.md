@@ -28,6 +28,8 @@ description: Learn how to use the API.
 
 `nav.hidden` excludes the page from generated sidebars while still publishing it.
 
+`nav.hideChildren` excludes a hidden folder page and all of its children from generated sidebars.
+
 ```md
 ---
 title: Plugin Authoring
@@ -36,6 +38,7 @@ nav:
   title: Plugins
   order: 20
   hidden: false
+  hideChildren: false
 ---
 ```
 
