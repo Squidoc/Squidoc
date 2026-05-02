@@ -42,6 +42,7 @@ export default defineConfig({
     { title: "Introduction", path: "/" },
     { title: "Getting Started", path: "/getting-started" },
     { title: "Configuration", path: "/configuration" },
+    { title: "Sidebar Navigation", path: "/navigation" },
     {
       title: "Customization",
       items: [
@@ -63,7 +64,7 @@ export default defineConfig({
 
 The `site` object feeds page titles, metadata, generated SEO files, and theme templates. The `docs.basePath` value controls where documentation is published; it defaults to `/docs`. Navigation paths are docs-relative, so `/configuration` points at `docs/configuration.md` and publishes as `/docs/configuration` by default.
 
-`squidoc check` catches missing navigation routes before deploy. Navigation items can be flat links, folders with `items`, or folders with both a `path` and `items` when the folder has its own article.
+`squidoc check` catches missing navigation routes before deploy. Navigation items can be flat links, folders with `items`, folders with both a `path` and `items` when the folder has its own article, or generated sections based on your docs directory. See [Sidebar Navigation](/navigation) for manual, automatic, and mixed sidebar examples.
 
 Add plugins and themes with the CLI:
 

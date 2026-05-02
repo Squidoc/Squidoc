@@ -16,6 +16,7 @@ import {
   discoverDocs,
   loadConfig,
   loadTheme,
+  resolveNavConfig,
   runPlugins,
 } from "@squidoc/core";
 import { type FSWatcher, watch } from "chokidar";
@@ -27,6 +28,8 @@ const templatesRoot = join(dirname(fileURLToPath(import.meta.url)), "templates")
 export type BuildOptions = {
   cwd?: string;
 };
+
+type RuntimeSquidocConfig = Omit<ResolvedSquidocConfig, "nav"> & { nav: NavItem[] };
 
 export type ServeOptions = {
   cwd?: string;
@@ -77,10 +80,8 @@ async function generateAstroProject(cwd: string, internalRoot: string): Promise<
   const pages = await discoverDocs(loaded.config, cwd, {
     extensions: capabilities.docExtensions,
   });
-  const project = await applyProjectTransforms(
-    { pages, nav: loaded.config.nav },
-    capabilities.projectTransformers,
-  );
+  const nav = resolveNavConfig(loaded.config.nav, pages);
+  const project = await applyProjectTransforms({ pages, nav }, capabilities.projectTransformers);
   const config = { ...loaded.config, nav: project.nav };
   const theme = await loadTheme(loaded.config, cwd);
   const plugins = await runPlugins(config, project.pages, cwd);
@@ -112,7 +113,7 @@ async function linkResolvedPackage(packageName: string, nodeModules: string): Pr
 async function writeAstroProject(
   internalRoot: string,
   cwd: string,
-  config: ResolvedSquidocConfig,
+  config: RuntimeSquidocConfig,
   pages: DocPage[],
   theme: SquidocTheme,
   plugins: PluginContext,
@@ -241,7 +242,7 @@ async function copySitePageSources(internalRoot: string, sitePages: SitePage[]):
 
 async function writeSitePageRoutes(
   internalRoot: string,
-  config: ResolvedSquidocConfig,
+  config: RuntimeSquidocConfig,
   docsPages: DocPage[],
   sitePages: SitePage[],
 ): Promise<void> {
@@ -298,7 +299,7 @@ const data = sitePages[${index}];
 
 async function writeRenderData(
   internalRoot: string,
-  config: ResolvedSquidocConfig,
+  config: RuntimeSquidocConfig,
   pages: DocPage[],
   theme: SquidocTheme,
   plugins: PluginContext,
@@ -383,7 +384,7 @@ type RenderFooter = {
 type ThemeOptions = Record<string, unknown>;
 
 function pagesForSiteShell(
-  config: ResolvedSquidocConfig,
+  config: RuntimeSquidocConfig,
   docsPages: DocPage[],
   theme: SquidocTheme,
   plugins: PluginContext,

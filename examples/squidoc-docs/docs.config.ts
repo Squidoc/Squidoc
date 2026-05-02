@@ -61,6 +61,7 @@ export default defineConfig({
     { title: "Getting Started", path: "/getting-started" },
     { title: "Configuration", path: "/configuration" },
     { title: "Frontmatter", path: "/frontmatter" },
+    { title: "Sidebar Navigation", path: "/navigation" },
     { title: "CLI Reference", path: "/cli" },
     { title: "Deployment", path: "/deployment" },
     {

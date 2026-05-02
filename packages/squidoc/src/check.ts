@@ -6,7 +6,9 @@ export type CheckIssue = {
   message: string;
 };
 
-export function validateProject(config: ResolvedSquidocConfig, pages: DocPage[]): CheckIssue[] {
+type ValidatedConfig = Omit<ResolvedSquidocConfig, "nav"> & { nav: NavItem[] };
+
+export function validateProject(config: ValidatedConfig, pages: DocPage[]): CheckIssue[] {
   const issues: CheckIssue[] = [];
 
   if (pages.length === 0) {
@@ -19,7 +21,7 @@ export function validateProject(config: ResolvedSquidocConfig, pages: DocPage[])
   return issues;
 }
 
-function validateNavRoutes(config: ResolvedSquidocConfig, pages: DocPage[]): CheckIssue[] {
+function validateNavRoutes(config: ValidatedConfig, pages: DocPage[]): CheckIssue[] {
   const routes = new Set(pages.flatMap((page) => [page.docsRoute, page.route]));
 
   return flattenNavItems(config.nav)

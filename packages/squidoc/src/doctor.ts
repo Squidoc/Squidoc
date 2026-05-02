@@ -1,6 +1,12 @@
 import { access } from "node:fs/promises";
 import { dirname, join } from "node:path";
-import { applyProjectTransforms, discoverDocs, loadConfig, runPlugins } from "@squidoc/core";
+import {
+  applyProjectTransforms,
+  discoverDocs,
+  loadConfig,
+  resolveNavConfig,
+  runPlugins,
+} from "@squidoc/core";
 import { validateProject } from "./check.js";
 
 export type DoctorReport = {
@@ -19,10 +25,8 @@ export async function inspectProject(cwd = process.cwd()): Promise<DoctorReport>
   const pages = await discoverDocs(loaded.config, cwd, {
     extensions: capabilities.docExtensions,
   });
-  const project = await applyProjectTransforms(
-    { pages, nav: loaded.config.nav },
-    capabilities.projectTransformers,
-  );
+  const nav = resolveNavConfig(loaded.config.nav, pages);
+  const project = await applyProjectTransforms({ pages, nav }, capabilities.projectTransformers);
   const config = { ...loaded.config, nav: project.nav };
   const issues = validateProject(config, project.pages).map((issue) => issue.message);
 

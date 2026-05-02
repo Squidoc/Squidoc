@@ -13,6 +13,7 @@ export const docsConfigSchema = z.object({
 export type NavItemInput = {
   title: string;
   path?: string;
+  autogenerate?: NavAutogenerateInput;
   items?: NavItemInput[];
 };
 
@@ -22,17 +23,53 @@ export type NavItem = {
   items?: NavItem[];
 };
 
-export const navItemSchema: z.ZodType<NavItem, z.ZodTypeDef, NavItemInput> = z.lazy(() =>
+export type NavAutogenerateInput = {
+  from?: string;
+  exclude?: string[];
+};
+
+export type NavAutogenerate = {
+  from: string;
+  exclude: string[];
+};
+
+export type NavConfigItem = {
+  title: string;
+  path?: string;
+  autogenerate?: NavAutogenerate;
+  items?: NavConfigItem[];
+};
+
+export type NavConfig = NavConfigItem[] | "auto" | { autogenerate: NavAutogenerate };
+
+export const navAutogenerateSchema = z
+  .object({
+    from: z.string().min(1).default("/"),
+    exclude: z.array(z.string().min(1)).default([]),
+  })
+  .transform((value) => ({
+    from: normalizeRoutePath(value.from),
+    exclude: value.exclude,
+  }));
+
+export const navItemSchema: z.ZodType<NavConfigItem, z.ZodTypeDef, NavItemInput> = z.lazy(() =>
   z
     .object({
       title: z.string().min(1),
       path: z.string().min(1).optional(),
+      autogenerate: navAutogenerateSchema.optional(),
       items: z.array(navItemSchema).optional(),
     })
-    .refine((item) => item.path || (item.items && item.items.length > 0), {
-      message: "Navigation items must define a path or child items.",
+    .refine((item) => item.path || item.autogenerate || (item.items && item.items.length > 0), {
+      message: "Navigation items must define a path, generated section, or child items.",
     }),
 );
+
+export const navConfigSchema = z.union([
+  z.literal("auto"),
+  z.object({ autogenerate: navAutogenerateSchema }),
+  z.array(navItemSchema),
+]);
 
 export const themeConfigSchema = z.union([
   z.string().min(1),
@@ -58,7 +95,7 @@ export const squidocConfigSchema = z.object({
   plugins: z
     .array(pluginConfigSchema)
     .default(["@squidoc/plugin-seo", "@squidoc/plugin-codeblocks", "@squidoc/plugin-article-tree"]),
-  nav: z.array(navItemSchema).default([]),
+  nav: navConfigSchema.default([]),
 });
 
 export type SquidocConfig = z.input<typeof squidocConfigSchema>;

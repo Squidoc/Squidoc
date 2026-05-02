@@ -42,6 +42,12 @@ const pages = [
     canonical: "https://squidoc.com/docs/frontmatter",
   },
   {
+    file: "docs/navigation/index.html",
+    route: "/docs/navigation",
+    title: "Sidebar Navigation | Squidoc",
+    canonical: "https://squidoc.com/docs/navigation",
+  },
+  {
     file: "docs/plugin-authoring/index.html",
     route: "/docs/plugin-authoring",
     title: "Plugin Authoring | Squidoc",
@@ -246,6 +252,7 @@ assertIncludes(llms, "[MDX](https://squidoc.com/docs/mdx)", "llms.txt");
 assertIncludes(llms, "[CLI Reference](https://squidoc.com/docs/cli)", "llms.txt");
 assertIncludes(llms, "[Deployment](https://squidoc.com/docs/deployment)", "llms.txt");
 assertIncludes(llms, "[Frontmatter](https://squidoc.com/docs/frontmatter)", "llms.txt");
+assertIncludes(llms, "[Sidebar Navigation](https://squidoc.com/docs/navigation)", "llms.txt");
 assertIncludes(llms, "[Plugins](https://squidoc.com/docs/plugins)", "llms.txt");
 assertIncludes(llms, "[Themes](https://squidoc.com/docs/themes)", "llms.txt");
 assertIncludes(llms, "[Versioning](https://squidoc.com/docs/versioning)", "llms.txt");

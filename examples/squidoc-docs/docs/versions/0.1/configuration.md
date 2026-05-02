@@ -16,6 +16,9 @@ export default defineConfig({
     url: "https://docs.example.com",
     description: "Documentation powered by Squidoc",
   },
+  docs: {
+    basePath: "/docs",
+  },
   theme: {
     name: "@squidoc/theme-basic",
     options: {
@@ -24,13 +27,14 @@ export default defineConfig({
         text: "Built with Squidoc.",
         links: [
           { title: "GitHub", href: "https://github.com/Squidoc/Squidoc" },
-          { title: "Configuration", path: "/configuration" },
+          { title: "Configuration", path: "/docs/configuration" },
         ],
       },
     },
   },
   plugins: [
     "@squidoc/plugin-seo",
+    "@squidoc/plugin-pages",
     "@squidoc/plugin-codeblocks",
     "@squidoc/plugin-article-tree",
   ],
@@ -38,6 +42,7 @@ export default defineConfig({
     { title: "Introduction", path: "/" },
     { title: "Getting Started", path: "/getting-started" },
     { title: "Configuration", path: "/configuration" },
+    { title: "Sidebar Navigation", path: "/navigation" },
     {
       title: "Customization",
       items: [
@@ -57,7 +62,9 @@ export default defineConfig({
 });
 ```
 
-The `site` object feeds page titles, metadata, generated SEO files, and theme templates. Navigation paths must point to discovered docs routes, and `squidoc check` catches missing routes before deploy. Navigation items can be flat links, folders with `items`, or folders with both a `path` and `items` when the folder has its own article.
+The `site` object feeds page titles, metadata, generated SEO files, and theme templates. The `docs.basePath` value controls where documentation is published; it defaults to `/docs`. Navigation paths are docs-relative, so `/configuration` points at `docs/configuration.md` and publishes as `/docs/configuration` by default.
+
+`squidoc check` catches missing navigation routes before deploy. Navigation items can be flat links, folders with `items`, folders with both a `path` and `items` when the folder has its own article, or generated sections based on your docs directory. See [Sidebar Navigation](/versions/0.1/navigation) for manual, automatic, and mixed sidebar examples.
 
 Add plugins and themes with the CLI:
 
@@ -81,6 +88,6 @@ plugins: [
 
 Themes control the page structure, classes, and styling that turn discovered docs into a site.
 
-The basic theme reads `theme.options.headerLinks` for the top navigation and `theme.options.footer` for the footer. Footer links use the same `{ title, href }` or `{ title, path }` shape as header links.
+The basic theme reads `theme.options.headerLinks` for the top navigation and `theme.options.footer` for the footer. Footer links use the same `{ title, href }` or `{ title, path }` shape as header links. Theme header and footer paths are site routes, so link to `/docs/configuration` when the docs base path is `/docs`.
 
-For page-level metadata, use [frontmatter](/frontmatter). For command behavior, see the [CLI Reference](/cli).
+For page-level metadata, use [frontmatter](/versions/0.1/frontmatter). For command behavior, see the [CLI Reference](/versions/0.1/cli).

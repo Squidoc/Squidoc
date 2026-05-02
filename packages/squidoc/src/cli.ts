@@ -1,6 +1,12 @@
 #!/usr/bin/env node
 
-import { applyProjectTransforms, discoverDocs, loadConfig, runPlugins } from "@squidoc/core";
+import {
+  applyProjectTransforms,
+  discoverDocs,
+  loadConfig,
+  resolveNavConfig,
+  runPlugins,
+} from "@squidoc/core";
 import { type AddKind, addExtension } from "./add.js";
 import { buildSite, devSite, previewSite } from "./build.js";
 import { validateProject } from "./check.js";
@@ -92,10 +98,8 @@ async function checkProject(): Promise<void> {
     const pages = await discoverDocs(loaded.config, process.cwd(), {
       extensions: capabilities.docExtensions,
     });
-    const project = await applyProjectTransforms(
-      { pages, nav: loaded.config.nav },
-      capabilities.projectTransformers,
-    );
+    const nav = resolveNavConfig(loaded.config.nav, pages);
+    const project = await applyProjectTransforms({ pages, nav }, capabilities.projectTransformers);
     const config = { ...loaded.config, nav: project.nav };
 
     console.log(`Loaded config: ${loaded.path}`);

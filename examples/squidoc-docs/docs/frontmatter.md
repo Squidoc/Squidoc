@@ -22,9 +22,26 @@ description: Learn how to use the API.
 
 `description` sets the page description used by SEO metadata, search results, and generated LLM files. Descriptions should be plain text and useful out of context.
 
+`nav.title` overrides the label used by generated sidebars.
+
+`nav.order` sorts pages in generated sidebars. Lower numbers appear first.
+
+`nav.hidden` excludes the page from generated sidebars while still publishing it.
+
+```md
+---
+title: Plugin Authoring
+description: Build Squidoc plugins.
+nav:
+  title: Plugins
+  order: 20
+  hidden: false
+---
+```
+
 ## Unsupported fields
 
-Additional frontmatter fields are preserved on the page data for future theme and plugin use, but Squidoc core only assigns behavior to `title` and `description` today.
+Additional frontmatter fields are preserved on the page data for future theme and plugin use, but Squidoc core only assigns behavior to `title`, `description`, and `nav` today.
 
 ```md
 ---
