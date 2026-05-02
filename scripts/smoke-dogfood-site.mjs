@@ -9,91 +9,91 @@ const pages = [
     file: "docs/index.html",
     route: "/docs",
     title: "Introduction | Squidoc",
-    canonical: "https://squidoc.dev/docs",
+    canonical: "https://squidoc.com/docs",
   },
   {
     file: "docs/cli/index.html",
     route: "/docs/cli",
     title: "CLI Reference | Squidoc",
-    canonical: "https://squidoc.dev/docs/cli",
+    canonical: "https://squidoc.com/docs/cli",
   },
   {
     file: "docs/configuration/index.html",
     route: "/docs/configuration",
     title: "Configuration | Squidoc",
-    canonical: "https://squidoc.dev/docs/configuration",
+    canonical: "https://squidoc.com/docs/configuration",
   },
   {
     file: "docs/developers/index.html",
     route: "/docs/developers",
     title: "Authoring Extensions | Squidoc",
-    canonical: "https://squidoc.dev/docs/developers",
+    canonical: "https://squidoc.com/docs/developers",
   },
   {
     file: "docs/deployment/index.html",
     route: "/docs/deployment",
     title: "Deployment | Squidoc",
-    canonical: "https://squidoc.dev/docs/deployment",
+    canonical: "https://squidoc.com/docs/deployment",
   },
   {
     file: "docs/frontmatter/index.html",
     route: "/docs/frontmatter",
     title: "Frontmatter | Squidoc",
-    canonical: "https://squidoc.dev/docs/frontmatter",
+    canonical: "https://squidoc.com/docs/frontmatter",
   },
   {
     file: "docs/plugin-authoring/index.html",
     route: "/docs/plugin-authoring",
     title: "Plugin Authoring | Squidoc",
-    canonical: "https://squidoc.dev/docs/plugin-authoring",
+    canonical: "https://squidoc.com/docs/plugin-authoring",
   },
   {
     file: "docs/theme-authoring/index.html",
     route: "/docs/theme-authoring",
     title: "Theme Authoring | Squidoc",
-    canonical: "https://squidoc.dev/docs/theme-authoring",
+    canonical: "https://squidoc.com/docs/theme-authoring",
   },
   {
     file: "docs/getting-started/index.html",
     route: "/docs/getting-started",
     title: "Getting Started | Squidoc",
-    canonical: "https://squidoc.dev/docs/getting-started",
+    canonical: "https://squidoc.com/docs/getting-started",
   },
   {
     file: "docs/plugins/index.html",
     route: "/docs/plugins",
     title: "Plugins | Squidoc",
-    canonical: "https://squidoc.dev/docs/plugins",
+    canonical: "https://squidoc.com/docs/plugins",
   },
   {
     file: "docs/pages/index.html",
     route: "/docs/pages",
     title: "Pages | Squidoc",
-    canonical: "https://squidoc.dev/docs/pages",
+    canonical: "https://squidoc.com/docs/pages",
   },
   {
     file: "docs/themes/index.html",
     route: "/docs/themes",
     title: "Themes | Squidoc",
-    canonical: "https://squidoc.dev/docs/themes",
+    canonical: "https://squidoc.com/docs/themes",
   },
   {
     file: "docs/versioning/index.html",
     route: "/docs/versioning",
     title: "Versioning | Squidoc",
-    canonical: "https://squidoc.dev/docs/versioning",
+    canonical: "https://squidoc.com/docs/versioning",
   },
   {
     file: "docs/i18n/index.html",
     route: "/docs/i18n",
     title: "Internationalization | Squidoc",
-    canonical: "https://squidoc.dev/docs/i18n",
+    canonical: "https://squidoc.com/docs/i18n",
   },
   {
     file: "docs/mdx/index.html",
     route: "/docs/mdx",
     title: "MDX | Squidoc",
-    canonical: "https://squidoc.dev/docs/mdx",
+    canonical: "https://squidoc.com/docs/mdx",
   },
 ];
 const archivedPages = pages.map((page) => ({
@@ -105,39 +105,39 @@ const archivedPages = pages.map((page) => ({
       : page.route.replace("/docs", "/docs/versions/0.1"),
   canonical:
     page.route === "/docs"
-      ? "https://squidoc.dev/docs/versions/0.1"
-      : `https://squidoc.dev${page.route.replace("/docs", "/docs/versions/0.1")}`,
+      ? "https://squidoc.com/docs/versions/0.1"
+      : `https://squidoc.com${page.route.replace("/docs", "/docs/versions/0.1")}`,
 }));
 const localizedPages = [
   {
     file: "es/docs/index.html",
     route: "/es/docs",
     title: "Introducción | Squidoc",
-    canonical: "https://squidoc.dev/es/docs",
+    canonical: "https://squidoc.com/es/docs",
   },
   {
     file: "es/docs/configuration/index.html",
     route: "/es/docs/configuration",
     title: "Configuración | Squidoc",
-    canonical: "https://squidoc.dev/es/docs/configuration",
+    canonical: "https://squidoc.com/es/docs/configuration",
   },
   {
     file: "es/docs/versions/0.1/index.html",
     route: "/es/docs/versions/0.1",
     title: "Introducción | Squidoc",
-    canonical: "https://squidoc.dev/es/docs/versions/0.1",
+    canonical: "https://squidoc.com/es/docs/versions/0.1",
   },
   {
     file: "es/docs/versions/0.1/configuration/index.html",
     route: "/es/docs/versions/0.1/configuration",
     title: "Configuración | Squidoc",
-    canonical: "https://squidoc.dev/es/docs/versions/0.1/configuration",
+    canonical: "https://squidoc.com/es/docs/versions/0.1/configuration",
   },
   {
     file: "es/docs/versions/0.1/i18n/index.html",
     route: "/es/docs/versions/0.1/i18n",
     title: "Internacionalización | Squidoc",
-    canonical: "https://squidoc.dev/es/docs/versions/0.1/i18n",
+    canonical: "https://squidoc.com/es/docs/versions/0.1/i18n",
   },
 ];
 const allPages = [...pages, ...archivedPages, ...localizedPages];
@@ -242,17 +242,17 @@ assert(
 );
 
 const llms = await readDistFile("llms.txt");
-assertIncludes(llms, "[MDX](https://squidoc.dev/docs/mdx)", "llms.txt");
-assertIncludes(llms, "[CLI Reference](https://squidoc.dev/docs/cli)", "llms.txt");
-assertIncludes(llms, "[Deployment](https://squidoc.dev/docs/deployment)", "llms.txt");
-assertIncludes(llms, "[Frontmatter](https://squidoc.dev/docs/frontmatter)", "llms.txt");
-assertIncludes(llms, "[Plugins](https://squidoc.dev/docs/plugins)", "llms.txt");
-assertIncludes(llms, "[Themes](https://squidoc.dev/docs/themes)", "llms.txt");
-assertIncludes(llms, "[Versioning](https://squidoc.dev/docs/versioning)", "llms.txt");
-assertIncludes(llms, "[Versioning](https://squidoc.dev/docs/versions/0.1/versioning)", "llms.txt");
-assertIncludes(llms, "[Authoring Extensions](https://squidoc.dev/docs/developers)", "llms.txt");
-assertIncludes(llms, "[Plugin Authoring](https://squidoc.dev/docs/plugin-authoring)", "llms.txt");
-assertIncludes(llms, "[Theme Authoring](https://squidoc.dev/docs/theme-authoring)", "llms.txt");
+assertIncludes(llms, "[MDX](https://squidoc.com/docs/mdx)", "llms.txt");
+assertIncludes(llms, "[CLI Reference](https://squidoc.com/docs/cli)", "llms.txt");
+assertIncludes(llms, "[Deployment](https://squidoc.com/docs/deployment)", "llms.txt");
+assertIncludes(llms, "[Frontmatter](https://squidoc.com/docs/frontmatter)", "llms.txt");
+assertIncludes(llms, "[Plugins](https://squidoc.com/docs/plugins)", "llms.txt");
+assertIncludes(llms, "[Themes](https://squidoc.com/docs/themes)", "llms.txt");
+assertIncludes(llms, "[Versioning](https://squidoc.com/docs/versioning)", "llms.txt");
+assertIncludes(llms, "[Versioning](https://squidoc.com/docs/versions/0.1/versioning)", "llms.txt");
+assertIncludes(llms, "[Authoring Extensions](https://squidoc.com/docs/developers)", "llms.txt");
+assertIncludes(llms, "[Plugin Authoring](https://squidoc.com/docs/plugin-authoring)", "llms.txt");
+assertIncludes(llms, "[Theme Authoring](https://squidoc.com/docs/theme-authoring)", "llms.txt");
 
 const llmsFull = await readDistFile("llms-full.txt");
 assertIncludes(llmsFull, "Component-based MDX is not compiled yet.", "llms-full.txt");

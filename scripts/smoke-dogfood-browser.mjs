@@ -62,13 +62,13 @@ try {
     await expectAttribute(
       page.locator('link[rel="canonical"]'),
       "href",
-      "https://squidoc.dev/docs/configuration",
+      "https://squidoc.com/docs/configuration",
     );
     await expectText(page.locator(".sq-locale-selector__label"), "Language");
     await expectAttribute(
       page.locator('link[rel="alternate"][hreflang="es"]'),
       "href",
-      "https://squidoc.dev/es/docs/configuration",
+      "https://squidoc.com/es/docs/configuration",
     );
     await assertMinCount(page.locator("[data-squidoc-codeblock]"), 2);
     await assertMinCount(page.locator("[data-squidoc-copy-code]"), 2);

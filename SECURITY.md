@@ -8,7 +8,7 @@ Squidoc is pre-1.0. Security fixes are prioritized for the latest published vers
 
 Please do not open a public issue for security vulnerabilities.
 
-Report suspected vulnerabilities by emailing the maintainers at security@squidoc.dev. Include:
+Report suspected vulnerabilities by emailing the maintainers at security@squidoc.com. Include:
 
 - A short description of the issue
 - Steps to reproduce or a proof of concept

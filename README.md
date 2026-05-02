@@ -46,7 +46,7 @@ export default defineConfig({
 
 ## Documentation
 
-The docs site will be published at [squidoc.dev](https://squidoc.dev). Until then, the dogfood docs live in `examples/squidoc-docs`.
+The docs site will be published at [squidoc.com](https://squidoc.com). Until then, the dogfood docs live in `examples/squidoc-docs`.
 
 ## Contributing
 

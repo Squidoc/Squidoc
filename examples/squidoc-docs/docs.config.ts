@@ -3,7 +3,7 @@ import { defineConfig } from "squidoc";
 export default defineConfig({
   site: {
     name: "Squidoc",
-    url: "https://squidoc.dev",
+    url: "https://squidoc.com",
     description: "Documentation for the Squidoc static docs platform.",
   },
   plugins: [
