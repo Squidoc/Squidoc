@@ -46,8 +46,15 @@ try {
   try {
     await page.setViewportSize({ width: 1200, height: 720 });
     await page.goto(`${baseUrl}/`, { waitUntil: "networkidle" });
-    await expectText(page.locator("main h1"), "Docs that start simple and grow with your product.");
-    await expectAttribute(page.locator(".sq-home__primary"), "href", "/docs/getting-started");
+    await expectText(
+      page.locator("main h1"),
+      "Documentation that starts as Markdown and stays yours.",
+    );
+    await expectAttribute(
+      page.locator(".sq-home-button--primary").first(),
+      "href",
+      "/docs/getting-started",
+    );
     await expectAttribute(page.locator(".sq-topbar__logo"), "src", "/squidoc-logo.svg");
     await expectMobileTopbarLinks(page);
     await expectNarrowDocsLayout(page);
