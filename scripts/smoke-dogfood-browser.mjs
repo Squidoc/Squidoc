@@ -1,11 +1,12 @@
 import { spawn } from "node:child_process";
 import { once } from "node:events";
+import { createServer } from "node:net";
 import { join } from "node:path";
 import { chromium } from "playwright";
 
 const repoRoot = new URL("..", import.meta.url).pathname;
 const docsRoot = join(repoRoot, "examples/squidoc-docs");
-const port = process.env.SQUIDOC_BROWSER_SMOKE_PORT ?? "4397";
+const port = process.env.SQUIDOC_BROWSER_SMOKE_PORT ?? (await findOpenPort());
 const baseUrl = `http://127.0.0.1:${port}`;
 const server = spawn(
   process.execPath,
@@ -76,6 +77,12 @@ try {
     );
     await assertMinCount(page.locator("[data-squidoc-codeblock]"), 2);
     await assertMinCount(page.locator("[data-squidoc-copy-code]"), 2);
+    await assertMinCount(page.locator(".sq-heading-anchor"), 1);
+    await expectAttribute(
+      page.locator("#configuration .sq-heading-anchor"),
+      "href",
+      "#configuration",
+    );
     await page.addInitScript(() => {
       Object.defineProperty(navigator, "clipboard", {
         configurable: true,
@@ -206,6 +213,28 @@ try {
     once(server, "exit").catch(() => {}),
     new Promise((resolve) => setTimeout(resolve, 1_000)),
   ]);
+}
+
+async function findOpenPort() {
+  const server = createServer();
+
+  await new Promise((resolve, reject) => {
+    server.once("error", reject);
+    server.listen(0, "127.0.0.1", resolve);
+  });
+
+  const address = server.address();
+  const port = typeof address === "object" && address ? address.port : undefined;
+
+  await new Promise((resolve, reject) => {
+    server.close((error) => (error ? reject(error) : resolve(undefined)));
+  });
+
+  if (!port) {
+    throw new Error("Could not find an open port for browser smoke tests.");
+  }
+
+  return String(port);
 }
 
 function stopServer() {

@@ -543,6 +543,42 @@ a {
   line-height: 1.1;
 }
 
+.sq-content h1,
+.sq-content h2,
+.sq-content h3,
+.sq-content h4,
+.sq-content h5,
+.sq-content h6 {
+  scroll-margin-top: 84px;
+}
+
+.sq-heading-anchor {
+  margin-left: 0.35em;
+  color: var(--squidoc-muted);
+  font-size: 0.78em;
+  font-weight: 800;
+  opacity: 0;
+  text-decoration: none;
+  transition:
+    color 140ms ease,
+    opacity 140ms ease;
+}
+
+.sq-heading-anchor:hover,
+.sq-heading-anchor:focus {
+  color: var(--squidoc-accent);
+  outline: none;
+}
+
+.sq-heading-anchor::before {
+  content: "#";
+}
+
+.sq-content :is(h1, h2, h3, h4, h5, h6):hover .sq-heading-anchor,
+.sq-content :is(h1, h2, h3, h4, h5, h6):focus-within .sq-heading-anchor {
+  opacity: 1;
+}
+
 .sq-content p,
 .sq-content li {
   line-height: 1.7;
