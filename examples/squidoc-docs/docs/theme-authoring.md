@@ -33,7 +33,7 @@ The current renderer uses the `renderer` object to provide global CSS and class 
 
 Every theme should support Squidoc's stable layout contract. For now there are exactly two layouts:
 
-- `docs`: documentation pages with the docs sidebar, locale selector, version selector, article tree slot, and article content styling.
+- `docs`: documentation pages with the docs sidebar, navbar locale selector, version selector, article tree slot, and article content styling.
 - `page`: custom pages from `@squidoc/plugin-pages`, such as homepages, changelogs, landing pages, and about pages.
 
 Page authors can choose a layout from their Astro page metadata:
@@ -52,7 +52,7 @@ If a page omits `layout`, Squidoc uses `page`. Theme authors should treat both l
 Themes can also receive plugin slots. The basic theme renders:
 
 - `search` in the navbar.
-- `locale-selector` in the docs sidebar.
+- `locale-selector` in the navbar.
 - `version-selector` in the docs sidebar.
 - `article-tree` beside the docs article.
 

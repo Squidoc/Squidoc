@@ -53,6 +53,7 @@ const isDocsLayout = layout === "docs";
       <nav class="sq-topbar__nav" aria-label="Site">
         <Fragment set:html={headerLinksHtml} />
       </nav>
+      <Fragment set:html={slots.localeSelector} />
       <label class="sq-sidebar-toggle" for="squidoc-sidebar-toggle">
         <svg class="sq-icon" aria-hidden="true" focusable="false">
           <use href="#sq-icon-menu"></use>
@@ -64,7 +65,6 @@ const isDocsLayout = layout === "docs";
       isDocsLayout ? (
         <div class={classes.shell}>
           <aside class={classes.sidebar}>
-            <Fragment set:html={slots.localeSelector} />
             <Fragment set:html={slots.versionSelector} />
             <nav class={classes.nav} aria-label="Documentation">
               <Fragment set:html={navHtml} />

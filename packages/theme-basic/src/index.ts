@@ -217,6 +217,43 @@ a {
   color: var(--squidoc-text);
 }
 
+.sq-topbar > .sq-locale-selector {
+  position: relative;
+  display: block;
+  flex: 0 0 auto;
+  margin: 0;
+}
+
+.sq-topbar > .sq-locale-selector .sq-locale-selector__label {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.sq-topbar > .sq-locale-selector .sq-locale-selector__select {
+  width: auto;
+  min-width: 132px;
+  min-height: 38px;
+  border-radius: 999px;
+  padding: 7px 34px 7px 34px;
+  background:
+    url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%234a54df' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.8'%3E%3Ccircle cx='12' cy='12' r='9'/%3E%3Cpath d='M3 12h18M12 3c2.2 2.5 3.3 5.5 3.3 9S14.2 18.5 12 21M12 3c-2.2 2.5-3.3 5.5-3.3 9s1.1 6.5 3.3 9'/%3E%3C/g%3E%3C/svg%3E")
+      left 11px center / 16px 16px no-repeat,
+    url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='m7 10 5 5 5-5' fill='none' stroke='%235f6f89' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.8'/%3E%3C/svg%3E")
+      right 11px center / 16px 16px no-repeat,
+    #ffffff;
+  font-weight: 700;
+}
+
+.sq-topbar > .sq-locale-selector .sq-locale-selector__select:focus {
+  border-color: var(--squidoc-accent);
+  outline: 2px solid color-mix(in srgb, var(--squidoc-accent), transparent 78%);
+  outline-offset: 1px;
+}
+
 .sq-sidebar-control {
   position: absolute;
   inline-size: 1px;
@@ -786,7 +823,25 @@ a {
 
   .sq-sidebar-toggle {
     display: inline-flex;
+    order: 2;
     margin-left: auto;
+  }
+
+  .sq-topbar > .sq-locale-selector {
+    order: 1;
+  }
+
+  .sq-topbar > .sq-locale-selector .sq-locale-selector__select {
+    min-width: 118px;
+  }
+
+  @media (max-width: 370px) {
+    .sq-topbar > .sq-locale-selector .sq-locale-selector__select {
+      width: 44px;
+      min-width: 44px;
+      padding-right: 0;
+      color: transparent;
+    }
   }
 
   .sq-shell {

@@ -70,6 +70,8 @@ try {
       "https://squidoc.com/docs/configuration",
     );
     await expectText(page.locator(".sq-locale-selector__label"), "Language");
+    await expectVisible(page.locator(".sq-topbar > .sq-locale-selector"));
+    await expectHidden(page.locator(".sq-sidebar > .sq-locale-selector"));
     await expectAttribute(
       page.locator('link[rel="alternate"][hreflang="es"]'),
       "href",
