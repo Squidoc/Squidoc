@@ -30,6 +30,12 @@ describe("@squidoc/plugin-i18n", () => {
     expect(slots[0]?.html).toContain('<option value="en" selected>English</option>');
   });
 
+  test("falls back to the target locale docs root when the equivalent route is missing", async () => {
+    const { slots } = await runI18n([createPage("/"), createPage("/es/")]);
+
+    expect(slots[0]?.html).toContain("target.routes[0] ?? target.routePrefix");
+  });
+
   test("composes locale and version routes", async () => {
     const { pages } = await runI18n([
       createPage("/versions/0.1/configuration"),

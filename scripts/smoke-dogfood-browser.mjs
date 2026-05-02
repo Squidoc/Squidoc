@@ -54,6 +54,10 @@ try {
       "/docs/getting-started",
     );
     await expectAttribute(page.locator(".sq-topbar__logo"), "src", "/squidoc-logo.svg");
+    await page.locator("#squidoc-locale-selector").selectOption("es");
+    await page.waitForURL(`${baseUrl}/es/docs`, { waitUntil: "networkidle" });
+    await expectText(page.locator("main h1"), "Introducción");
+    await page.goto(`${baseUrl}/`, { waitUntil: "networkidle" });
     await expectMobileTopbarLinks(page);
     await expectNarrowDocsLayout(page);
 
@@ -135,7 +139,7 @@ try {
     );
 
     await page.goto(`${baseUrl}/docs/configuration`, { waitUntil: "networkidle" });
-    await expectText(page.locator(".sq-version-selector__label"), "Version");
+    await expectText(page.locator(".sq-version-selector__label"), "VERSION");
     await page.locator("#squidoc-version-selector").selectOption("/docs/versions/0.1");
     await page.waitForURL(`${baseUrl}/docs/versions/0.1/configuration`, {
       waitUntil: "networkidle",

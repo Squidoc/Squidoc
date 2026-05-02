@@ -245,7 +245,7 @@ function renderLocaleSelector(locales: ResolvedLocale[], pages: DocPage[]): stri
     const candidate = [target.routePrefix.replace(/\\/+$/, ""), relative].filter(Boolean).join("/");
     const nextPath = target.routes.includes(candidate.startsWith("/") ? candidate : "/" + candidate)
       ? candidate
-      : target.routePrefix;
+      : target.routes[0] ?? target.routePrefix;
     window.location.href = nextPath.startsWith("/") ? nextPath : "/" + nextPath;
   });
 
