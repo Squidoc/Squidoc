@@ -46,6 +46,9 @@ export default definePlugin({
 function renderSearchSlot(): string {
   return `<div class="sq-search" data-squidoc-search>
   <label class="sq-search__label" for="squidoc-search-input">Search docs</label>
+  <svg class="sq-search__icon sq-icon" aria-hidden="true" focusable="false">
+    <use href="#sq-icon-search"></use>
+  </svg>
   <input class="sq-search__input" id="squidoc-search-input" type="search" placeholder="Search" autocomplete="off" />
   <div class="sq-search__results" id="squidoc-search-results" role="list"></div>
 </div>

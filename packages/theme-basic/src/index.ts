@@ -21,6 +21,23 @@ a {
   color: var(--squidoc-accent);
 }
 
+.sq-icon-sprite {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+}
+
+.sq-icon {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentcolor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.8;
+}
+
 .sq-shell {
   display: grid;
   grid-template-columns: minmax(220px, 280px) minmax(0, 1fr) minmax(180px, 240px);
@@ -210,6 +227,8 @@ a {
 
 .sq-sidebar-toggle {
   display: none;
+  align-items: center;
+  gap: 7px;
   border: 1px solid var(--squidoc-border);
   border-radius: 8px;
   padding: 7px 10px;
@@ -255,14 +274,18 @@ a {
 
 .sq-version-selector__select,
 .sq-locale-selector__select {
+  appearance: none;
   box-sizing: border-box;
   width: 100%;
   min-height: 36px;
   border: 1px solid var(--squidoc-border);
   border-radius: 8px;
-  padding: 7px 9px;
+  padding: 7px 34px 7px 9px;
   color: var(--squidoc-text);
-  background: #ffffff;
+  background:
+    url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='m7 10 5 5 5-5' fill='none' stroke='%235f6f89' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.8'/%3E%3C/svg%3E")
+      right 9px center / 16px 16px no-repeat,
+    #ffffff;
   font: inherit;
   font-size: 14px;
 }
@@ -322,14 +345,7 @@ a {
 }
 
 .sq-nav summary::after {
-  content: ">";
-  color: var(--squidoc-muted);
-  font-size: 12px;
-  transform: rotate(90deg);
-}
-
-.sq-nav details:not([open]) summary::after {
-  transform: none;
+  content: none;
 }
 
 .sq-nav summary a {
@@ -339,6 +355,18 @@ a {
 .sq-nav summary a[aria-current="page"] {
   color: var(--squidoc-text);
   font-weight: 700;
+}
+
+.sq-nav__chevron {
+  flex: 0 0 auto;
+  width: 15px;
+  height: 15px;
+  color: var(--squidoc-muted);
+  transition: transform 140ms ease;
+}
+
+.sq-nav details[open] > summary .sq-nav__chevron {
+  transform: rotate(90deg);
 }
 
 .sq-search {
@@ -363,10 +391,21 @@ a {
   min-height: 38px;
   border: 1px solid var(--squidoc-border);
   border-radius: 8px;
-  padding: 8px 10px;
+  padding: 8px 10px 8px 34px;
   color: var(--squidoc-text);
   background: #ffffff;
   font: inherit;
+}
+
+.sq-search__icon {
+  position: absolute;
+  top: 50%;
+  left: 11px;
+  width: 16px;
+  height: 16px;
+  color: var(--squidoc-muted);
+  pointer-events: none;
+  transform: translateY(-50%);
 }
 
 .sq-search__input:focus {

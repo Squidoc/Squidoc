@@ -529,7 +529,7 @@ function renderNavItem(item: RenderNavItem, currentRoute: string): string {
 
   return `<li class="sq-nav__item sq-nav__item--group">
   <details${isExpanded ? " open" : ""}>
-    <summary>${link}</summary>
+    <summary>${link}<svg class="sq-nav__chevron sq-icon" aria-hidden="true" focusable="false"><use href="#sq-icon-chevron-right"></use></svg></summary>
     ${renderNavHtml(children, currentRoute)}
   </details>
 </li>`;
