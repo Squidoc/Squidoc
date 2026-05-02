@@ -46,10 +46,7 @@ try {
   try {
     await page.setViewportSize({ width: 1200, height: 720 });
     await page.goto(`${baseUrl}/`, { waitUntil: "networkidle" });
-    await expectText(
-      page.locator("main h1"),
-      "Documentation that starts as Markdown and stays yours.",
-    );
+    await expectText(page.locator("main h1"), "Docs that stay yours.");
     await expectAttribute(
       page.locator(".sq-home-button--primary").first(),
       "href",
