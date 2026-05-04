@@ -13,10 +13,11 @@
     "clean": "pnpm -r --filter './packages/**' clean",
     "format": "biome format --write .",
     "lint": "biome check .",
-    "test": "pnpm -r --filter './packages/**' test && pnpm check:docs && pnpm build:docs && pnpm test:dogfood && pnpm test:browser && pnpm test:generator",
+    "test": "pnpm -r --filter './packages/**' test && pnpm test:locales && pnpm check:docs && pnpm build:docs && pnpm test:dogfood && pnpm test:browser && pnpm test:generator",
     "test:browser": "node scripts/smoke-dogfood-browser.mjs",
     "test:dogfood": "node scripts/smoke-dogfood-site.mjs",
     "test:generator": "node scripts/smoke-create-squidoc.mjs",
+    "test:locales": "node scripts/check-localized-docs.mjs",
     "version-packages": "changeset version",
     "publish-packages": "pnpm build && changeset publish",
     "changeset": "changeset"

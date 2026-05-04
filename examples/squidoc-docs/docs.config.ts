@@ -39,7 +39,54 @@ export default defineConfig({
         defaultLocale: "en",
         locales: [
           { code: "en", label: "English" },
-          { code: "es", label: "Español" },
+          {
+            code: "es",
+            label: "Español",
+            navLabels: {
+              Customization: "Personalización",
+              "Authoring Extensions": "Crear extensiones",
+            },
+          },
+          {
+            code: "de",
+            label: "Deutsch",
+            navLabels: {
+              Customization: "Anpassung",
+              "Authoring Extensions": "Erweiterungen erstellen",
+            },
+          },
+          {
+            code: "fr",
+            label: "Français",
+            navLabels: {
+              Customization: "Personnalisation",
+              "Authoring Extensions": "Créer des extensions",
+            },
+          },
+          {
+            code: "ja",
+            label: "日本語",
+            navLabels: {
+              Customization: "カスタマイズ",
+              "Authoring Extensions": "拡張機能の作成",
+            },
+          },
+          {
+            code: "zh-CN",
+            label: "简体中文",
+            navLabels: {
+              Customization: "自定义",
+              "Authoring Extensions": "编写扩展",
+            },
+          },
+          {
+            code: "pt-BR",
+            label: "Português do Brasil",
+            navLabels: {
+              Customization: "Personalização",
+              "Authoring Extensions": "Criar extensões",
+            },
+          },
         ],
       },
     },

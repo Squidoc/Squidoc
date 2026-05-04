@@ -74,6 +74,8 @@ This verifies package `files` fields and catches missing templates or accidental
 
 The dogfood docs are localized. When you update user-facing docs in `examples/squidoc-docs/docs/`, update every supported locale too, including the matching files under localized version folders such as `examples/squidoc-docs/docs/es/versions/0.1/`.
 
+Run `pnpm test:locales` after docs changes. It verifies that English, each supported locale, and each localized version tree expose the same docs routes.
+
 ## Submitting A Pull Request
 
 1. Create a branch from `main`.
