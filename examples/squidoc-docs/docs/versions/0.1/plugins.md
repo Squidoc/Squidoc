@@ -97,7 +97,7 @@ This plugin transforms Markdown code blocks after rendering. If a code fence has
 
 ### `@squidoc/plugin-pages`
 
-Adds Astro page support for non-doc routes such as homepages, changelogs, landing pages, and product pages. See the [Pages guide](/versions/0.1/pages).
+Adds Astro page support for non-doc routes such as homepages, changelogs, landing pages, and product pages. See the [Pages guide](/pages).
 
 Options:
 
@@ -174,7 +174,7 @@ Options: none.
 plugins: ["@squidoc/plugin-mdx"];
 ```
 
-This plugin does not compile JSX components yet. Today it only lets Squidoc discover `.mdx` files alongside `.md` files. See the [MDX guide](/versions/0.1/mdx) for the current limits.
+This plugin does not compile JSX components yet. Today it only lets Squidoc discover `.mdx` files alongside `.md` files. See the [MDX guide](/mdx) for the current limits.
 
 ### `@squidoc/plugin-llms`
 
@@ -195,7 +195,7 @@ If `site.url` is set, generated links use absolute URLs. Otherwise, generated li
 
 ### `@squidoc/plugin-versions`
 
-Adds versioned docs routes, version metadata, a version selector, and a version manifest. See the [Versioning guide](/versions/0.1/versioning).
+Adds versioned docs routes, version metadata, a version selector, and a version manifest. See the [Versioning guide](/versioning).
 
 Options:
 
@@ -212,6 +212,8 @@ Options:
 | `label` | `string` | `name` | Label shown in the version selector. |
 | `routePrefix` | `string` | Current: `/`; archived: `/versions/{name}` | Public route prefix, joined under `docs.basePath`. |
 | `docsPrefix` | `string` | Archived: `versions/{name}` | Source docs directory prefix for archived docs. |
+| `current` | `boolean` | Current: `true`; archived: `false` | Marks the active/default version for search and selector behavior. |
+| `hidden` | `boolean` | `false` | Publishes the version but hides it from the version selector. |
 
 ```ts
 plugins: [
@@ -245,7 +247,7 @@ When a page exists in one version but not another, the selector falls back to th
 
 ### `@squidoc/plugin-i18n`
 
-Adds localized docs routes, locale metadata, a language selector, and locale manifests. See the [Internationalization guide](/versions/0.1/i18n).
+Adds localized docs routes, locale metadata, a language selector, and locale manifests. See the [Internationalization guide](/i18n).
 
 Options:
 

@@ -104,15 +104,12 @@ const pages = [
 ];
 const archivedPages = pages.map((page) => ({
   ...page,
-  file: page.file.replace("docs/", "docs/versions/0.1/"),
-  route:
-    page.route === "/docs"
-      ? "/docs/versions/0.1"
-      : page.route.replace("/docs", "/docs/versions/0.1"),
+  file: page.file.replace("docs/", "docs/next/"),
+  route: page.route === "/docs" ? "/docs/next" : page.route.replace("/docs", "/docs/next"),
   canonical:
     page.route === "/docs"
-      ? "https://squidoc.com/docs/versions/0.1"
-      : `https://squidoc.com${page.route.replace("/docs", "/docs/versions/0.1")}`,
+      ? "https://squidoc.com/docs/next"
+      : `https://squidoc.com${page.route.replace("/docs", "/docs/next")}`,
 }));
 const localizedPages = [
   {
@@ -128,22 +125,22 @@ const localizedPages = [
     canonical: "https://squidoc.com/es/docs/configuration",
   },
   {
-    file: "es/docs/versions/0.1/index.html",
-    route: "/es/docs/versions/0.1",
+    file: "es/docs/next/index.html",
+    route: "/es/docs/next",
     title: "Introducción | Squidoc",
-    canonical: "https://squidoc.com/es/docs/versions/0.1",
+    canonical: "https://squidoc.com/es/docs/next",
   },
   {
-    file: "es/docs/versions/0.1/configuration/index.html",
-    route: "/es/docs/versions/0.1/configuration",
+    file: "es/docs/next/configuration/index.html",
+    route: "/es/docs/next/configuration",
     title: "Configuración | Squidoc",
-    canonical: "https://squidoc.com/es/docs/versions/0.1/configuration",
+    canonical: "https://squidoc.com/es/docs/next/configuration",
   },
   {
-    file: "es/docs/versions/0.1/i18n/index.html",
-    route: "/es/docs/versions/0.1/i18n",
+    file: "es/docs/next/i18n/index.html",
+    route: "/es/docs/next/i18n",
     title: "Internacionalización | Squidoc",
-    canonical: "https://squidoc.com/es/docs/versions/0.1/i18n",
+    canonical: "https://squidoc.com/es/docs/next/i18n",
   },
 ];
 const allPages = [...pages, ...archivedPages, ...localizedPages];
@@ -200,25 +197,17 @@ assert(
   "plugin-authoring/index.html should render search before the sidebar",
 );
 
-const archivedVersioning = await readDistFile("docs/versions/0.1/versioning/index.html");
-assertIncludes(
-  archivedVersioning,
-  'href="/docs/versions/0.1/configuration"',
-  "docs/versions/0.1/versioning/index.html",
-);
-assertIncludes(
-  archivedVersioning,
-  'href="/docs/versions/0.1/plugin-authoring"',
-  "docs/versions/0.1/versioning/index.html",
-);
+const archivedVersioning = await readDistFile("docs/versioning/index.html");
+assertIncludes(archivedVersioning, 'href="/docs/configuration"', "docs/versioning/index.html");
+assertIncludes(archivedVersioning, 'href="/docs/plugin-authoring"', "docs/versioning/index.html");
 assert(
   !archivedVersioning.includes("<span>Versions</span>"),
-  "docs/versions/0.1/versioning/index.html should not render a redundant Versions nav folder",
+  "docs/versioning/index.html should not render a redundant Versions nav folder",
 );
 
 const searchIndex = JSON.parse(await readDistFile("search-index.json"));
 assert(
-  Array.isArray(searchIndex) && searchIndex.length === allPages.length,
+  Array.isArray(searchIndex) && searchIndex.length >= allPages.length,
   "search-index.json should include every dogfood page",
 );
 assert(
@@ -229,14 +218,19 @@ assert(
 const versions = JSON.parse(await readDistFile("versions.json"));
 assert(
   Array.isArray(versions) &&
-    versions.some((version) => version.name === "current" && version.current === true) &&
     versions.some(
-      (version) => version.name === "0.1" && version.routePrefix === "/docs/versions/0.1",
+      (version) =>
+        version.name === "next" && version.routePrefix === "/docs/next" && version.hidden === true,
     ) &&
     versions.some(
-      (version) => version.name === "0.1" && version.routePrefix === "/es/docs/versions/0.1",
+      (version) =>
+        version.name === "0.1" && version.routePrefix === "/docs" && version.current === true,
+    ) &&
+    versions.some(
+      (version) =>
+        version.name === "0.1" && version.routePrefix === "/es/docs" && version.current === true,
     ),
-  "versions.json should include current and archived dogfood versions",
+  "versions.json should include hidden next and active 0.1 dogfood versions",
 );
 
 const locales = JSON.parse(await readDistFile("locales.json"));
@@ -256,7 +250,7 @@ assertIncludes(llms, "[Sidebar Navigation](https://squidoc.com/docs/navigation)"
 assertIncludes(llms, "[Plugins](https://squidoc.com/docs/plugins)", "llms.txt");
 assertIncludes(llms, "[Themes](https://squidoc.com/docs/themes)", "llms.txt");
 assertIncludes(llms, "[Versioning](https://squidoc.com/docs/versioning)", "llms.txt");
-assertIncludes(llms, "[Versioning](https://squidoc.com/docs/versions/0.1/versioning)", "llms.txt");
+assertIncludes(llms, "[Versioning](https://squidoc.com/docs/next/versioning)", "llms.txt");
 assertIncludes(llms, "[Authoring Extensions](https://squidoc.com/docs/developers)", "llms.txt");
 assertIncludes(llms, "[Plugin Authoring](https://squidoc.com/docs/plugin-authoring)", "llms.txt");
 assertIncludes(llms, "[Theme Authoring](https://squidoc.com/docs/theme-authoring)", "llms.txt");

@@ -61,4 +61,4 @@ npm run preview
 
 `squidoc dev` watches docs and config files, then regenerates the internal Astro project without requiring a manual server restart.
 
-Next, learn how to configure [frontmatter](/versions/0.1/frontmatter), [plugins](/versions/0.1/plugins), [pages](/versions/0.1/pages), [themes](/versions/0.1/themes), and [deployment](/versions/0.1/deployment).
+Next, learn how to configure [frontmatter](/frontmatter), [plugins](/plugins), [pages](/pages), [themes](/themes), and [deployment](/deployment).

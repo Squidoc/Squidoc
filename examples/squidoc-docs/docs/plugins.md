@@ -212,6 +212,8 @@ Options:
 | `label` | `string` | `name` | Label shown in the version selector. |
 | `routePrefix` | `string` | Current: `/`; archived: `/versions/{name}` | Public route prefix, joined under `docs.basePath`. |
 | `docsPrefix` | `string` | Archived: `versions/{name}` | Source docs directory prefix for archived docs. |
+| `current` | `boolean` | Current: `true`; archived: `false` | Marks the active/default version for search and selector behavior. |
+| `hidden` | `boolean` | `false` | Publishes the version but hides it from the version selector. |
 
 ```ts
 plugins: [

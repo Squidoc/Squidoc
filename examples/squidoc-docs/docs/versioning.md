@@ -87,6 +87,32 @@ Use `docsPrefix` when your archived docs live somewhere else, and `routePrefix` 
 
 With that config, `docs/archive/v1/api.md` becomes `/docs/v1/api` when `docs.basePath` is `/docs`.
 
+Use `current: true` when a version should be treated as the active/default release even if it lives in `versions`. Use `hidden: true` when a version should be published but omitted from the version selector, such as a private `Next` docs channel.
+
+```ts
+{
+  name: "@squidoc/plugin-versions",
+  options: {
+    current: {
+      name: "next",
+      label: "Next",
+      routePrefix: "/next",
+      hidden: true,
+    },
+    versions: [
+      {
+        name: "0.1",
+        label: "0.1",
+        routePrefix: "/",
+        current: true,
+      },
+    ],
+  },
+}
+```
+
+With that config, `docs/configuration.md` publishes at `/docs/next/configuration`, while `docs/versions/0.1/configuration.md` publishes at `/docs/configuration` and behaves as the active release.
+
 ## What the plugin adds
 
 The plugin adds `versions.json` to the generated static output:

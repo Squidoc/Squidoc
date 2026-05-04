@@ -56,7 +56,7 @@ try {
     await expectAttribute(page.locator(".sq-topbar__logo"), "src", "/squidoc-logo.svg");
     await page.locator("#squidoc-locale-selector").selectOption("es");
     await page.waitForURL(`${baseUrl}/es/docs`, { waitUntil: "networkidle" });
-    await expectText(page.locator("main h1"), "Introducción");
+    await expectText(page.locator("main h1"), "Squidoc");
     await page.goto(`${baseUrl}/`, { waitUntil: "networkidle" });
     await expectMobileTopbarLinks(page);
     await expectNarrowDocsLayout(page);
@@ -107,17 +107,11 @@ try {
     await page.waitForURL(`${baseUrl}/es/docs/configuration`, { waitUntil: "networkidle" });
     await expectAttribute(page.locator("html"), "lang", "es");
     await expectText(page.locator("main h1"), "Configuración");
-    await page.locator("#squidoc-version-selector").selectOption("/es/docs/versions/0.1");
-    await page.waitForURL(`${baseUrl}/es/docs/versions/0.1/configuration`, {
-      waitUntil: "networkidle",
-    });
-    await expectText(page.locator("main h1"), "Configuración");
-    await page.locator("#squidoc-version-selector").selectOption("/es/docs");
-    await page.waitForURL(`${baseUrl}/es/docs/configuration`, { waitUntil: "networkidle" });
-    await page.locator("#squidoc-search-input").fill("fuente principal");
+    await expectText(page.locator("#squidoc-version-selector"), "0.1");
+    await page.locator("#squidoc-search-input").fill("metadatos");
     await expectText(
       page.locator('.sq-search__result[href="/es/docs/configuration"] .sq-search__result-title'),
-      "Configuración\nCurrent",
+      "Configuración\n0.1",
     );
     await page.locator("#squidoc-locale-selector").selectOption("en");
     await page.waitForURL(`${baseUrl}/docs/configuration`, { waitUntil: "networkidle" });
@@ -140,15 +134,12 @@ try {
 
     await page.goto(`${baseUrl}/docs/configuration`, { waitUntil: "networkidle" });
     await expectText(page.locator(".sq-version-selector__label"), "VERSION");
-    await page.locator("#squidoc-version-selector").selectOption("/docs/versions/0.1");
-    await page.waitForURL(`${baseUrl}/docs/versions/0.1/configuration`, {
-      waitUntil: "networkidle",
-    });
+    await expectText(page.locator("#squidoc-version-selector"), "0.1");
     await expectText(page.locator("main h1"), "Configuration");
     await expectAttribute(
       page.locator('nav[aria-label="Documentation"] a').filter({ hasText: "Plugin Authoring" }),
       "href",
-      "/docs/versions/0.1/plugin-authoring",
+      "/docs/plugin-authoring",
     );
     assert(
       (await page
@@ -159,25 +150,24 @@ try {
     );
     await page.locator("#squidoc-search-input").fill("production deployment");
     await expectText(
-      page.locator(
-        '.sq-search__result[href="/docs/versions/0.1/deployment"] .sq-search__result-version',
-      ),
+      page.locator('.sq-search__result[href="/docs/deployment"] .sq-search__result-version'),
       "0.1",
     );
-    await page.locator("#squidoc-version-selector").selectOption("/docs");
-    await page.waitForURL(`${baseUrl}/docs/configuration`, { waitUntil: "networkidle" });
 
+    await page.goto(`${baseUrl}/docs/next/configuration`, { waitUntil: "networkidle" });
     await page.locator("#squidoc-search-input").fill("production deployment");
     await expectText(
-      page.locator('.sq-search__result[href="/docs/deployment"] .sq-search__result-title'),
-      "Deployment\nCurrent",
+      page.locator('.sq-search__result[href="/docs/next/deployment"] .sq-search__result-title'),
+      "Deployment\nNext",
     );
     await expectText(
-      page.locator('.sq-search__result[href="/docs/deployment"] .sq-search__result-version'),
-      "Current",
+      page.locator('.sq-search__result[href="/docs/next/deployment"] .sq-search__result-version'),
+      "Next",
     );
     await expectText(
-      page.locator('.sq-search__result[href="/docs/deployment"] .sq-search__result-description'),
+      page.locator(
+        '.sq-search__result[href="/docs/next/deployment"] .sq-search__result-description',
+      ),
       "Deploy a Squidoc site to production on Vercel, Netlify, Cloudflare Pages, GitHub Pages, Docker, and static hosts.",
     );
 
@@ -188,23 +178,22 @@ try {
     const searchIndex = JSON.parse(await page.locator("body").innerText());
     assert(
       searchIndex.some(
-        (entry) => entry.route === "/docs/configuration" && entry.version?.label === "Current",
+        (entry) => entry.route === "/docs/configuration" && entry.version?.label === "0.1",
       ),
       "search-index.json should include current version metadata",
     );
     assert(
       searchIndex.some(
-        (entry) =>
-          entry.route === "/docs/versions/0.1/configuration" && entry.version?.label === "0.1",
+        (entry) => entry.route === "/docs/next/configuration" && entry.version?.label === "Next",
       ),
-      "search-index.json should include archived version metadata",
+      "search-index.json should include hidden next version metadata",
     );
     assert(
       searchIndex.some(
         (entry) =>
           entry.route === "/es/docs/configuration" &&
           entry.locale?.code === "es" &&
-          entry.version?.label === "Current",
+          entry.version?.label === "0.1",
       ),
       "search-index.json should include locale metadata",
     );

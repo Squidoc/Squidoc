@@ -23,4 +23,4 @@ Squidoc generates an internal Astro project during development and build. You do
 
 ## Start here
 
-Begin with [Getting Started](/versions/0.1/getting-started), then read [Configuration](/versions/0.1/configuration), [Frontmatter](/versions/0.1/frontmatter), [Pages](/versions/0.1/pages), and the [CLI Reference](/versions/0.1/cli). When you are ready to publish, use the [Deployment](/versions/0.1/deployment) guide.
+Begin with [Getting Started](/getting-started), then read [Configuration](/configuration), [Frontmatter](/frontmatter), [Pages](/pages), and the [CLI Reference](/cli). When you are ready to publish, use the [Deployment](/deployment) guide.

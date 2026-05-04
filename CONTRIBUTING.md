@@ -70,6 +70,10 @@ pnpm -r --filter './packages/**' exec npm pack --dry-run --cache /private/tmp/sq
 
 This verifies package `files` fields and catches missing templates or accidental test fixture/source leakage before release.
 
+## Documentation Changes
+
+The dogfood docs are localized. When you update user-facing docs in `examples/squidoc-docs/docs/`, update every supported locale too, including the matching files under localized version folders such as `examples/squidoc-docs/docs/es/versions/0.1/`.
+
 ## Submitting A Pull Request
 
 1. Create a branch from `main`.

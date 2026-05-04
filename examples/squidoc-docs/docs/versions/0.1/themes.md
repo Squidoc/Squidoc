@@ -88,4 +88,4 @@ footer: {
 
 Use a theme when you want to change more than a color token. Squidoc themes can change layout, navigation placement, headers, footers, widgets, typography, and where plugin UI appears.
 
-If you want to build your own, start with [Theme Authoring](/versions/0.1/theme-authoring).
+If you want to build your own, start with [Theme Authoring](/theme-authoring).

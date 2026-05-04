@@ -64,7 +64,7 @@ export default defineConfig({
 
 The `site` object feeds page titles, metadata, generated SEO files, and theme templates. The `docs.basePath` value controls where documentation is published; it defaults to `/docs`. Navigation paths are docs-relative, so `/configuration` points at `docs/configuration.md` and publishes as `/docs/configuration` by default.
 
-`squidoc check` catches missing navigation routes before deploy. Navigation items can be flat links, folders with `items`, folders with both a `path` and `items` when the folder has its own article, or generated sections based on your docs directory. See [Sidebar Navigation](/versions/0.1/navigation) for manual, automatic, and mixed sidebar examples.
+`squidoc check` catches missing navigation routes before deploy. Navigation items can be flat links, folders with `items`, folders with both a `path` and `items` when the folder has its own article, or generated sections based on your docs directory. See [Sidebar Navigation](/navigation) for manual, automatic, and mixed sidebar examples.
 
 Add plugins and themes with the CLI:
 
@@ -90,4 +90,4 @@ Themes control the page structure, classes, and styling that turn discovered doc
 
 The basic theme reads `theme.options.headerLinks` for the top navigation and `theme.options.footer` for the footer. Footer links use the same `{ title, href }` or `{ title, path }` shape as header links. Theme header and footer paths are site routes, so link to `/docs/configuration` when the docs base path is `/docs`.
 
-For page-level metadata, use [frontmatter](/versions/0.1/frontmatter). For command behavior, see the [CLI Reference](/versions/0.1/cli).
+For page-level metadata, use [frontmatter](/frontmatter). For command behavior, see the [CLI Reference](/cli).

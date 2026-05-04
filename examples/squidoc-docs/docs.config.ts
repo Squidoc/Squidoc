@@ -18,13 +18,17 @@ export default defineConfig({
       name: "@squidoc/plugin-versions",
       options: {
         current: {
-          name: "current",
-          label: "Current",
+          name: "next",
+          label: "Next",
+          routePrefix: "/next",
+          hidden: true,
         },
         versions: [
           {
             name: "0.1",
             label: "0.1",
+            routePrefix: "/",
+            current: true,
           },
         ],
       },
