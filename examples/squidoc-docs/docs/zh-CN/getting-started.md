@@ -24,3 +24,35 @@ Squidoc 是一个静态优先的文档平台，内置插件系统、主题系统
 此页面与英文文档保持对应，确保所有支持的语言在当前版本中拥有相同的文档覆盖范围。
 
 [配置](/configuration) · [插件](/plugins) · [主题](/themes) · [部署](/deployment)
+
+## 参考示例
+
+```bash
+npm create squidoc@latest my-docs
+cd my-docs
+npm run dev
+```
+
+```md
+---
+title: API Guide
+description: Learn how to use the API.
+---
+
+# API Guide
+
+Write your documentation here.
+```
+
+```ts
+nav: [
+  { title: "Getting Started", path: "/getting-started" },
+  { title: "API Guide", path: "/api-guide" },
+];
+```
+
+```bash
+npm run check
+npm run build
+npm run preview
+```

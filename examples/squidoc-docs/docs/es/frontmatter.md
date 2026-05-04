@@ -45,3 +45,13 @@ nav:
 ## Campos no soportados
 
 Campos adicionales se preservan en los datos de página para uso futuro de temas y plugins, pero el core solo asigna comportamiento a `title`, `description` y `nav`.
+
+## Ejemplos de referencia
+
+```md
+---
+title: Release Notes
+description: Product release notes.
+owner: Docs Team
+---
+```

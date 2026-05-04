@@ -83,3 +83,55 @@ Cuando búsqueda y versionado están habilitados, los resultados se limitan a la
 ## Idiomas
 
 Versionado se implementa como transform del proyecto. Eso permite componerlo con i18n y mantener rutas localizadas y versionadas de forma consistente.
+
+## Ejemplos de referencia
+
+```ts
+{
+  name: "@squidoc/plugin-versions",
+  options: {
+    current: {
+      name: "next",
+      label: "Next",
+      routePrefix: "/next",
+      hidden: true,
+    },
+    versions: [
+      {
+        name: "0.1",
+        label: "0.1",
+        routePrefix: "/",
+        current: true,
+      },
+    ],
+  },
+}
+```
+
+```json
+[
+  {
+    "name": "1.0",
+    "label": "1.0",
+    "routePrefix": "/docs",
+    "current": true,
+    "routes": ["/docs", "/docs/configuration"]
+  },
+  {
+    "name": "0.9",
+    "label": "0.9",
+    "routePrefix": "/docs/versions/0.9",
+    "current": false,
+    "routes": ["/docs/versions/0.9", "/docs/versions/0.9/configuration"]
+  }
+]
+```
+
+```ts
+{
+  squidocVersion: "0.9",
+  squidocVersionLabel: "0.9",
+  squidocVersionRoutePrefix: "/docs/versions/0.9",
+  squidocVersionCurrent: false,
+}
+```

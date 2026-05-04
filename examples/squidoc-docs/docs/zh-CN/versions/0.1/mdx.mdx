@@ -24,3 +24,37 @@ Squidoc 是一个静态优先的文档平台，内置插件系统、主题系统
 此页面与英文文档保持对应，确保所有支持的语言在当前版本中拥有相同的文档覆盖范围。
 
 [快速开始](/getting-started) · [配置](/configuration) · [插件](/plugins) · [主题](/themes) · [部署](/deployment)
+
+## 参考示例
+
+```bash
+npx squidoc add plugin @squidoc/plugin-mdx
+```
+
+```ts
+export default defineConfig({
+  plugins: [
+    "@squidoc/plugin-seo",
+    "@squidoc/plugin-codeblocks",
+    "@squidoc/plugin-article-tree",
+    "@squidoc/plugin-mdx",
+  ],
+});
+```
+
+```mdx
+---
+title: API Guide
+description: A guide written in an MDX file.
+---
+
+# API Guide
+
+Regular Markdown content works here.
+```
+
+```mdx
+import Callout from "../components/Callout";
+
+<Callout>This is not supported yet.</Callout>
+```

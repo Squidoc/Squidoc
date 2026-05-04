@@ -24,3 +24,64 @@ Antes do deploy, execute npm run check, npm run build e npm run preview.
 Esta página acompanha a documentação em inglês para manter a mesma cobertura em todos os idiomas suportados na versão atual.
 
 [Primeiros passos](/getting-started) · [Configuração](/configuration) · [Plugins](/plugins) · [Deploy](/deployment)
+
+## Exemplos de referência
+
+```ts
+export default defineConfig({
+  theme: "@squidoc/theme-basic",
+});
+```
+
+```ts
+export default defineConfig({
+  theme: {
+    name: "@squidoc/theme-basic",
+    options: {
+      headerLinks: [{ title: "GitHub", href: "https://github.com/Squidoc/Squidoc" }],
+      footer: {
+        text: "Built with Squidoc.",
+        links: [
+          { title: "GitHub", href: "https://github.com/Squidoc/Squidoc" },
+          { title: "Configuration", path: "/docs/configuration" },
+        ],
+      },
+    },
+  },
+});
+```
+
+```bash
+npx squidoc add theme @acme/squidoc-theme
+```
+
+```bash
+npm install @acme/squidoc-theme
+```
+
+```ts
+export default defineConfig({
+  theme: "@acme/squidoc-theme",
+});
+```
+
+```ts
+primaryColor: "#4a54df";
+```
+
+```ts
+headerLinks: [
+  { title: "GitHub", href: "https://github.com/Squidoc/Squidoc" },
+  { title: "Deployment", path: "/docs/deployment" },
+];
+```
+
+```ts
+footer: {
+  text: "Built with Squidoc.",
+  links: [
+    { title: "GitHub", href: "https://github.com/Squidoc/Squidoc" },
+    { title: "Plugins", path: "/docs/plugins" },
+  ],
+};
+```

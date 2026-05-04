@@ -24,3 +24,77 @@ Antes do deploy, execute npm run check, npm run build e npm run preview.
 Esta página acompanha a documentação em inglês para manter a mesma cobertura em todos os idiomas suportados na versão atual.
 
 [Primeiros passos](/getting-started) · [Configuração](/configuration) · [Plugins](/plugins) · [Temas](/themes) · [Deploy](/deployment)
+
+## Exemplos de referência
+
+```txt
+docs/
+  index.md
+  configuration.md
+pages/
+  index.astro
+  changelog.astro
+```
+
+```txt
+/docs/
+/docs/configuration/
+/
+/changelog/
+```
+
+```bash
+npm install @squidoc/plugin-pages
+```
+
+```ts
+import { defineConfig } from "squidoc";
+
+export default defineConfig({
+  plugins: [
+    "@squidoc/plugin-seo",
+    "@squidoc/plugin-pages",
+    "@squidoc/plugin-codeblocks",
+    "@squidoc/plugin-article-tree",
+  ],
+});
+```
+
+```astro
+---
+export const squidoc = {
+  title: "My Docs",
+  description: "A custom homepage for my docs site.",
+};
+---
+
+<section>
+  <h1>My Docs</h1>
+  <p>Read the latest documentation.</p>
+  <a href="/docs/getting-started">Get started</a>
+</section>
+```
+
+```ts
+export default defineConfig({
+  plugins: [
+    {
+      name: "@squidoc/plugin-pages",
+      options: {
+        pagesDir: "custom-pages",
+      },
+    },
+  ],
+});
+```
+
+```astro
+---
+export const squidoc = {
+  title: "Changelog",
+  layout: "docs",
+};
+---
+
+<h1>Changelog</h1>
+```

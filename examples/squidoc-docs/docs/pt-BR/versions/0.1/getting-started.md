@@ -24,3 +24,35 @@ Antes do deploy, execute npm run check, npm run build e npm run preview.
 Esta página acompanha a documentação em inglês para manter a mesma cobertura em todos os idiomas suportados na versão atual.
 
 [Configuração](/configuration) · [Plugins](/plugins) · [Temas](/themes) · [Deploy](/deployment)
+
+## Exemplos de referência
+
+```bash
+npm create squidoc@latest my-docs
+cd my-docs
+npm run dev
+```
+
+```md
+---
+title: API Guide
+description: Learn how to use the API.
+---
+
+# API Guide
+
+Write your documentation here.
+```
+
+```ts
+nav: [
+  { title: "Getting Started", path: "/getting-started" },
+  { title: "API Guide", path: "/api-guide" },
+];
+```
+
+```bash
+npm run check
+npm run build
+npm run preview
+```

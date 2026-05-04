@@ -24,3 +24,34 @@ Squidoc 是一个静态优先的文档平台，内置插件系统、主题系统
 此页面与英文文档保持对应，确保所有支持的语言在当前版本中拥有相同的文档覆盖范围。
 
 [快速开始](/getting-started) · [配置](/configuration) · [插件](/plugins) · [主题](/themes) · [部署](/deployment)
+
+## 参考示例
+
+```md
+---
+title: API Guide
+description: Learn how to use the API.
+---
+
+# API Guide
+```
+
+```md
+---
+title: Plugin Authoring
+description: Build Squidoc plugins.
+nav:
+  title: Plugins
+  order: 20
+  hidden: false
+  hideChildren: false
+---
+```
+
+```md
+---
+title: Release Notes
+description: Product release notes.
+owner: Docs Team
+---
+```

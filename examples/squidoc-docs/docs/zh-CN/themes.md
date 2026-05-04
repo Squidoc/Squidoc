@@ -24,3 +24,64 @@ Squidoc 是一个静态优先的文档平台，内置插件系统、主题系统
 此页面与英文文档保持对应，确保所有支持的语言在当前版本中拥有相同的文档覆盖范围。
 
 [快速开始](/getting-started) · [配置](/configuration) · [插件](/plugins) · [部署](/deployment)
+
+## 参考示例
+
+```ts
+export default defineConfig({
+  theme: "@squidoc/theme-basic",
+});
+```
+
+```ts
+export default defineConfig({
+  theme: {
+    name: "@squidoc/theme-basic",
+    options: {
+      headerLinks: [{ title: "GitHub", href: "https://github.com/Squidoc/Squidoc" }],
+      footer: {
+        text: "Built with Squidoc.",
+        links: [
+          { title: "GitHub", href: "https://github.com/Squidoc/Squidoc" },
+          { title: "Configuration", path: "/docs/configuration" },
+        ],
+      },
+    },
+  },
+});
+```
+
+```bash
+npx squidoc add theme @acme/squidoc-theme
+```
+
+```bash
+npm install @acme/squidoc-theme
+```
+
+```ts
+export default defineConfig({
+  theme: "@acme/squidoc-theme",
+});
+```
+
+```ts
+primaryColor: "#4a54df";
+```
+
+```ts
+headerLinks: [
+  { title: "GitHub", href: "https://github.com/Squidoc/Squidoc" },
+  { title: "Deployment", path: "/docs/deployment" },
+];
+```
+
+```ts
+footer: {
+  text: "Built with Squidoc.",
+  links: [
+    { title: "GitHub", href: "https://github.com/Squidoc/Squidoc" },
+    { title: "Plugins", path: "/docs/plugins" },
+  ],
+};
+```

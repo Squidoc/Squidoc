@@ -48,3 +48,13 @@ La API soporta:
 El plugin de búsqueda combina archivos generados con un slot: escribe `search-index.json` y registra un slot `search` que el tema básico renderiza.
 
 El plugin de árbol del artículo usa el mismo patrón con el slot `article-tree`.
+
+## Ejemplos de referencia
+
+```ts
+api.addThemeSlot({
+  name: "search",
+  component: "@squidoc/plugin-search/Search.astro",
+  html: "<div data-squidoc-search>...</div>",
+});
+```

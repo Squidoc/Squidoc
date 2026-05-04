@@ -24,3 +24,42 @@ Nutze npm run check, npm run build und npm run preview, bevor du deployest.
 Diese Seite folgt der englischen Dokumentation, damit alle unterstuetzten Sprachen dieselbe Abdeckung fuer die aktuelle Version haben.
 
 [Erste Schritte](/getting-started) · [Konfiguration](/configuration) · [Plugins](/plugins) · [Themes](/themes) · [Deployment](/deployment)
+
+## Referenzbeispiele
+
+```json
+{
+  "scripts": {
+    "dev": "squidoc dev",
+    "build": "squidoc build",
+    "preview": "squidoc preview",
+    "check": "squidoc check",
+    "doctor": "squidoc doctor"
+  }
+}
+```
+
+```bash
+npm run dev
+```
+
+```bash
+npm run build
+```
+
+```bash
+npm run preview
+```
+
+```bash
+npm run check
+```
+
+```bash
+npm run doctor
+```
+
+```bash
+npx squidoc add plugin @squidoc/plugin-search
+npx squidoc add theme @squidoc/theme-basic
+```

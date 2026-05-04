@@ -1,4 +1,4 @@
-import { readdir } from "node:fs/promises";
+import { readFile, readdir } from "node:fs/promises";
 import { join, relative } from "node:path";
 
 const repoRoot = new URL("..", import.meta.url).pathname;
@@ -7,27 +7,25 @@ const locales = ["es", "de", "fr", "ja", "zh-CN", "pt-BR"];
 const versions = ["versions/0.1"];
 const ignoredTopLevel = new Set(["versions", ...locales]);
 
-const englishRoutes = await routeSet(
-  docsRoot,
-  (segments) => !ignoredTopLevel.has(segments[0] ?? ""),
-);
+const englishDocs = await docsMap(docsRoot, (segments) => !ignoredTopLevel.has(segments[0] ?? ""));
+const englishRoutes = new Set(englishDocs.keys());
 const failures = [];
 
 for (const version of versions) {
-  const versionRoutes = await routeSet(join(docsRoot, version));
-  compareRouteSets(`English ${version}`, englishRoutes, versionRoutes);
+  const versionDocs = await docsMap(join(docsRoot, version));
+  compareDocs(`English ${version}`, englishDocs, versionDocs);
 }
 
 for (const locale of locales) {
-  const localeRoutes = await routeSet(
+  const localeDocs = await docsMap(
     join(docsRoot, locale),
     (segments) => segments[0] !== "versions",
   );
-  compareRouteSets(locale, englishRoutes, localeRoutes);
+  compareDocs(locale, englishDocs, localeDocs);
 
   for (const version of versions) {
-    const localizedVersionRoutes = await routeSet(join(docsRoot, locale, version));
-    compareRouteSets(`${locale} ${version}`, englishRoutes, localizedVersionRoutes);
+    const localizedVersionDocs = await docsMap(join(docsRoot, locale, version));
+    compareDocs(`${locale} ${version}`, englishDocs, localizedVersionDocs);
   }
 }
 
@@ -37,15 +35,24 @@ if (failures.length > 0) {
 
 console.log("Localized docs coverage is in sync.");
 
-async function routeSet(root, include = () => true) {
+async function docsMap(root, include = () => true) {
   const files = await listDocs(root);
-  return new Set(
+  const docs = await Promise.all(
     files
-      .map((file) => relative(root, file).split("/"))
-      .filter(include)
-      .map(routeFromSegments)
-      .sort(),
+      .map((file) => ({ file, segments: relative(root, file).split("/") }))
+      .filter(({ segments }) => include(segments))
+      .map(async ({ file, segments }) => {
+        const content = await readFile(file, "utf8");
+        return [
+          routeFromSegments(segments),
+          {
+            codeBlockCount: codeBlockCount(content),
+          },
+        ];
+      }),
   );
+
+  return new Map(docs);
 }
 
 async function listDocs(directory) {
@@ -72,9 +79,9 @@ function routeFromSegments(segments) {
   return route;
 }
 
-function compareRouteSets(label, expected, actual) {
-  const missing = [...expected].filter((route) => !actual.has(route));
-  const extra = [...actual].filter((route) => !expected.has(route));
+function compareDocs(label, expected, actual) {
+  const missing = [...expected.keys()].filter((route) => !actual.has(route));
+  const extra = [...actual.keys()].filter((route) => !expected.has(route));
 
   if (missing.length > 0) {
     failures.push(`${label} is missing: ${missing.join(", ")}`);
@@ -83,4 +90,22 @@ function compareRouteSets(label, expected, actual) {
   if (extra.length > 0) {
     failures.push(`${label} has extra routes: ${extra.join(", ")}`);
   }
+
+  for (const [route, expectedMetrics] of expected) {
+    const actualMetrics = actual.get(route);
+
+    if (!actualMetrics) {
+      continue;
+    }
+
+    if (actualMetrics.codeBlockCount !== expectedMetrics.codeBlockCount) {
+      failures.push(
+        `${label} ${route} has ${actualMetrics.codeBlockCount} code blocks; expected ${expectedMetrics.codeBlockCount}`,
+      );
+    }
+  }
+}
+
+function codeBlockCount(value) {
+  return (value.match(/```[\s\S]*?```/g) ?? []).length;
 }

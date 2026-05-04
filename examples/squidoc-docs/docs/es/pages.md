@@ -66,3 +66,57 @@ No se permiten conflictos de ruta. Por ejemplo, `pages/docs.astro` entra en conf
 Rutas reservadas como `404.astro` y `500.astro` no están soportadas. Rutas dinámicas como `[slug].astro` tampoco están soportadas todavía.
 
 La metadata debe usar `export const squidoc = { ... }` con valores string para `title`, `description` y `layout`.
+
+## Ejemplos de referencia
+
+```ts
+import { defineConfig } from "squidoc";
+
+export default defineConfig({
+  plugins: [
+    "@squidoc/plugin-seo",
+    "@squidoc/plugin-pages",
+    "@squidoc/plugin-codeblocks",
+    "@squidoc/plugin-article-tree",
+  ],
+});
+```
+
+```astro
+---
+export const squidoc = {
+  title: "My Docs",
+  description: "A custom homepage for my docs site.",
+};
+---
+
+<section>
+  <h1>My Docs</h1>
+  <p>Read the latest documentation.</p>
+  <a href="/docs/getting-started">Get started</a>
+</section>
+```
+
+```ts
+export default defineConfig({
+  plugins: [
+    {
+      name: "@squidoc/plugin-pages",
+      options: {
+        pagesDir: "custom-pages",
+      },
+    },
+  ],
+});
+```
+
+```astro
+---
+export const squidoc = {
+  title: "Changelog",
+  layout: "docs",
+};
+---
+
+<h1>Changelog</h1>
+```

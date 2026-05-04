@@ -24,3 +24,43 @@ Squidoc 是一个静态优先的文档平台，内置插件系统、主题系统
 此页面与英文文档保持对应，确保所有支持的语言在当前版本中拥有相同的文档覆盖范围。
 
 [快速开始](/getting-started) · [配置](/configuration) · [插件](/plugins) · [主题](/themes) · [部署](/deployment)
+
+## 参考示例
+
+```ts
+import { definePlugin } from "@squidoc/core";
+
+export default definePlugin({
+  name: "@acme/squidoc-plugin-example",
+  setup(api) {
+    const message =
+      typeof api.pluginOptions.message === "string"
+        ? api.pluginOptions.message
+        : "Generated during squidoc build.";
+
+    api.addGeneratedFile({
+      path: "example.txt",
+      contents: `${message}\n`,
+    });
+  },
+});
+```
+
+```ts
+plugins: [
+  {
+    name: "@acme/squidoc-plugin-example",
+    options: {
+      message: "Generated from plugin options.",
+    },
+  },
+];
+```
+
+```ts
+api.addThemeSlot({
+  name: "search",
+  component: "@squidoc/plugin-search/Search.astro",
+  html: "<div data-squidoc-search>...</div>",
+});
+```

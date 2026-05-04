@@ -76,3 +76,85 @@ nav:
 ```
 
 `hidden` oculta la página. `hideChildren` también oculta sus hijos, útil para carpetas internas.
+
+## Ejemplos de referencia
+
+```ts
+export default defineConfig({
+  nav: [
+    { title: "Introduction", path: "/" },
+    {
+      title: "Developers",
+      autogenerate: {
+        from: "/developers",
+      },
+    },
+    {
+      title: "Reference",
+      items: [{ title: "CLI", path: "/cli" }],
+    },
+  ],
+});
+```
+
+```ts
+{
+  title: "Developers",
+  autogenerate: {
+    from: "/developers",
+  },
+  items: [
+    { title: "External API", path: "/external-api" },
+  ],
+}
+```
+
+```ts
+{
+  title: "Developers",
+  autogenerate: {
+    from: "/developers",
+    generatedPosition: "after",
+  },
+  items: [
+    { title: "Overview", path: "/developers/overview" },
+  ],
+}
+```
+
+```ts
+export default defineConfig({
+  nav: {
+    autogenerate: {
+      from: "/",
+      exclude: ["versions/**", "es/**"],
+    },
+  },
+});
+```
+
+```md
+---
+title: Plugin Authoring
+nav:
+  title: Plugins
+  order: 20
+---
+```
+
+```md
+---
+title: Internal Migration Notes
+nav:
+  hidden: true
+---
+```
+
+```md
+---
+title: Internal Notes
+nav:
+  hidden: true
+  hideChildren: true
+---
+```

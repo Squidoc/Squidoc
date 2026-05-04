@@ -24,3 +24,34 @@ Nutze npm run check, npm run build und npm run preview, bevor du deployest.
 Diese Seite folgt der englischen Dokumentation, damit alle unterstuetzten Sprachen dieselbe Abdeckung fuer die aktuelle Version haben.
 
 [Erste Schritte](/getting-started) · [Konfiguration](/configuration) · [Plugins](/plugins) · [Themes](/themes) · [Deployment](/deployment)
+
+## Referenzbeispiele
+
+```md
+---
+title: API Guide
+description: Learn how to use the API.
+---
+
+# API Guide
+```
+
+```md
+---
+title: Plugin Authoring
+description: Build Squidoc plugins.
+nav:
+  title: Plugins
+  order: 20
+  hidden: false
+  hideChildren: false
+---
+```
+
+```md
+---
+title: Release Notes
+description: Product release notes.
+owner: Docs Team
+---
+```

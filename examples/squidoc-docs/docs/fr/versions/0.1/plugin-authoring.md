@@ -24,3 +24,43 @@ Exécutez npm run check, npm run build et npm run preview avant le déploiement.
 Cette page suit la documentation anglaise afin que chaque langue prise en charge garde la même couverture pour la version actuelle.
 
 [Bien démarrer](/getting-started) · [Configuration](/configuration) · [Plugins](/plugins) · [Thèmes](/themes) · [Déploiement](/deployment)
+
+## Exemples de référence
+
+```ts
+import { definePlugin } from "@squidoc/core";
+
+export default definePlugin({
+  name: "@acme/squidoc-plugin-example",
+  setup(api) {
+    const message =
+      typeof api.pluginOptions.message === "string"
+        ? api.pluginOptions.message
+        : "Generated during squidoc build.";
+
+    api.addGeneratedFile({
+      path: "example.txt",
+      contents: `${message}\n`,
+    });
+  },
+});
+```
+
+```ts
+plugins: [
+  {
+    name: "@acme/squidoc-plugin-example",
+    options: {
+      message: "Generated from plugin options.",
+    },
+  },
+];
+```
+
+```ts
+api.addThemeSlot({
+  name: "search",
+  component: "@squidoc/plugin-search/Search.astro",
+  html: "<div data-squidoc-search>...</div>",
+});
+```

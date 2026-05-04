@@ -24,3 +24,37 @@ Nutze npm run check, npm run build und npm run preview, bevor du deployest.
 Diese Seite folgt der englischen Dokumentation, damit alle unterstuetzten Sprachen dieselbe Abdeckung fuer die aktuelle Version haben.
 
 [Erste Schritte](/getting-started) · [Konfiguration](/configuration) · [Plugins](/plugins) · [Themes](/themes) · [Deployment](/deployment)
+
+## Referenzbeispiele
+
+```bash
+npx squidoc add plugin @squidoc/plugin-mdx
+```
+
+```ts
+export default defineConfig({
+  plugins: [
+    "@squidoc/plugin-seo",
+    "@squidoc/plugin-codeblocks",
+    "@squidoc/plugin-article-tree",
+    "@squidoc/plugin-mdx",
+  ],
+});
+```
+
+```mdx
+---
+title: API Guide
+description: A guide written in an MDX file.
+---
+
+# API Guide
+
+Regular Markdown content works here.
+```
+
+```mdx
+import Callout from "../components/Callout";
+
+<Callout>This is not supported yet.</Callout>
+```

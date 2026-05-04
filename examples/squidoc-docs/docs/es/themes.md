@@ -51,3 +51,36 @@ O instala el paquete y actualiza `docs.config.ts`.
 Usa un tema cuando quieres cambiar más que un color. Los temas pueden cambiar layout, navegación, cabeceras, footers, widgets, tipografía y ubicación de slots.
 
 Para crear uno, empieza con [Crear temas](/theme-authoring).
+
+## Ejemplos de referencia
+
+```bash
+npm install @acme/squidoc-theme
+```
+
+```ts
+export default defineConfig({
+  theme: "@acme/squidoc-theme",
+});
+```
+
+```ts
+primaryColor: "#4a54df";
+```
+
+```ts
+headerLinks: [
+  { title: "GitHub", href: "https://github.com/Squidoc/Squidoc" },
+  { title: "Deployment", path: "/docs/deployment" },
+];
+```
+
+```ts
+footer: {
+  text: "Built with Squidoc.",
+  links: [
+    { title: "GitHub", href: "https://github.com/Squidoc/Squidoc" },
+    { title: "Plugins", path: "/docs/plugins" },
+  ],
+};
+```

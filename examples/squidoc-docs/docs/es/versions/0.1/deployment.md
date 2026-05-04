@@ -79,3 +79,22 @@ Para pnpm, yarn o bun, cambia el lockfile y el comando de instalación.
 ## Hosting estático
 
 Cualquier host que sirva archivos estáticos puede publicar Squidoc. Ejecuta `npm run build` y sube el contenido de `dist/`.
+
+## Ejemplos de referencia
+
+```dockerfile
+FROM node:22-alpine AS build
+WORKDIR /app
+COPY package.json package-lock.json* ./
+RUN npm install
+COPY . .
+RUN npm run build
+
+FROM nginx:1.27-alpine
+COPY --from=build /app/dist /usr/share/nginx/html
+EXPOSE 80
+```
+
+```bash
+npm run build
+```

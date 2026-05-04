@@ -24,3 +24,128 @@ Nutze npm run check, npm run build und npm run preview, bevor du deployest.
 Diese Seite folgt der englischen Dokumentation, damit alle unterstuetzten Sprachen dieselbe Abdeckung fuer die aktuelle Version haben.
 
 [Erste Schritte](/getting-started) · [Konfiguration](/configuration) · [Plugins](/plugins) · [Themes](/themes) · [Deployment](/deployment)
+
+## Referenzbeispiele
+
+```ts
+export default defineConfig({
+  nav: [
+    { title: "Introduction", path: "/" },
+    { title: "Configuration", path: "/configuration" },
+    {
+      title: "Developers",
+      path: "/developers",
+      items: [
+        { title: "Plugin Authoring", path: "/plugin-authoring" },
+        { title: "Theme Authoring", path: "/theme-authoring" },
+      ],
+    },
+  ],
+});
+```
+
+```ts
+export default defineConfig({
+  nav: "auto",
+});
+```
+
+```txt
+docs/
+  index.md
+  getting-started.md
+  developers/
+    index.md
+    plugin-authoring.md
+    theme-authoring.md
+```
+
+```ts
+export default defineConfig({
+  nav: {
+    autogenerate: {
+      from: "/developers",
+    },
+  },
+});
+```
+
+```ts
+export default defineConfig({
+  nav: [
+    { title: "Introduction", path: "/" },
+    {
+      title: "Developers",
+      autogenerate: {
+        from: "/developers",
+      },
+    },
+    {
+      title: "Reference",
+      items: [{ title: "CLI", path: "/cli" }],
+    },
+  ],
+});
+```
+
+```ts
+{
+  title: "Developers",
+  autogenerate: {
+    from: "/developers",
+  },
+  items: [
+    { title: "External API", path: "/external-api" },
+  ],
+}
+```
+
+```ts
+{
+  title: "Developers",
+  autogenerate: {
+    from: "/developers",
+    generatedPosition: "after",
+  },
+  items: [
+    { title: "Overview", path: "/developers/overview" },
+  ],
+}
+```
+
+```ts
+export default defineConfig({
+  nav: {
+    autogenerate: {
+      from: "/",
+      exclude: ["versions/**", "es/**"],
+    },
+  },
+});
+```
+
+```md
+---
+title: Plugin Authoring
+nav:
+  title: Plugins
+  order: 20
+---
+```
+
+```md
+---
+title: Internal Migration Notes
+nav:
+  hidden: true
+---
+```
+
+```md
+---
+title: Internal Notes
+nav:
+  hidden: true
+  hideChildren: true
+---
+```

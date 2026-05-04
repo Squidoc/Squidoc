@@ -43,3 +43,14 @@ El tema básico renderiza:
 - `article-tree` junto al artículo.
 
 Los slots permiten que plugins agreguen UI sin quedar hardcodeados en el core. Los temas pueden moverlos, pero deberían mantenerlos disponibles en el layout `docs`.
+
+## Ejemplos de referencia
+
+```astro
+---
+export const squidoc = {
+  title: "Changelog",
+  layout: "docs",
+};
+---
+```

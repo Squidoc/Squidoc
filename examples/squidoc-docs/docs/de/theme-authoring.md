@@ -24,3 +24,34 @@ Nutze npm run check, npm run build und npm run preview, bevor du deployest.
 Diese Seite folgt der englischen Dokumentation, damit alle unterstuetzten Sprachen dieselbe Abdeckung fuer die aktuelle Version haben.
 
 [Erste Schritte](/getting-started) · [Konfiguration](/configuration) · [Plugins](/plugins) · [Themes](/themes) · [Deployment](/deployment)
+
+## Referenzbeispiele
+
+```ts
+import { defineTheme } from "@squidoc/core";
+
+export default defineTheme({
+  name: "@acme/squidoc-theme",
+  layouts: {
+    docs: "./layouts/Docs.astro",
+    page: "./layouts/Page.astro",
+  },
+  renderer: {
+    globalCss: "...",
+    classes: {
+      shell: "docs-shell",
+      sidebar: "docs-sidebar",
+      content: "docs-content",
+    },
+  },
+});
+```
+
+```astro
+---
+export const squidoc = {
+  title: "Changelog",
+  layout: "docs",
+};
+---
+```

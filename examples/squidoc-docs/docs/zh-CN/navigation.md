@@ -24,3 +24,128 @@ Squidoc 是一个静态优先的文档平台，内置插件系统、主题系统
 此页面与英文文档保持对应，确保所有支持的语言在当前版本中拥有相同的文档覆盖范围。
 
 [快速开始](/getting-started) · [配置](/configuration) · [插件](/plugins) · [主题](/themes) · [部署](/deployment)
+
+## 参考示例
+
+```ts
+export default defineConfig({
+  nav: [
+    { title: "Introduction", path: "/" },
+    { title: "Configuration", path: "/configuration" },
+    {
+      title: "Developers",
+      path: "/developers",
+      items: [
+        { title: "Plugin Authoring", path: "/plugin-authoring" },
+        { title: "Theme Authoring", path: "/theme-authoring" },
+      ],
+    },
+  ],
+});
+```
+
+```ts
+export default defineConfig({
+  nav: "auto",
+});
+```
+
+```txt
+docs/
+  index.md
+  getting-started.md
+  developers/
+    index.md
+    plugin-authoring.md
+    theme-authoring.md
+```
+
+```ts
+export default defineConfig({
+  nav: {
+    autogenerate: {
+      from: "/developers",
+    },
+  },
+});
+```
+
+```ts
+export default defineConfig({
+  nav: [
+    { title: "Introduction", path: "/" },
+    {
+      title: "Developers",
+      autogenerate: {
+        from: "/developers",
+      },
+    },
+    {
+      title: "Reference",
+      items: [{ title: "CLI", path: "/cli" }],
+    },
+  ],
+});
+```
+
+```ts
+{
+  title: "Developers",
+  autogenerate: {
+    from: "/developers",
+  },
+  items: [
+    { title: "External API", path: "/external-api" },
+  ],
+}
+```
+
+```ts
+{
+  title: "Developers",
+  autogenerate: {
+    from: "/developers",
+    generatedPosition: "after",
+  },
+  items: [
+    { title: "Overview", path: "/developers/overview" },
+  ],
+}
+```
+
+```ts
+export default defineConfig({
+  nav: {
+    autogenerate: {
+      from: "/",
+      exclude: ["versions/**", "es/**"],
+    },
+  },
+});
+```
+
+```md
+---
+title: Plugin Authoring
+nav:
+  title: Plugins
+  order: 20
+---
+```
+
+```md
+---
+title: Internal Migration Notes
+nav:
+  hidden: true
+---
+```
+
+```md
+---
+title: Internal Notes
+nav:
+  hidden: true
+  hideChildren: true
+---
+```
