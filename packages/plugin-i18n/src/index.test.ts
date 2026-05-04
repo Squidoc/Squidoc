@@ -30,6 +30,47 @@ describe("@squidoc/plugin-i18n", () => {
     expect(slots[0]?.html).toContain('<option value="en" selected>English</option>');
   });
 
+  test("localizes manual nav labels from page titles and locale labels", async () => {
+    const { pages } = await runI18n(
+      [
+        createPage("/", "Introduction"),
+        createPage("/configuration", "Configuration"),
+        createPage("/es/", "Introducción"),
+        createPage("/es/configuration", "Configuración"),
+      ],
+      {
+        nav: [
+          { title: "Introduction", path: "/" },
+          {
+            title: "Customization",
+            items: [{ title: "Configuration", path: "/configuration" }],
+          },
+        ],
+        pluginOptions: {
+          defaultLocale: "en",
+          locales: [
+            { code: "en", label: "English" },
+            {
+              code: "es",
+              label: "Español",
+              navLabels: { Customization: "Personalización" },
+            },
+          ],
+        },
+      },
+    );
+
+    const spanishPage = pages.find((page) => page.route === "/es/docs/configuration");
+
+    expect(spanishPage?.nav).toEqual([
+      { title: "Introducción", path: "/es/docs" },
+      {
+        title: "Personalización",
+        items: [{ title: "Configuración", path: "/es/docs/configuration" }],
+      },
+    ]);
+  });
+
   test("falls back to the target locale docs root when the equivalent route is missing", async () => {
     const { slots } = await runI18n([createPage("/"), createPage("/es/")]);
 
@@ -139,12 +180,13 @@ async function runI18n(
   overrides: {
     plugins?: Array<string | { name: string; options: Record<string, unknown> }>;
     pluginOptions?: Record<string, unknown>;
+    nav?: NavItem[];
   } = {},
 ) {
   const projectTransformers: PluginApi["addProjectTransformer"][] = [];
   const files: Parameters<PluginApi["addGeneratedFile"]>[0][] = [];
   const slots: Parameters<PluginApi["addThemeSlot"]>[0][] = [];
-  const nav: NavItem[] = [{ title: "Configuration", path: "/configuration" }];
+  const nav: NavItem[] = overrides.nav ?? [{ title: "Configuration", path: "/configuration" }];
   const api: PluginApi = {
     addDocExtension() {},
     addGeneratedFile(file) {
@@ -207,12 +249,12 @@ async function runI18n(
   return { pages: project.pages, files, slots };
 }
 
-function createPage(docsRoute: string): DocPage {
+function createPage(docsRoute: string, title = "Configuration"): DocPage {
   return {
     sourcePath: `/repo/docs${docsRoute}.md`,
     route: `/docs${docsRoute === "/" ? "" : docsRoute}`,
     docsRoute,
-    title: "Configuration",
+    title,
     description: "Configure Squidoc.",
     frontmatter: {},
     content: "# Configuration",

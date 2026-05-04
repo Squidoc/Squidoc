@@ -8,6 +8,7 @@ export type I18nOptions = {
 type LocaleConfig = {
   code: string;
   label?: string;
+  navLabels?: Record<string, string>;
 };
 
 type ResolvedLocale = {
@@ -15,6 +16,7 @@ type ResolvedLocale = {
   label: string;
   routePrefix: string;
   current: boolean;
+  navLabels: Record<string, string>;
 };
 
 type VersionConfig = {
@@ -59,7 +61,15 @@ export default definePlugin({
         ),
       );
       const pages = project.pages.map((page) =>
-        transformPage(page, locales, versions, project.nav, api.config.docs.basePath, routeSet),
+        transformPage(
+          page,
+          project.pages,
+          locales,
+          versions,
+          project.nav,
+          api.config.docs.basePath,
+          routeSet,
+        ),
       );
 
       return { pages, nav: project.nav };
@@ -80,6 +90,7 @@ export default definePlugin({
 
 function transformPage(
   page: DocPage,
+  pages: DocPage[],
   locales: ResolvedLocale[],
   versions: VersionConfig[],
   nav: NavItem[],
@@ -88,6 +99,7 @@ function transformPage(
 ): DocPage {
   const parsed = parsePageLocale(page.docsRoute, locales);
   const version = findVersion(parsed.docsRoute, versions);
+  const titlesByRoute = localizedTitlesByDocsRoute(pages, locales, versions, parsed.locale);
   const remainder = version
     ? stripDocsPrefix(parsed.docsRoute, version.docsPrefix ?? "")
     : stripLeadingSlash(parsed.docsRoute);
@@ -100,7 +112,7 @@ function transformPage(
   return {
     ...page,
     route,
-    nav: rewriteNav(nav, versionRoutePrefix, routeSet),
+    nav: rewriteNav(nav, versionRoutePrefix, routeSet, parsed.locale, titlesByRoute),
     frontmatter: {
       ...page.frontmatter,
       squidocLocale: parsed.locale.code,
@@ -187,19 +199,57 @@ function stripDocsPrefix(docsRoute: string, docsPrefix: string): string {
   return sourceRoute.slice(normalizedPrefix.length).replace(/^\/+/, "");
 }
 
-function rewriteNav(items: NavItem[], routePrefix: string, routeSet: Set<string>): NavItem[] {
+function rewriteNav(
+  items: NavItem[],
+  routePrefix: string,
+  routeSet: Set<string>,
+  locale: ResolvedLocale,
+  titlesByRoute: Map<string, string>,
+): NavItem[] {
   return items.flatMap((item) => {
     const path = item.path ? joinRoutes(routePrefix, item.path) : undefined;
-    const children = item.items ? rewriteNav(item.items, routePrefix, routeSet) : undefined;
+    const children = item.items
+      ? rewriteNav(item.items, routePrefix, routeSet, locale, titlesByRoute)
+      : undefined;
     const hasPath = path ? routeSet.has(path) : false;
+    const docsRoute = item.path ? normalizeRoutePrefix(item.path) : undefined;
     const nextItem = {
       ...item,
+      title:
+        locale.navLabels[item.title] ??
+        (docsRoute ? titlesByRoute.get(docsRoute) : undefined) ??
+        item.title,
       path: hasPath ? path : undefined,
       items: children && children.length > 0 ? children : undefined,
     };
 
     return nextItem.path || nextItem.items ? [nextItem] : [];
   });
+}
+
+function localizedTitlesByDocsRoute(
+  pages: DocPage[],
+  locales: ResolvedLocale[],
+  versions: VersionConfig[],
+  locale: ResolvedLocale,
+): Map<string, string> {
+  const titles = new Map<string, string>();
+
+  for (const page of pages) {
+    const parsed = parsePageLocale(page.docsRoute, locales);
+
+    if (parsed.locale.code !== locale.code) {
+      continue;
+    }
+
+    const version = findVersion(parsed.docsRoute, versions);
+    const remainder = version
+      ? stripDocsPrefix(parsed.docsRoute, version.docsPrefix ?? "")
+      : stripLeadingSlash(parsed.docsRoute);
+    titles.set(normalizeRoutePrefix(remainder ? `/${remainder}` : "/"), page.title);
+  }
+
+  return titles;
 }
 
 function renderLocaleSelector(locales: ResolvedLocale[], pages: DocPage[]): string {
@@ -296,6 +346,7 @@ function resolveLocales(options: Record<string, unknown>): ResolvedLocale[] {
     label: locale.label ?? locale.code,
     routePrefix: locale.code === defaultLocale ? "/" : normalizeRoutePrefix(`/${locale.code}`),
     current: locale.code === defaultLocale,
+    navLabels: locale.navLabels ?? {},
   }));
 }
 
@@ -372,7 +423,7 @@ function readLocaleConfig(value: unknown): LocaleConfig | undefined {
 
   validateLocaleCode(code, "locale code");
 
-  return { code, label: readString(value.label) };
+  return { code, label: readString(value.label), navLabels: readStringRecord(value.navLabels) };
 }
 
 function validateLocaleCode(code: string, label: string): void {
@@ -434,6 +485,18 @@ function readString(value: unknown): string | undefined {
 
 function readBoolean(value: unknown): boolean | undefined {
   return typeof value === "boolean" ? value : undefined;
+}
+
+function readStringRecord(value: unknown): Record<string, string> | undefined {
+  if (!isRecord(value)) {
+    return undefined;
+  }
+
+  const entries = Object.entries(value).flatMap(([key, entry]) =>
+    typeof entry === "string" && entry.trim().length > 0 ? [[key, entry] as const] : [],
+  );
+
+  return Object.fromEntries(entries);
 }
 
 function isRecord(value: unknown): value is Record<string, unknown> {
