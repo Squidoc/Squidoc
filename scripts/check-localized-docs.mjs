@@ -6,6 +6,19 @@ const docsRoot = join(repoRoot, "examples/squidoc-docs/docs");
 const locales = ["es", "de", "fr", "ja", "zh-CN", "pt-BR"];
 const versions = ["versions/0.1"];
 const ignoredTopLevel = new Set(["versions", ...locales]);
+const blockedLocalizedPhrases = [
+  "Squidoc ist eine statische Dokumentationsplattform mit Plugins",
+  "## Projektstruktur",
+  "## Erweitern",
+  "## Verifizieren",
+  "Diese Seite folgt der englischen Dokumentation",
+  "Cette page suit la documentation anglaise",
+  "Esta página acompanha a documentação em inglês",
+  "Esta página acompaña la documentación en inglés",
+  "このページは英語版ドキュメントに対応",
+  "此页面与英文文档保持对应",
+  "This page follows the English documentation",
+];
 
 const englishDocs = await docsMap(docsRoot, (segments) => !ignoredTopLevel.has(segments[0] ?? ""));
 const englishRoutes = new Set(englishDocs.keys());
@@ -22,10 +35,12 @@ for (const locale of locales) {
     (segments) => segments[0] !== "versions",
   );
   compareDocs(locale, englishDocs, localeDocs);
+  checkLocalizedContent(locale, localeDocs);
 
   for (const version of versions) {
     const localizedVersionDocs = await docsMap(join(docsRoot, locale, version));
     compareDocs(`${locale} ${version}`, englishDocs, localizedVersionDocs);
+    checkLocalizedContent(`${locale} ${version}`, localizedVersionDocs);
   }
 }
 
@@ -46,6 +61,7 @@ async function docsMap(root, include = () => true) {
         return [
           routeFromSegments(segments),
           {
+            content,
             codeBlockCount: codeBlockCount(content),
           },
         ];
@@ -102,6 +118,18 @@ function compareDocs(label, expected, actual) {
       failures.push(
         `${label} ${route} has ${actualMetrics.codeBlockCount} code blocks; expected ${expectedMetrics.codeBlockCount}`,
       );
+    }
+  }
+}
+
+function checkLocalizedContent(label, docs) {
+  for (const [route, metrics] of docs) {
+    const blockedPhrase = blockedLocalizedPhrases.find((phrase) =>
+      metrics.content.includes(phrase),
+    );
+
+    if (blockedPhrase) {
+      failures.push(`${label} ${route} contains localized placeholder copy: "${blockedPhrase}"`);
     }
   }
 }

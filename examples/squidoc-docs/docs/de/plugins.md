@@ -1,31 +1,25 @@
 ---
 title: "Plugins"
-description: "Dokumentation fuer Squidoc auf Deutsch."
+description: "Squidoc-Dokumentation zu Plugins."
 ---
 
 # Plugins
 
-Squidoc ist eine statische Dokumentationsplattform mit Plugins, Themes und SEO-freundlichen Voreinstellungen. Schreibe Markdown, konfiguriere dein Projekt in docs.config.ts und veroeffentliche ein schnelles statisches Docs-Site.
+Diese Seite konzentriert sich auf Plugins und erklärt, wie dieser Teil in einem Squidoc-Projekt funktioniert.
 
-## Projektstruktur
+## Was du einstellst
 
-Dokumente liegen in docs/, optionale Astro-Seiten in pages/, und docs.config.ts verbindet Website-Metadaten, Navigation, Plugins und Theme.
+Hier lernst du, wie du Suche, SEO, Codeblöcke, Seiten, Versionen, i18n, MDX und LLM-Dateien aktivieren kannst.
 
-## Erweitern
+## Vor dem Veröffentlichen prüfen
 
-Plugins fuegen Verhalten wie Suche, SEO, Codebloecke, Versionierung, Internationalisierung und generierte Dateien hinzu. Themes steuern Layout, Navigation und Slots.
+Die Reihenfolge kann wichtig sein, besonders wenn Versionen und i18n Routen gemeinsam verändern.
 
-## Verifizieren
+## Weitere Themen
 
-Nutze npm run check, npm run build und npm run preview, bevor du deployest.
+[Konfiguration](/configuration) · [Plugins](/plugins) · [Deployment](/deployment)
 
-## Plugins
-
-Diese Seite folgt der englischen Dokumentation, damit alle unterstuetzten Sprachen dieselbe Abdeckung fuer die aktuelle Version haben.
-
-[Erste Schritte](/getting-started) · [Konfiguration](/configuration) · [Themes](/themes) · [Deployment](/deployment)
-
-## Referenzbeispiele
+## Beispiele
 
 ```bash
 npx squidoc add plugin @squidoc/plugin-search

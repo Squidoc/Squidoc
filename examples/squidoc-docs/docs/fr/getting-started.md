@@ -1,31 +1,25 @@
 ---
 title: "Bien démarrer"
-description: "Documentation Squidoc en français."
+description: "Guide Squidoc pour Bien démarrer."
 ---
 
 # Bien démarrer
 
-Squidoc est une plateforme de documentation statique avec plugins, thèmes et réglages SEO par défaut. Écrivez du Markdown, configurez docs.config.ts, puis publiez un site rapide et statique.
+Cette page se concentre sur un nouveau projet et explique comment cette partie fonctionne dans un projet Squidoc.
 
-## Structure du projet
+## Ce que vous allez configurer
 
-Les articles vivent dans docs/, les pages Astro facultatives dans pages/, et docs.config.ts relie les métadonnées, la navigation, les plugins et le thème.
+Vous allez apprendre à créer le projet, installer les dépendances et lancer le serveur de dev.
 
-## Extension
+## À vérifier avant publication
 
-Les plugins ajoutent recherche, SEO, blocs de code, versionnement, internationalisation et fichiers générés. Les thèmes contrôlent les layouts, la navigation et les slots.
+`check` et `build` doivent passer avant la première publication.
 
-## Vérification
+## À lire aussi
 
-Exécutez npm run check, npm run build et npm run preview avant le déploiement.
+[Configuration](/configuration) · [Plugins](/plugins) · [Déploiement](/deployment)
 
-## Bien démarrer
-
-Cette page suit la documentation anglaise afin que chaque langue prise en charge garde la même couverture pour la version actuelle.
-
-[Configuration](/configuration) · [Plugins](/plugins) · [Thèmes](/themes) · [Déploiement](/deployment)
-
-## Exemples de référence
+## Exemples
 
 ```bash
 npm create squidoc@latest my-docs

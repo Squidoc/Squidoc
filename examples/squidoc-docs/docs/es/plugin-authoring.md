@@ -1,11 +1,25 @@
 ---
-title: Crear plugins
-description: Extiende Squidoc con archivos generados, metadatos, extensiones de docs y slots de tema.
+title: "Creación de plugins"
+description: "Guía de Squidoc sobre Creación de plugins."
 ---
 
-# Crear plugins
+# Creación de plugins
 
-Los plugins son paquetes pequeños que exportan una definición Squidoc.
+La creación de plugins te permite engancharte al ciclo de Squidoc para añadir archivos, metadata, extensiones de documentos o slots de tema.
+
+## Qué vas a configurar
+
+Define un paquete, exporta el objeto de plugin y usa opciones explícitas cuando tu plugin necesite configuración del usuario.
+
+## Qué revisar antes de publicar
+
+Prueba el plugin en el sitio dogfood y documenta las opciones para que el orden y los efectos sean claros.
+
+## También puedes leer
+
+[Configuración](/configuration) · [Plugins](/plugins) · [Deployment](/deployment)
+
+## Ejemplos
 
 ```ts
 import { definePlugin } from "@squidoc/core";
@@ -13,43 +27,29 @@ import { definePlugin } from "@squidoc/core";
 export default definePlugin({
   name: "@acme/squidoc-plugin-example",
   setup(api) {
+    const message =
+      typeof api.pluginOptions.message === "string"
+        ? api.pluginOptions.message
+        : "Generated during squidoc build.";
+
     api.addGeneratedFile({
       path: "example.txt",
-      contents: "Generado durante squidoc build.\n",
+      contents: `${message}\n`,
     });
   },
 });
 ```
-
-Los usuarios pueden configurarlos con forma de objeto:
 
 ```ts
 plugins: [
   {
     name: "@acme/squidoc-plugin-example",
     options: {
-      message: "Hola desde opciones.",
+      message: "Generated from plugin options.",
     },
   },
 ];
 ```
-
-## API de setup
-
-La API soporta:
-
-- `addGeneratedFile` para assets como `robots.txt`, `sitemap.xml`, `search-index.json` y `llms.txt`.
-- `addHeadTags` para metadatos globales.
-- `addPageHeadTags` para metadatos por página.
-- `addDocExtension` para formatos como `.mdx`.
-- `addThemeSlot` para UI que un tema puede renderizar.
-- `pluginOptions` para leer las opciones del plugin actual.
-
-El plugin de búsqueda combina archivos generados con un slot: escribe `search-index.json` y registra un slot `search` que el tema básico renderiza.
-
-El plugin de árbol del artículo usa el mismo patrón con el slot `article-tree`.
-
-## Ejemplos de referencia
 
 ```ts
 api.addThemeSlot({

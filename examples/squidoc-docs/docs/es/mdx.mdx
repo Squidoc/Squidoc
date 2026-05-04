@@ -1,13 +1,25 @@
 ---
-title: MDX
-description: Agrega documentos .mdx a Squidoc y entiende los límites actuales.
+title: "MDX"
+description: "Guía de Squidoc sobre MDX."
 ---
 
 # MDX
 
-Squidoc usa Markdown como formato predeterminado, mientras `@squidoc/plugin-mdx` agrega descubrimiento de archivos `.mdx` para proyectos que quieren avanzar gradualmente hacia documentos más ricos.
+El plugin MDX permite descubrir archivos `.mdx` junto a tus documentos Markdown.
 
-Instala el plugin y agrégalo a `docs.config.ts`:
+## Qué vas a configurar
+
+Úsalo cuando quieras preparar contenido MDX dentro del árbol de docs; la compatibilidad con componentes JSX completos todavía es limitada.
+
+## Qué revisar antes de publicar
+
+Verifica el build cada vez que agregues MDX para confirmar que el pipeline de documentos reconoce el archivo como esperas.
+
+## También puedes leer
+
+[Configuración](/configuration) · [Plugins](/plugins) · [Deployment](/deployment)
+
+## Ejemplos
 
 ```bash
 npx squidoc add plugin @squidoc/plugin-mdx
@@ -24,28 +36,16 @@ export default defineConfig({
 });
 ```
 
-## Qué funciona hoy
-
-Usa `.mdx` para contenido Markdown, frontmatter, encabezados, enlaces, listas, tablas y bloques de código. El renderer Markdown predeterminado sigue produciendo el HTML final.
-
 ```mdx
 ---
-title: Guía API
-description: Una guía escrita en MDX.
+title: API Guide
+description: A guide written in an MDX file.
 ---
 
-# Guía API
+# API Guide
 
-El contenido Markdown normal funciona aquí.
+Regular Markdown content works here.
 ```
-
-## Qué no funciona todavía
-
-MDX basado en componentes todavía no se compila. Imports JSX y componentes estilo React se tratan como texto del documento.
-
-Si necesitas UI reutilizable hoy, colócala en un tema o en un slot de plugin. La compilación completa de componentes MDX es una capacidad natural para un plugin futuro.
-
-## Ejemplos de referencia
 
 ```mdx
 import Callout from "../components/Callout";

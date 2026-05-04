@@ -1,13 +1,25 @@
 ---
-title: Despliegue
-description: Publica un sitio Squidoc en Vercel, Netlify, Cloudflare Pages, GitHub Pages, Docker y hosts estáticos.
+title: "Deployment"
+description: "Guía de Squidoc sobre Deployment."
 ---
 
-# Despliegue
+# Deployment
 
-Squidoc genera un sitio estático. En producción normalmente ejecutas `npm run build` y sirves el directorio `dist/` desde cualquier host estático.
+Squidoc genera un sitio estático que puedes desplegar en Vercel, Netlify, GitHub Pages, Docker o cualquier hosting de archivos.
 
-Antes de desplegar, corre las mismas verificaciones que debería correr CI:
+## Qué vas a configurar
+
+El flujo normal es instalar dependencias, ejecutar `npm run build` y publicar la carpeta generada por Astro.
+
+## Qué revisar antes de publicar
+
+Configura `site.url` y `docs.basePath` antes del deploy para que sitemap, canonical URLs y rutas públicas salgan correctas.
+
+## También puedes leer
+
+[Configuración](/configuration) · [Plugins](/plugins) · [Deployment](/deployment)
+
+## Ejemplos
 
 ```bash
 npm run check
@@ -15,72 +27,50 @@ npm run build
 npm run preview
 ```
 
-## Vercel
-
-Crea un proyecto Vercel desde tu repositorio y usa:
-
-- Framework preset: `Other`
-- Build command: `npm run build`
-- Output directory: `dist`
-- Install command: el comando de tu package manager, por ejemplo `npm install`, `pnpm install`, `yarn install` o `bun install`
-
-Si el sitio vive en un monorepo, configura el root directory en la carpeta que contiene `package.json` y `docs.config.ts`.
-
-## Netlify
-
-Usa:
-
-- Build command: `npm run build`
-- Publish directory: `dist`
-
-También puedes agregar `netlify.toml`:
-
 ```toml
 [build]
   command = "npm run build"
   publish = "dist"
 ```
 
-## Cloudflare Pages
+```yaml
+name: Deploy Docs
 
-Usa:
+on:
+  push:
+    branches: [main]
 
-- Framework preset: `None`
-- Build command: `npm run build`
-- Build output directory: `dist`
+permissions:
+  contents: read
+  pages: write
+  id-token: write
 
-Cloudflare Pages funciona bien porque Squidoc produce HTML, CSS, JavaScript y assets estáticos.
+concurrency:
+  group: pages
+  cancel-in-progress: false
 
-## GitHub Pages
-
-GitHub Pages puede desplegar `dist/` con GitHub Actions. El workflow debe instalar dependencias, ejecutar `npm run check`, compilar con `npm run build` y subir `dist` con `actions/upload-pages-artifact`.
-
-Si despliegas en un subpath, configura `site.url` con la URL pública final para que canonical URLs, sitemap y archivos SEO apunten al lugar correcto.
-
-## Docker
-
-Usa Docker cuando quieras empaquetar el sitio como contenedor. Compila con Node y sirve `dist/` con Nginx:
-
-```dockerfile
-FROM node:22-alpine AS build
-WORKDIR /app
-COPY package.json package-lock.json* ./
-RUN npm install
-COPY . .
-RUN npm run build
-
-FROM nginx:1.27-alpine
-COPY --from=build /app/dist /usr/share/nginx/html
-EXPOSE 80
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run check
+      - run: npm run build
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+      - id: deployment
+        uses: actions/deploy-pages@v4
 ```
-
-Para pnpm, yarn o bun, cambia el lockfile y el comando de instalación.
-
-## Hosting estático
-
-Cualquier host que sirva archivos estáticos puede publicar Squidoc. Ejecuta `npm run build` y sube el contenido de `dist/`.
-
-## Ejemplos de referencia
 
 ```dockerfile
 FROM node:22-alpine AS build

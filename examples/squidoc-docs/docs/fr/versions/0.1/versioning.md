@@ -1,31 +1,25 @@
 ---
-title: "Versionnement"
-description: "Documentation Squidoc en français."
+title: "Versions"
+description: "Guide Squidoc pour Versions."
 ---
 
-# Versionnement
+# Versions
 
-Squidoc est une plateforme de documentation statique avec plugins, thèmes et réglages SEO par défaut. Écrivez du Markdown, configurez docs.config.ts, puis publiez un site rapide et statique.
+Cette page se concentre sur la documentation versionnée et explique comment cette partie fonctionne dans un projet Squidoc.
 
-## Structure du projet
+## Ce que vous allez configurer
 
-Les articles vivent dans docs/, les pages Astro facultatives dans pages/, et docs.config.ts relie les métadonnées, la navigation, les plugins et le thème.
+Vous allez apprendre à publier docs actuelles et archivées sous des routes stables.
 
-## Extension
+## À vérifier avant publication
 
-Les plugins ajoutent recherche, SEO, blocs de code, versionnement, internationalisation et fichiers générés. Les thèmes contrôlent les layouts, la navigation et les slots.
+Vérifiez les pages manquantes entre versions et étiquetez les résultats de recherche.
 
-## Vérification
+## À lire aussi
 
-Exécutez npm run check, npm run build et npm run preview avant le déploiement.
+[Configuration](/configuration) · [Plugins](/plugins) · [Déploiement](/deployment)
 
-## Versioning
-
-Cette page suit la documentation anglaise afin que chaque langue prise en charge garde la même couverture pour la version actuelle.
-
-[Bien démarrer](/getting-started) · [Configuration](/configuration) · [Plugins](/plugins) · [Thèmes](/themes) · [Déploiement](/deployment)
-
-## Exemples de référence
+## Exemples
 
 ```bash
 npx squidoc add plugin @squidoc/plugin-versions

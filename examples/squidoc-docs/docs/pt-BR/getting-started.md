@@ -1,31 +1,25 @@
 ---
 title: "Primeiros passos"
-description: "Documentação do Squidoc em português do Brasil."
+description: "Guia do Squidoc sobre Primeiros passos."
 ---
 
 # Primeiros passos
 
-Squidoc é uma plataforma de documentação estática com plugins, temas e padrões pensados para SEO. Escreva Markdown, configure o projeto em docs.config.ts e publique um site estático rápido.
+Esta página se concentra em um novo projeto e explica como essa parte funciona em um projeto Squidoc.
 
-## Estrutura do projeto
+## O que você vai configurar
 
-Os artigos ficam em docs/, páginas Astro opcionais ficam em pages/, e docs.config.ts conecta metadados, navegação, plugins e tema.
+Você vai aprender a criar o projeto, instalar dependências e iniciar o servidor de desenvolvimento.
 
-## Extensão
+## O que conferir antes de publicar
 
-Plugins adicionam busca, SEO, blocos de código, versionamento, internacionalização e arquivos gerados. Temas controlam layouts, navegação e slots.
+`check` e `build` devem passar antes da primeira publicação.
 
-## Validação
+## Leia também
 
-Antes do deploy, execute npm run check, npm run build e npm run preview.
+[Configuração](/configuration) · [Plugins](/plugins) · [Deploy](/deployment)
 
-## Primeiros passos
-
-Esta página acompanha a documentação em inglês para manter a mesma cobertura em todos os idiomas suportados na versão atual.
-
-[Configuração](/configuration) · [Plugins](/plugins) · [Temas](/themes) · [Deploy](/deployment)
-
-## Exemplos de referência
+## Exemplos
 
 ```bash
 npm create squidoc@latest my-docs

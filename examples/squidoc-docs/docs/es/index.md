@@ -1,26 +1,20 @@
 ---
-title: Introducción
-description: Aprende qué es Squidoc, cómo funciona y por dónde empezar.
+title: "Introducción"
+description: "Guía de Squidoc sobre Introducción."
 ---
 
-# Squidoc
+# Introducción
 
-Squidoc es una plataforma de documentación estática con plugins, temas potentes y valores predeterminados pensados para SEO.
+Squidoc convierte una carpeta de Markdown en un sitio estático de documentación con temas, plugins y valores SEO listos para usar.
 
-Está diseñada para que los primeros minutos sean simples: crea un proyecto, escribe Markdown, levanta un servidor local y publica un sitio estático rápido. Debajo de ese flujo sencillo, Squidoc mantiene una arquitectura modular para que los usuarios avanzados puedan agregar búsqueda, MDX, archivos para LLMs, SEO personalizado y temas completos sin reemplazar el pipeline de documentación.
+## Qué vas a configurar
 
-## El modelo mental
+Empieza aquí para entender el modelo mental: los documentos viven en `docs/`, las páginas libres pueden vivir en `pages/`, y `docs.config.ts` conecta el sitio, la navegación, los plugins y el tema.
 
-Un proyecto Squidoc tiene cinco piezas principales:
+## Qué revisar antes de publicar
 
-- `docs/` contiene los artículos que se publican en `/docs` por defecto.
-- `pages/` contiene páginas Astro opcionales para rutas como `/` o `/changelog`.
-- `docs.config.ts` define los datos del sitio, la navegación, los plugins y el tema activo.
-- Los plugins agregan comportamiento como metadatos SEO, archivos generados, páginas personalizadas, búsqueda, bloques de código, árboles de encabezados y nuevos formatos de documento.
-- Los temas deciden cómo se convierten los documentos y páginas en navegación, cabeceras, pies de página y layouts.
+Antes de publicar, confirma que las rutas clave están en la navegación, que la metadata del sitio está completa y que los plugins que usas aparecen en el orden esperado.
 
-Squidoc genera un proyecto Astro interno durante desarrollo y build. No necesitas escribir páginas Astro para usar Squidoc; Astro es el motor de render estático que permite builds rápidos, salida estática y despliegues sencillos.
+## También puedes leer
 
-## Empieza aquí
-
-Comienza con [Primeros pasos](/getting-started), luego lee [Configuración](/configuration), [Frontmatter](/frontmatter), [Páginas](/pages) y la [Referencia CLI](/cli). Cuando estés listo para publicar, sigue la guía de [Despliegue](/deployment).
+[Configuración](/configuration) · [Plugins](/plugins) · [Deployment](/deployment)

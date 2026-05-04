@@ -1,31 +1,25 @@
 ---
 title: "プラグイン作成"
-description: "Squidoc の日本語ドキュメントです。"
+description: "プラグイン作成 に関する Squidoc ドキュメント。"
 ---
 
 # プラグイン作成
 
-Squidoc は、プラグイン、テーマ、SEO 向けの既定設定を備えた静的ファーストのドキュメント基盤です。Markdown を書き、docs.config.ts で設定し、高速な静的サイトとして公開できます。
+このページでは 独自プラグイン に焦点を当て、Squidoc プロジェクト内でどのように機能するかを説明します。
 
-## プロジェクト構成
+## 設定する内容
 
-記事は docs/、任意の Astro ページは pages/、サイト情報・ナビゲーション・プラグイン・テーマは docs.config.ts で管理します。
+ここでは build フック、生成ファイル、メタデータ、文書拡張、スロットを追加します。
 
-## 拡張
+## 公開前に確認すること
 
-プラグインは検索、SEO、コードブロック、バージョン管理、国際化、生成ファイルを追加します。テーマはレイアウト、ナビゲーション、スロットを制御します。
+オプションは明示的に検証し、ユーザー向け docs に書いてください。
 
-## 確認
+## 関連ページ
 
-公開前に npm run check、npm run build、npm run preview を実行します。
+[設定](/configuration) · [プラグイン](/plugins) · [デプロイ](/deployment)
 
-## プラグイン作成
-
-このページは英語版ドキュメントに対応しており、サポートされるすべての言語で現在のバージョンのカバレッジをそろえます。
-
-[始め方](/getting-started) · [設定](/configuration) · [プラグイン](/plugins) · [テーマ](/themes) · [デプロイ](/deployment)
-
-## 参考例
+## 例
 
 ```ts
 import { definePlugin } from "@squidoc/core";

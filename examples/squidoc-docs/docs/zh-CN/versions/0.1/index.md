@@ -1,26 +1,20 @@
 ---
 title: "介绍"
-description: "Squidoc 简体中文文档。"
+description: "关于介绍的 Squidoc 文档。"
 ---
 
-# Squidoc
+# 介绍
 
-Squidoc 是一个静态优先的文档平台，内置插件系统、主题系统和面向 SEO 的默认配置。你可以编写 Markdown，通过 docs.config.ts 配置项目，并发布快速的静态站点。
+本页聚焦 Squidoc 的整体概念，说明它在 Squidoc 项目中的工作方式。
 
-## 项目结构
+## 你将配置什么
 
-文档文章放在 docs/，可选 Astro 页面放在 pages/，docs.config.ts 连接站点元数据、导航、插件和主题。
+你将学习如何把 Markdown、主题、插件和静态输出连接起来。
 
-## 扩展
+## 发布前检查
 
-插件可以添加搜索、SEO、代码块、版本管理、国际化和生成文件。主题控制布局、导航和插件插槽。
+尽早区分哪些内容属于 docs，哪些应该作为独立页面存在。
 
-## 验证
+## 相关阅读
 
-部署前运行 npm run check、npm run build 和 npm run preview。
-
-## 介绍
-
-此页面与英文文档保持对应，确保所有支持的语言在当前版本中拥有相同的文档覆盖范围。
-
-[快速开始](/getting-started) · [配置](/configuration) · [插件](/plugins) · [主题](/themes) · [部署](/deployment)
+[配置](/configuration) · [插件](/plugins) · [部署](/deployment)

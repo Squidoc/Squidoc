@@ -1,18 +1,20 @@
 ---
-title: Crear extensiones
-description: Extiende Squidoc con plugins, temas y personalización avanzada.
+title: "Desarrolladores"
+description: "Guía de Squidoc sobre Desarrolladores."
 ---
 
-# Crear extensiones
+# Desarrolladores
 
-Squidoc está diseñado para mantenerse simple para autores y, al mismo tiempo, ofrecer puntos de extensión reales para desarrolladores.
+Esta sección reúne los puntos de extensión para quienes quieren crear plugins o temas.
 
-Usa plugins cuando quieras agregar comportamiento: archivos generados, metadatos, nuevos formatos de documento o slots de UI. Usa temas cuando quieras cambiar layout, navegación, tipografía o la estructura que recibe los datos normalizados de la documentación.
+## Qué vas a configurar
 
-## Superficies de extensión
+Empieza por decidir si tu idea cambia comportamiento del build, metadata o slots de UI; eso suele ser un plugin. Si cambia estructura visual, suele ser un tema.
 
-- Los plugins corren durante los builds y pueden inspeccionar configuración y páginas descubiertas.
-- Los temas controlan el renderer predeterminado y deciden dónde aparecen los slots de plugins.
-- El archivo de configuración conecta metadatos del sitio, navegación, plugins y temas.
+## Qué revisar antes de publicar
 
-Comienza con [Crear plugins](/plugin-authoring) para agregar comportamiento o con [Crear temas](/theme-authoring) para cambiar estructura y presentación.
+Mantén APIs pequeñas y documentadas para que otros autores puedan combinar extensiones sin depender de detalles internos.
+
+## También puedes leer
+
+[Configuración](/configuration) · [Plugins](/plugins) · [Deployment](/deployment)

@@ -1,11 +1,25 @@
 ---
-title: Primeros pasos
-description: Crea un proyecto Squidoc, ejecútalo localmente y compila documentación estática.
+title: "Primeros pasos"
+description: "Guía de Squidoc sobre Primeros pasos."
 ---
 
 # Primeros pasos
 
-Crea un proyecto nuevo con el generador:
+Esta guía te lleva desde un proyecto vacío hasta una documentación local funcionando con el tema básico.
+
+## Qué vas a configurar
+
+Vas a crear el proyecto, instalar dependencias, iniciar el servidor de desarrollo y agregar tus primeros archivos Markdown.
+
+## Qué revisar antes de publicar
+
+Revisa que `npm run check` no reporte enlaces de navegación rotos y que `npm run build` genere el sitio estático antes de desplegar.
+
+## También puedes leer
+
+[Configuración](/configuration) · [Plugins](/plugins) · [Deployment](/deployment)
+
+## Ejemplos
 
 ```bash
 npm create squidoc@latest my-docs
@@ -13,50 +27,26 @@ cd my-docs
 npm run dev
 ```
 
-El proyecto generado incluye:
-
-- `docs.config.ts` para metadatos, navegación, plugins y tema.
-- `docs/` para artículos Markdown.
-- `pages/` para páginas Astro personalizadas como homepages o changelogs.
-- Scripts en `package.json` para desarrollo, validación, builds y previews.
-- El tema básico y plugins predeterminados para SEO, páginas, bloques de código y árbol del artículo.
-
-## Agrega tu primera página
-
-Crea un archivo Markdown en `docs/`:
-
 ```md
 ---
-title: Guía API
-description: Aprende a usar la API.
+title: API Guide
+description: Learn how to use the API.
 ---
 
-# Guía API
+# API Guide
 
-Escribe tu documentación aquí.
+Write your documentation here.
 ```
-
-Luego agrégalo a `docs.config.ts`:
 
 ```ts
 nav: [
-  { title: "Primeros pasos", path: "/getting-started" },
-  { title: "Guía API", path: "/api-guide" },
+  { title: "Getting Started", path: "/getting-started" },
+  { title: "API Guide", path: "/api-guide" },
 ];
 ```
-
-Por defecto, `docs/api-guide.md` se publica como `/docs/api-guide` y `docs/index.md` como `/docs`.
-
-## Valida antes de publicar
-
-Usa la CLI mientras trabajas:
 
 ```bash
 npm run check
 npm run build
 npm run preview
 ```
-
-`npm run check` detecta navegación y enlaces internos rotos. `npm run build` escribe el sitio en `dist/`. `npm run preview` sirve la salida de producción localmente.
-
-Luego continúa con [Frontmatter](/frontmatter), [Plugins](/plugins), [Páginas](/pages), [Temas](/themes) y [Despliegue](/deployment).

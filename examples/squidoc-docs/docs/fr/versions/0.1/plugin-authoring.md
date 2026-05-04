@@ -1,31 +1,25 @@
 ---
 title: "Créer des plugins"
-description: "Documentation Squidoc en français."
+description: "Guide Squidoc pour Créer des plugins."
 ---
 
 # Créer des plugins
 
-Squidoc est une plateforme de documentation statique avec plugins, thèmes et réglages SEO par défaut. Écrivez du Markdown, configurez docs.config.ts, puis publiez un site rapide et statique.
+Cette page se concentre sur vos propres plugins et explique comment cette partie fonctionne dans un projet Squidoc.
 
-## Structure du projet
+## Ce que vous allez configurer
 
-Les articles vivent dans docs/, les pages Astro facultatives dans pages/, et docs.config.ts relie les métadonnées, la navigation, les plugins et le thème.
+Vous allez apprendre à ajouter hooks de build, fichiers générés, métadonnées, extensions et slots.
 
-## Extension
+## À vérifier avant publication
 
-Les plugins ajoutent recherche, SEO, blocs de code, versionnement, internationalisation et fichiers générés. Les thèmes contrôlent les layouts, la navigation et les slots.
+Les options doivent être validées explicitement et documentées.
 
-## Vérification
+## À lire aussi
 
-Exécutez npm run check, npm run build et npm run preview avant le déploiement.
+[Configuration](/configuration) · [Plugins](/plugins) · [Déploiement](/deployment)
 
-## Créer des plugins
-
-Cette page suit la documentation anglaise afin que chaque langue prise en charge garde la même couverture pour la version actuelle.
-
-[Bien démarrer](/getting-started) · [Configuration](/configuration) · [Plugins](/plugins) · [Thèmes](/themes) · [Déploiement](/deployment)
-
-## Exemples de référence
+## Exemples
 
 ```ts
 import { definePlugin } from "@squidoc/core";

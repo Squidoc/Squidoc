@@ -1,26 +1,20 @@
 ---
-title: "Criar extensões"
-description: "Documentação do Squidoc em português do Brasil."
+title: "Desenvolvedores"
+description: "Guia do Squidoc sobre Desenvolvedores."
 ---
 
-# Criar extensões
+# Desenvolvedores
 
-Squidoc é uma plataforma de documentação estática com plugins, temas e padrões pensados para SEO. Escreva Markdown, configure o projeto em docs.config.ts e publique um site estático rápido.
+Esta página se concentra em extensões e explica como essa parte funciona em um projeto Squidoc.
 
-## Estrutura do projeto
+## O que você vai configurar
 
-Os artigos ficam em docs/, páginas Astro opcionais ficam em pages/, e docs.config.ts conecta metadados, navegação, plugins e tema.
+Você vai aprender a decidir se uma ideia vira plugin ou tema.
 
-## Extensão
+## O que conferir antes de publicar
 
-Plugins adicionam busca, SEO, blocos de código, versionamento, internacionalização e arquivos gerados. Temas controlam layouts, navegação e slots.
+Mantenha pontos de extensão pequenos e documentados para preservar composição.
 
-## Validação
+## Leia também
 
-Antes do deploy, execute npm run check, npm run build e npm run preview.
-
-## Criar extensões
-
-Esta página acompanha a documentação em inglês para manter a mesma cobertura em todos os idiomas suportados na versão atual.
-
-[Primeiros passos](/getting-started) · [Configuração](/configuration) · [Plugins](/plugins) · [Temas](/themes) · [Deploy](/deployment)
+[Configuração](/configuration) · [Plugins](/plugins) · [Deploy](/deployment)
