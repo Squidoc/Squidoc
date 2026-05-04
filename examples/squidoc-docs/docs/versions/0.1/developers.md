@@ -15,4 +15,4 @@ Use plugins when you want to add behavior such as generated files, metadata, new
 - Themes control the default renderer and can decide where plugin slots appear.
 - The config file ties site metadata, navigation, plugins, and themes together.
 
-Start with [Plugin Authoring](/plugin-authoring) when you want to add behavior. Start with [Theme Authoring](/theme-authoring) when you want to change site structure and presentation.
+Start with [Plugin Authoring](/versions/0.1/plugin-authoring) when you want to add behavior. Start with [Theme Authoring](/versions/0.1/theme-authoring) when you want to change site structure and presentation.

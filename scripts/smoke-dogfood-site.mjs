@@ -229,7 +229,7 @@ assert(
 const versions = JSON.parse(await readDistFile("versions.json"));
 assert(
   Array.isArray(versions) &&
-    versions.some((version) => version.name === "next" && version.current === true) &&
+    versions.some((version) => version.name === "current" && version.current === true) &&
     versions.some(
       (version) => version.name === "0.1" && version.routePrefix === "/docs/versions/0.1",
     ) &&

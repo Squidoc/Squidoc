@@ -18,8 +18,8 @@ export default defineConfig({
       name: "@squidoc/plugin-versions",
       options: {
         current: {
-          name: "next",
-          label: "Next",
+          name: "current",
+          label: "Current",
         },
         versions: [
           {

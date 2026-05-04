@@ -27,7 +27,7 @@ export default defineConfig({
         text: "Built with Squidoc.",
         links: [
           { title: "GitHub", href: "https://github.com/Squidoc/Squidoc" },
-          { title: "Configuration", path: "/configuration" },
+          { title: "Configuration", path: "/docs/configuration" },
         ],
       },
     },
@@ -63,12 +63,12 @@ export default defineConfig({
 primaryColor: "#4a54df";
 ```
 
-`headerLinks` adds links to the desktop navbar. Use `href` for external links and `path` for internal docs routes.
+`headerLinks` adds links to the desktop navbar. Use `href` for external links and `path` for internal site routes.
 
 ```ts
 headerLinks: [
   { title: "GitHub", href: "https://github.com/Squidoc/Squidoc" },
-  { title: "Deployment", path: "/deployment" },
+  { title: "Deployment", path: "/docs/deployment" },
 ];
 ```
 
@@ -79,7 +79,7 @@ footer: {
   text: "Built with Squidoc.",
   links: [
     { title: "GitHub", href: "https://github.com/Squidoc/Squidoc" },
-    { title: "Plugins", path: "/plugins" },
+    { title: "Plugins", path: "/docs/plugins" },
   ],
 };
 ```
@@ -88,4 +88,4 @@ footer: {
 
 Use a theme when you want to change more than a color token. Squidoc themes can change layout, navigation placement, headers, footers, widgets, typography, and where plugin UI appears.
 
-If you want to build your own, start with [Theme Authoring](/theme-authoring).
+If you want to build your own, start with [Theme Authoring](/versions/0.1/theme-authoring).

@@ -117,7 +117,7 @@ try {
     await page.locator("#squidoc-search-input").fill("fuente principal");
     await expectText(
       page.locator('.sq-search__result[href="/es/docs/configuration"] .sq-search__result-title'),
-      "Configuración\nNext",
+      "Configuración\nCurrent",
     );
     await page.locator("#squidoc-locale-selector").selectOption("en");
     await page.waitForURL(`${baseUrl}/docs/configuration`, { waitUntil: "networkidle" });
@@ -170,11 +170,11 @@ try {
     await page.locator("#squidoc-search-input").fill("production deployment");
     await expectText(
       page.locator('.sq-search__result[href="/docs/deployment"] .sq-search__result-title'),
-      "Deployment\nNext",
+      "Deployment\nCurrent",
     );
     await expectText(
       page.locator('.sq-search__result[href="/docs/deployment"] .sq-search__result-version'),
-      "Next",
+      "Current",
     );
     await expectText(
       page.locator('.sq-search__result[href="/docs/deployment"] .sq-search__result-description'),
@@ -188,7 +188,7 @@ try {
     const searchIndex = JSON.parse(await page.locator("body").innerText());
     assert(
       searchIndex.some(
-        (entry) => entry.route === "/docs/configuration" && entry.version?.label === "Next",
+        (entry) => entry.route === "/docs/configuration" && entry.version?.label === "Current",
       ),
       "search-index.json should include current version metadata",
     );
@@ -204,7 +204,7 @@ try {
         (entry) =>
           entry.route === "/es/docs/configuration" &&
           entry.locale?.code === "es" &&
-          entry.version?.label === "Next",
+          entry.version?.label === "Current",
       ),
       "search-index.json should include locale metadata",
     );
