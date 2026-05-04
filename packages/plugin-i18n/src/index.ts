@@ -22,7 +22,8 @@ type VersionConfig = {
   label?: string;
   routePrefix?: string;
   docsPrefix?: string;
-  current: boolean;
+  current?: boolean;
+  hidden?: boolean;
 };
 
 type PageLocale = {
@@ -113,6 +114,7 @@ function transformPage(
             squidocVersionLabel: version.label ?? version.name,
             squidocVersionRoutePrefix: versionRoutePrefix,
             squidocVersionCurrent: version.current,
+            squidocVersionHidden: version.hidden,
           }
         : {}),
     },
@@ -161,7 +163,7 @@ function parsePageLocale(docsRoute: string, locales: ResolvedLocale[]): PageLoca
 
 function findVersion(docsRoute: string, versions: VersionConfig[]): VersionConfig | undefined {
   const sourceRoute = stripLeadingSlash(docsRoute);
-  const archived = versions.filter((version) => !version.current);
+  const archived = versions.filter((version) => version.docsPrefix);
 
   for (const version of archived) {
     const docsPrefix = normalizeDocsPrefix(version.docsPrefix ?? `versions/${version.name}`);
@@ -171,7 +173,7 @@ function findVersion(docsRoute: string, versions: VersionConfig[]): VersionConfi
     }
   }
 
-  return versions.find((version) => version.current);
+  return versions.find((version) => !version.docsPrefix);
 }
 
 function stripDocsPrefix(docsRoute: string, docsPrefix: string): string {
@@ -338,21 +340,21 @@ function resolveVersionsFromConfig(
         return config ? [config] : [];
       })
     : [];
+  const hasExplicitCurrent =
+    current.current === true || archived.some((version) => version.current === true);
 
   return [
     {
       ...current,
-      routePrefix: normalizeRoutePrefix(current.routePrefix ?? docsBasePath),
+      routePrefix: joinRoutes(docsBasePath, current.routePrefix ?? "/"),
       docsPrefix: current.docsPrefix,
-      current: true,
+      current: current.current ?? !hasExplicitCurrent,
     },
     ...archived.map((version) => ({
       ...version,
-      routePrefix: normalizeRoutePrefix(
-        version.routePrefix ?? joinRoutes(docsBasePath, `/versions/${version.name}`),
-      ),
+      routePrefix: joinRoutes(docsBasePath, version.routePrefix ?? `/versions/${version.name}`),
       docsPrefix: normalizeDocsPrefix(version.docsPrefix ?? `versions/${version.name}`),
-      current: false,
+      current: version.current ?? false,
     })),
   ];
 }
@@ -394,7 +396,8 @@ function readVersionConfig(value: unknown, current: boolean): VersionConfig | un
         label: readString(value.label),
         routePrefix: readString(value.routePrefix),
         docsPrefix: readString(value.docsPrefix),
-        current,
+        current: readBoolean(value.current),
+        hidden: readBoolean(value.hidden),
       }
     : undefined;
 }
@@ -427,6 +430,10 @@ function stripLeadingSlash(value: string): string {
 
 function readString(value: unknown): string | undefined {
   return typeof value === "string" && value.trim().length > 0 ? value : undefined;
+}
+
+function readBoolean(value: unknown): boolean | undefined {
+  return typeof value === "boolean" ? value : undefined;
 }
 
 function isRecord(value: unknown): value is Record<string, unknown> {

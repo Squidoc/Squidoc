@@ -10,6 +10,8 @@ type VersionConfig = {
   label?: string;
   routePrefix?: string;
   docsPrefix?: string;
+  current?: boolean;
+  hidden?: boolean;
 };
 
 type ResolvedVersion = {
@@ -18,6 +20,7 @@ type ResolvedVersion = {
   routePrefix: string;
   docsPrefix?: string;
   current: boolean;
+  hidden: boolean;
 };
 
 type VersionManifestEntry = {
@@ -25,6 +28,7 @@ type VersionManifestEntry = {
   label: string;
   routePrefix: string;
   current: boolean;
+  hidden?: boolean;
   locale?: {
     code: string;
     label: string;
@@ -68,6 +72,8 @@ function resolveVersions(
         return config ? [config] : [];
       })
     : [];
+  const hasExplicitCurrent =
+    current.current === true || archived.some((version) => version.current === true);
 
   return [
     {
@@ -75,14 +81,16 @@ function resolveVersions(
       label: current.label ?? current.name,
       routePrefix: joinRoutes(docsBasePath, current.routePrefix ?? "/"),
       docsPrefix: current.docsPrefix,
-      current: true,
+      current: current.current ?? !hasExplicitCurrent,
+      hidden: current.hidden ?? false,
     },
     ...archived.map((version) => ({
       name: version.name,
       label: version.label ?? version.name,
       routePrefix: joinRoutes(docsBasePath, version.routePrefix ?? `/versions/${version.name}`),
       docsPrefix: normalizeDocsPrefix(version.docsPrefix ?? `versions/${version.name}`),
-      current: false,
+      current: version.current ?? false,
+      hidden: version.hidden ?? false,
     })),
   ];
 }
@@ -104,6 +112,7 @@ function transformPage(page: DocPage, versions: ResolvedVersion[], nav: NavItem[
       squidocVersionLabel: matched.version.label,
       squidocVersionRoutePrefix: matched.version.routePrefix,
       squidocVersionCurrent: matched.version.current,
+      squidocVersionHidden: matched.version.hidden,
     },
   };
 }
@@ -112,7 +121,7 @@ function findVersionForPage(
   page: DocPage,
   versions: ResolvedVersion[],
 ): { version: ResolvedVersion; route: string } | undefined {
-  const archived = versions.filter((version) => !version.current && version.docsPrefix);
+  const archived = versions.filter((version) => version.docsPrefix);
   const sourceRoute = stripLeadingSlash(page.docsRoute);
 
   for (const version of archived) {
@@ -127,9 +136,11 @@ function findVersionForPage(
     }
   }
 
-  const current = versions.find((version) => version.current);
+  const current = versions.find((version) => !version.docsPrefix);
 
-  return current ? { version: current, route: page.route } : undefined;
+  return current
+    ? { version: current, route: joinRoutes(current.routePrefix, page.docsRoute) }
+    : undefined;
 }
 
 function rewriteNav(items: NavItem[], routePrefix: string): NavItem[] {
@@ -166,7 +177,7 @@ function renderVersionSelector(versions: ResolvedVersion[], pages: DocPage[]): s
   const versions = JSON.parse(root.dataset.versions ?? "[]");
   const path = window.location.pathname.replace(/\\/+$/, "") || "/";
   const active = resolveActiveVersion(versions, path);
-  const scopedVersions = versions.filter((version) => sameLocale(version, active));
+  const scopedVersions = versions.filter((version) => sameLocale(version, active) && !version.hidden);
 
   select.replaceChildren(...scopedVersions.map((version) => {
     const option = document.createElement("option");
@@ -198,7 +209,7 @@ function renderVersionSelector(versions: ResolvedVersion[], pages: DocPage[]): s
     return versions
     .filter((version) => version.routePrefix !== "/")
     .sort((first, second) => second.routePrefix.length - first.routePrefix.length)
-    .find((version) => path === version.routePrefix || path.startsWith(version.routePrefix.replace(/\\/+$/, "") + "/")) ?? versions.find((version) => version.routePrefix === "/" && path === "/") ?? versions.find((version) => version.current);
+    .find((version) => path === version.routePrefix || path.startsWith(version.routePrefix.replace(/\\/+$/, "") + "/")) ?? versions.find((version) => version.routePrefix === "/" && path === "/") ?? versions.find((version) => version.current && !version.hidden) ?? versions.find((version) => version.current);
   }
 
   function sameLocale(version, active) {
@@ -219,6 +230,7 @@ function toManifest(versions: ResolvedVersion[], pages: DocPage[]): VersionManif
       label: readString(page.frontmatter.squidocVersionLabel),
       routePrefix: readString(page.frontmatter.squidocVersionRoutePrefix),
       current: page.frontmatter.squidocVersionCurrent === true,
+      hidden: page.frontmatter.squidocVersionHidden === true,
       localeCode: readString(page.frontmatter.squidocLocale),
       localeLabel: readString(page.frontmatter.squidocLocaleLabel),
       localeCurrent: page.frontmatter.squidocLocaleCurrent === true,
@@ -233,6 +245,7 @@ function toManifest(versions: ResolvedVersion[], pages: DocPage[]): VersionManif
           label: version.label,
           routePrefix: version.routePrefix,
           current: version.current,
+          hidden: version.hidden,
           localeCode: undefined,
           localeLabel: undefined,
           localeCurrent: false,
@@ -249,6 +262,7 @@ function toManifest(versions: ResolvedVersion[], pages: DocPage[]): VersionManif
       label: entry?.label ?? routePrefix,
       routePrefix: routePrefix ?? "/",
       current: entry?.current ?? false,
+      hidden: entry?.hidden === true ? true : undefined,
       locale:
         entry?.localeCode && entry.localeLabel
           ? {
@@ -281,6 +295,8 @@ function readVersionConfig(value: unknown): VersionConfig | undefined {
     label: readString(value.label),
     routePrefix: readString(value.routePrefix),
     docsPrefix: readString(value.docsPrefix),
+    current: readBoolean(value.current),
+    hidden: readBoolean(value.hidden),
   };
 }
 
@@ -312,6 +328,10 @@ function stripLeadingSlash(value: string): string {
 
 function readString(value: unknown): string | undefined {
   return typeof value === "string" && value.trim().length > 0 ? value : undefined;
+}
+
+function readBoolean(value: unknown): boolean | undefined {
+  return typeof value === "boolean" ? value : undefined;
 }
 
 function isRecord(value: unknown): value is Record<string, unknown> {

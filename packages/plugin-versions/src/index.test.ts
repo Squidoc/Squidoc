@@ -138,6 +138,74 @@ describe("@squidoc/plugin-versions", () => {
 
     expect(project?.pages.map((page) => page.route)).toEqual(["/docs/v1", "/docs/v1/api"]);
   });
+
+  test("can make an archived version active while hiding next from the selector", async () => {
+    const { transformers, generatedFiles, slots } = await setupPlugin(
+      {
+        current: { name: "next", label: "Next", routePrefix: "/next", hidden: true },
+        versions: [{ name: "0.1", label: "0.1", routePrefix: "/", current: true }],
+      },
+      [
+        {
+          title: "Next",
+          route: "/docs/next/configuration",
+          docsRoute: "/configuration",
+          sourcePath: "/repo/docs/configuration.md",
+          frontmatter: {},
+          content: "# Next",
+        },
+        {
+          title: "Release",
+          route: "/docs/configuration",
+          docsRoute: "/versions/0.1/configuration",
+          sourcePath: "/repo/docs/versions/0.1/configuration.md",
+          frontmatter: {},
+          content: "# Release",
+        },
+      ],
+    );
+
+    const project = await transformers[0]?.({
+      pages: [
+        {
+          title: "Next",
+          route: "/docs/configuration",
+          docsRoute: "/configuration",
+          sourcePath: "/repo/docs/configuration.md",
+          frontmatter: {},
+          content: "# Next",
+        },
+        {
+          title: "Release",
+          route: "/docs/versions/0.1/configuration",
+          docsRoute: "/versions/0.1/configuration",
+          sourcePath: "/repo/docs/versions/0.1/configuration.md",
+          frontmatter: {},
+          content: "# Release",
+        },
+      ],
+      nav: [{ title: "Configuration", path: "/configuration" }],
+    });
+
+    expect(project?.pages.map((page) => page.route)).toEqual([
+      "/docs/next/configuration",
+      "/docs/configuration",
+    ]);
+    expect(project?.pages[0]?.frontmatter).toMatchObject({
+      squidocVersion: "next",
+      squidocVersionLabel: "Next",
+      squidocVersionRoutePrefix: "/docs/next",
+      squidocVersionCurrent: false,
+    });
+    expect(project?.pages[1]?.frontmatter).toMatchObject({
+      squidocVersion: "0.1",
+      squidocVersionLabel: "0.1",
+      squidocVersionRoutePrefix: "/docs",
+      squidocVersionCurrent: true,
+    });
+    expect(generatedFiles[0]?.contents).toContain('"hidden": true');
+    expect(slots[0]?.html).toContain("&& !version.hidden");
+  });
 });
 
 async function setupPlugin(options: Record<string, unknown>, pages: PluginApi["pages"] = []) {

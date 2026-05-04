@@ -55,6 +55,43 @@ describe("@squidoc/plugin-i18n", () => {
     });
   });
 
+  test("composes localized routes when an archived version is active", async () => {
+    const { pages } = await runI18n(
+      [createPage("/configuration"), createPage("/versions/0.1/configuration")],
+      {
+        plugins: [
+          {
+            name: "@squidoc/plugin-versions",
+            options: {
+              current: { name: "next", label: "Next", routePrefix: "/next", hidden: true },
+              versions: [{ name: "0.1", label: "0.1", routePrefix: "/", current: true }],
+            },
+          },
+          {
+            name: "@squidoc/plugin-i18n",
+            options: {
+              defaultLocale: "en",
+              locales: [
+                { code: "en", label: "English" },
+                { code: "es", label: "Español" },
+              ],
+            },
+          },
+        ],
+      },
+    );
+
+    expect(pages.map((page) => page.route)).toEqual([
+      "/docs/next/configuration",
+      "/docs/configuration",
+    ]);
+    expect(pages[1]?.frontmatter).toMatchObject({
+      squidocVersion: "0.1",
+      squidocVersionRoutePrefix: "/docs",
+      squidocVersionCurrent: true,
+    });
+  });
+
   test("warns when i18n is ordered before versions", async () => {
     const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
 
